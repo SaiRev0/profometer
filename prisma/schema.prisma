@@ -1,0 +1,108 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Department {
+    id            String      @id @default(cuid())
+    name          String
+    code          String      @unique
+    avgRating     Float
+    numProfessors Int
+    numReviews    Int
+    professors    Professor[]
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+}
+
+model Professor {
+    id              String     @id @default(cuid())
+    name            String
+    departmentId    String
+    department      Department @relation(fields: [departmentId], references: [id])
+    university      String
+    photoUrl        String?
+    email           String?
+    officeHours     String?
+    website         String?
+    bio             String?
+    rating          Float
+    numReviews      Int
+    difficultyLevel Float
+    imageUrl        String?
+    tags            Tag[]
+    courses         Course[]
+    reviews         Review[]
+    createdAt       DateTime   @default(now())
+    updatedAt       DateTime   @updatedAt
+}
+
+model Course {
+    id          String    @id @default(cuid())
+    code        String
+    name        String
+    professorId String
+    professor   Professor @relation(fields: [professorId], references: [id])
+    reviews     Review[]
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+}
+
+model Review {
+    id               String    @id @default(cuid())
+    professorId      String
+    professor        Professor @relation(fields: [professorId], references: [id])
+    courseId         String
+    course           Course    @relation(fields: [courseId], references: [id])
+    userId           String
+    user             User      @relation(fields: [userId], references: [id])
+    semester         String
+    anonymous        Boolean   @default(false)
+    rating           Float
+    comment          String    @db.Text
+    wouldTakeAgain   Boolean
+    textbookRequired Boolean
+    attendance       String // 'mandatory', 'optional', 'unknown'
+    grade            String?
+    tags             Tag[]
+    upvotes          Int       @default(0)
+    downvotes        Int       @default(0)
+    createdAt        DateTime  @default(now())
+    updatedAt        DateTime  @updatedAt
+}
+
+model User {
+    id          String       @id @default(cuid())
+    name        String?
+    email       String       @unique
+    image       String?
+    reviews     Review[]
+    reviewVotes ReviewVote[]
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+}
+
+model Tag {
+    id         String      @id @default(cuid())
+    name       String      @unique
+    professors Professor[]
+    reviews    Review[]
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+}
+
+model ReviewVote {
+    id        String   @id @default(cuid())
+    reviewId  String
+    userId    String
+    voteType  String // 'up' or 'down'
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    User      User     @relation(fields: [userId], references: [id])
+
+    @@unique([reviewId, userId])
+}
