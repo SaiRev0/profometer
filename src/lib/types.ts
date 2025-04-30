@@ -49,6 +49,7 @@ export interface Course {
   name: string;
   professorId: string;
   reviews: Review[];
+  reviewCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,7 +57,7 @@ export interface Course {
 export interface Professor {
   id: string;
   name: string;
-  department: string | Department;
+  department: Department;
   designation: string;
   photoUrl?: string;
   email?: string;

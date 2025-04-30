@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  SlidersHorizontal, 
-  Check, 
-  SortDesc, 
-  SortAsc, 
-  Star, 
-  BookOpen, 
-  Clock, 
-  BookmarkCheck 
+import {
+  SlidersHorizontal,
+  Check,
+  SortDesc,
+  SortAsc,
+  Star,
+  BookOpen,
+  Clock,
+  BookmarkCheck
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -36,19 +36,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export type SortOption = 
-  | "rating-high" 
-  | "rating-low" 
-  | "reviews" 
-  | "recent" 
-  | "name-asc" 
+export type SortOption =
+  | "rating-high"
+  | "rating-low"
+  | "reviews"
+  | "recent"
+  | "name-asc"
   | "name-desc";
 
 export type FilterOption = {
   department?: string;
   minRating?: number;
   maxRating?: number;
-  tags?: string[];
   courseLevel?: string;
 };
 
@@ -58,26 +57,24 @@ interface FilterDropdownProps {
   filters?: FilterOption;
   onFilterChange?: (filters: FilterOption) => void;
   departments?: string[];
-  tags?: string[];
   variant?: "default" | "outline";
   showActiveFilters?: boolean;
   className?: string;
 }
 
-export default function FilterDropdown({ 
-  sortOption, 
+export default function FilterDropdown({
+  sortOption,
   onSortChange,
   filters = {},
   onFilterChange,
   departments = [],
-  tags = [],
   variant = "default",
   showActiveFilters = true,
   className,
 }: FilterDropdownProps) {
   const [activeFilters, setActiveFilters] = useState<FilterOption>(filters);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  
+
   const sortOptions: { value: SortOption; label: string; icon: React.ReactNode }[] = [
     { value: "rating-high", label: "Highest Rated", icon: <Star className="h-4 w-4 mr-2" /> },
     { value: "rating-low", label: "Lowest Rated", icon: <Star className="h-4 w-4 mr-2" /> },
@@ -86,27 +83,26 @@ export default function FilterDropdown({
     { value: "name-asc", label: "Name (A-Z)", icon: <SortAsc className="h-4 w-4 mr-2" /> },
     { value: "name-desc", label: "Name (Z-A)", icon: <SortDesc className="h-4 w-4 mr-2" /> },
   ];
-  
+
   const getSortLabel = (value: SortOption) => {
     return sortOptions.find(option => option.value === value)?.label || "Sort By";
   };
-  
+
   const getActiveFilterCount = () => {
     let count = 0;
     if (activeFilters.department) count++;
     if (activeFilters.minRating) count++;
     if (activeFilters.courseLevel) count++;
-    if (activeFilters.tags && activeFilters.tags.length > 0) count += activeFilters.tags.length;
     return count;
   };
-  
+
   const handleFilterApply = () => {
     if (onFilterChange) {
       onFilterChange(activeFilters);
     }
     setFiltersOpen(false);
   };
-  
+
   const resetFilters = () => {
     const emptyFilters: FilterOption = {};
     setActiveFilters(emptyFilters);
@@ -114,30 +110,16 @@ export default function FilterDropdown({
       onFilterChange(emptyFilters);
     }
   };
-  
-  const handleTagToggle = (tag: string) => {
-    setActiveFilters(current => {
-      const currentTags = current.tags || [];
-      const newTags = currentTags.includes(tag)
-        ? currentTags.filter(t => t !== tag)
-        : [...currentTags, tag];
-      
-      return {
-        ...current,
-        tags: newTags.length > 0 ? newTags : undefined,
-      };
-    });
-  };
-  
+
   const activeFilterCount = getActiveFilterCount();
-  
+
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant={variant} 
-            size="sm" 
+          <Button
+            variant={variant}
+            size="sm"
             className="gap-1"
           >
             <SortAsc className="h-4 w-4 mr-1" />
@@ -149,7 +131,7 @@ export default function FilterDropdown({
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             {sortOptions.map((option) => (
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 key={option.value}
                 onClick={() => onSortChange(option.value)}
                 className="cursor-pointer"
@@ -164,20 +146,20 @@ export default function FilterDropdown({
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      
+
       {onFilterChange && (
         <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
           <PopoverTrigger asChild>
-            <Button 
-              variant={variant} 
-              size="sm" 
+            <Button
+              variant={variant}
+              size="sm"
               className="gap-1"
             >
               <SlidersHorizontal className="h-4 w-4 mr-1" />
               Filters
               {activeFilterCount > 0 && (
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className="ml-1 px-1.5 py-0 text-xs rounded-full"
                 >
                   {activeFilterCount}
@@ -193,11 +175,11 @@ export default function FilterDropdown({
                   Refine results by applying filters.
                 </p>
               </div>
-              
+
               <div className="grid gap-2">
                 <div className="grid gap-1">
                   <label className="text-sm font-medium">Department</label>
-                  <Select 
+                  <Select
                     value={activeFilters.department || ""}
                     onValueChange={(value) => setActiveFilters({...activeFilters, department: value || undefined})}
                   >
@@ -212,10 +194,10 @@ export default function FilterDropdown({
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="grid gap-1">
                   <label className="text-sm font-medium">Minimum Rating</label>
-                  <Select 
+                  <Select
                     value={activeFilters.minRating?.toString() || ""}
                     onValueChange={(value) => setActiveFilters({...activeFilters, minRating: value ? Number(value) : undefined})}
                   >
@@ -231,10 +213,10 @@ export default function FilterDropdown({
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="grid gap-1">
                   <label className="text-sm font-medium">Course Level</label>
-                  <Select 
+                  <Select
                     value={activeFilters.courseLevel || ""}
                     onValueChange={(value) => setActiveFilters({...activeFilters, courseLevel: value || undefined})}
                   >
@@ -251,29 +233,8 @@ export default function FilterDropdown({
                     </SelectContent>
                   </Select>
                 </div>
-                
-                {tags.length > 0 && (
-                  <div className="grid gap-2">
-                    <label className="text-sm font-medium">Tags</label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {tags.map((tag) => {
-                        const isActive = activeFilters.tags?.includes(tag);
-                        return (
-                          <Badge 
-                            key={tag}
-                            variant={isActive ? "default" : "outline"}
-                            className="cursor-pointer"
-                            onClick={() => handleTagToggle(tag)}
-                          >
-                            {tag}
-                          </Badge>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
               </div>
-              
+
               <div className="flex justify-between">
                 <Button
                   variant="outline"
@@ -283,7 +244,7 @@ export default function FilterDropdown({
                 >
                   Reset
                 </Button>
-                <Button 
+                <Button
                   size="sm"
                   onClick={handleFilterApply}
                 >
@@ -294,12 +255,12 @@ export default function FilterDropdown({
           </PopoverContent>
         </Popover>
       )}
-      
+
       {showActiveFilters && activeFilterCount > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-1 sm:mt-0">
           {activeFilters.department && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="flex items-center gap-1"
               onClick={() => {
                 setActiveFilters({...activeFilters, department: undefined});
@@ -313,10 +274,10 @@ export default function FilterDropdown({
               <button className="ml-1 text-xs">&times;</button>
             </Badge>
           )}
-          
+
           {activeFilters.minRating && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="flex items-center gap-1"
               onClick={() => {
                 setActiveFilters({...activeFilters, minRating: undefined});
@@ -330,34 +291,10 @@ export default function FilterDropdown({
               <button className="ml-1 text-xs">&times;</button>
             </Badge>
           )}
-          
-          {activeFilters.tags?.map((tag) => (
-            <Badge 
-              key={tag}
-              variant="secondary" 
-              className="flex items-center gap-1"
-              onClick={() => {
-                const newTags = activeFilters.tags?.filter(t => t !== tag);
-                setActiveFilters({
-                  ...activeFilters, 
-                  tags: newTags?.length ? newTags : undefined
-                });
-                if (onFilterChange) {
-                  onFilterChange({
-                    ...activeFilters, 
-                    tags: newTags?.length ? newTags : undefined
-                  });
-                }
-              }}
-            >
-              {tag}
-              <button className="ml-1 text-xs">&times;</button>
-            </Badge>
-          ))}
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
+
+          <Button
+            variant="ghost"
+            size="sm"
             className="h-6 px-2 text-xs"
             onClick={resetFilters}
           >

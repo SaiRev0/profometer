@@ -2,22 +2,28 @@
 
 import { useState } from 'react';
 
+
+
 import ReviewCard from '@/components/cards/review-card';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
 import { Review } from '@/lib/types';
 
+
+
+
+
 interface ReviewListProps {
-  reviews: Review[];
-  onReviewSubmit: (review: Review) => void;
+  initialReviews: Review[];
 }
 
-export default function ReviewList({ reviews, onReviewSubmit }: ReviewListProps) {
+export default function ReviewList({ initialReviews }: ReviewListProps) {
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [visibleReviews, setVisibleReviews] = useState(5);
   const [loadingMore, setLoadingMore] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<string>('all');
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
 
   const handleLoadMore = () => {
     setLoadingMore(true);
@@ -32,10 +38,10 @@ export default function ReviewList({ reviews, onReviewSubmit }: ReviewListProps)
   };
 
   const filteredReviews = reviews
-    .filter((review) => selectedCourse === 'all' || review.courseCode === selectedCourse)
+    .filter((review) => selectedCourse === 'all' || review.courseId === selectedCourse)
     .sort((a, b) => {
       if (sortOption === 'recent') {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       } else if (sortOption === 'rating-high') {
         return b.ratings.overall - a.ratings.overall;
       } else if (sortOption === 'rating-low') {
@@ -45,42 +51,38 @@ export default function ReviewList({ reviews, onReviewSubmit }: ReviewListProps)
     });
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-2'>
-          <FilterDropdown sortOption={sortOption} onSortChange={handleSortChange} />
-          <select
-            value={selectedCourse}
-            onChange={(e) => setSelectedCourse(e.target.value)}
-            className='border-input bg-background h-9 rounded-md border px-3 py-1 text-sm shadow-sm transition-colors'>
-            <option value='all'>All Courses</option>
-            {Array.from(new Set(reviews.map((review) => review.courseCode))).map((courseCode) => (
-              <option key={courseCode} value={courseCode}>
-                {courseCode}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div>
+      <div className='mb-4 flex flex-wrap items-center justify-between gap-3'>
+        <h2 className='text-xl font-bold'>Student Reviews</h2>
+
+        <FilterDropdown
+          sortOption={sortOption}
+          onSortChange={setSortOption}
+          variant='outline'
+          showActiveFilters={false}
+        />
       </div>
 
-      <div className='space-y-4'>
-        {filteredReviews.slice(0, visibleReviews).map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
-      </div>
+      {filteredReviews.length === 0 ? (
+        <Card>
+          <CardContent className='p-6 text-center'>
+            <p className='text-muted-foreground mb-4'>No reviews found for the selected filters.</p>
+            <Button onClick={() => setSelectedCourse('all')}>View All Reviews</Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div>
+          {filteredReviews.slice(0, visibleReviews).map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
 
-      {visibleReviews < filteredReviews.length && (
-        <div className='flex justify-center'>
-          <Button variant='outline' onClick={handleLoadMore} disabled={loadingMore}>
-            {loadingMore ? (
-              <>
-                <Skeleton className='mr-2 h-4 w-4' />
-                Loading...
-              </>
-            ) : (
-              'Load More Reviews'
-            )}
-          </Button>
+          {visibleReviews < filteredReviews.length && (
+            <div className='mt-6 flex justify-center'>
+              <Button variant='outline' onClick={handleLoadMore} disabled={loadingMore}>
+                {loadingMore ? 'Loading...' : 'Load More Reviews'}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

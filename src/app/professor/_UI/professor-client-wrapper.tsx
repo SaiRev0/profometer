@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import ProfessorDetails from '@/components/professor/professor-details';
+import ProfessorDetails from '@/components/professor';
 import { useProfessor } from '@/hooks/use-professor';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
