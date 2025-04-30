@@ -2,9 +2,16 @@ import { NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
+
     const departments = await db.department.findMany({
+      take: limit,
+      orderBy: {
+        name: 'asc'
+      },
       include: {
         _count: {
           select: {
@@ -36,6 +43,9 @@ export async function GET() {
         numReviews: 0 // Since we don't have reviews count in the schema
       };
     });
+
+    // Sort by average rating after calculating it
+    formattedDepartments.sort((a, b) => b.avgRating - a.avgRating);
 
     return NextResponse.json(formattedDepartments);
   } catch (error) {

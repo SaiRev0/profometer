@@ -7,16 +7,22 @@ interface Department {
   avgRating: number;
   numProfessors: number;
   numReviews: number;
-  description: string;
-  isDefault?: boolean;
-  isProtected?: boolean;
 }
 
-export function useDepartments() {
+interface DepartmentsParams {
+  limit?: number;
+}
+
+export function useDepartments(params: DepartmentsParams = {}) {
+  const { limit } = params;
+
   return useQuery<Department[]>({
-    queryKey: ['departments'],
+    queryKey: ['departments', { limit }],
     queryFn: async () => {
-      const response = await fetch('/api/departments');
+      const searchParams = new URLSearchParams();
+      if (limit) searchParams.set('limit', limit.toString());
+
+      const response = await fetch(`/api/departments?${searchParams.toString()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch departments');
       }

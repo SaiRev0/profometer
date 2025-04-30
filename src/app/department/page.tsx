@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { getDepartmentsByRating } from '@/lib/mock-data';
+import { useDepartments } from '@/hooks/use-departments';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
@@ -14,7 +14,7 @@ import { BookOpen, Search, Star, Users } from 'lucide-react';
 
 export default function DepartmentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const departments = getDepartmentsByRating();
+  const { data: departments = [], isLoading } = useDepartments();
 
   const filteredDepartments = departments.filter(
     (dept) =>
@@ -29,6 +29,14 @@ export default function DepartmentsPage() {
     if (rating >= 3.0) return 'bg-orange-500';
     return 'bg-error';
   };
+
+  if (isLoading) {
+    return (
+      <div className='container mx-auto px-4 py-8'>
+        <div className='text-center'>Loading departments...</div>
+      </div>
+    );
+  }
 
   return (
     <div className='container mx-auto px-4 py-8'>

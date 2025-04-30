@@ -5,14 +5,14 @@ import React from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { getDepartmentsByRating } from '@/lib/mock-data';
+import { useDepartments } from '@/hooks/use-departments';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 
 export function DepartmentRankings() {
-  const departments = getDepartmentsByRating().slice(0, 8);
+  const { data: departments = [], isLoading } = useDepartments({ limit: 8 });
 
   const getRatingColor = (rating: number) => {
     if (rating >= 4.5) return 'bg-success';
@@ -22,6 +22,16 @@ export function DepartmentRankings() {
 
     return 'bg-error';
   };
+
+  if (isLoading) {
+    return (
+      <section className='bg-slate-50 py-16 dark:bg-gray-900'>
+        <div className='container mx-auto px-4'>
+          <div className='text-center'>Loading departments...</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className='bg-slate-50 py-16 dark:bg-gray-900'>
