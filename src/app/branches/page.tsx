@@ -1,167 +1,49 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { 
+import { useState } from 'react';
+
+import Link from 'next/link';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useDepartments } from '@/hooks/use-departments';
+import { cn } from '@/lib/utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { motion } from 'framer-motion';
+import {
+  ChevronDown,
+  ChevronRight,
+  Clock,
   GitBranch,
   GitFork,
+  History,
   Search,
   Shield,
-  Clock,
-  ChevronRight,
-  ChevronDown,
-  User,
   Star,
-  History
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+  User
+} from 'lucide-react';
 
-interface Branch {
-  name: string;
-  isDefault: boolean;
-  isProtected: boolean;
-  lastCommit: {
-    message: string;
-    date: string;
-    hash: string;
-    author: {
-      name: string;
-      avatar: string;
-    };
-  };
-  aheadBy: number;
-  behindBy: number;
-}
+// Create a client
+const queryClient = new QueryClient();
 
-// Mock data for branches
-const mockBranches: Branch[] = [
-  {
-    name: "main",
-    isDefault: true,
-    isProtected: true,
-    lastCommit: {
-      message: "Update deployment configuration",
-      date: "2024-03-20T10:30:00Z",
-      hash: "8f4d2e1",
-      author: {
-        name: "Sarah Johnson",
-        avatar: "https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg"
-      }
-    },
-    aheadBy: 0,
-    behindBy: 0
-  },
-  {
-    name: "feature/user-authentication",
-    isDefault: false,
-    isProtected: false,
-    lastCommit: {
-      message: "Implement OAuth2 login flow",
-      date: "2024-03-19T15:45:00Z",
-      hash: "3a9c7b2",
-      author: {
-        name: "Michael Chen",
-        avatar: "https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg"
-      }
-    },
-    aheadBy: 3,
-    behindBy: 1
-  },
-  {
-    name: "feature/api-integration",
-    isDefault: false,
-    isProtected: false,
-    lastCommit: {
-      message: "Add REST API endpoints",
-      date: "2024-03-18T09:15:00Z",
-      hash: "5e2f8d4",
-      author: {
-        name: "Emily Wilson",
-        avatar: "https://images.pexels.com/photos/5905902/pexels-photo-5905902.jpeg"
-      }
-    },
-    aheadBy: 5,
-    behindBy: 2
-  },
-  {
-    name: "develop",
-    isDefault: false,
-    isProtected: true,
-    lastCommit: {
-      message: "Merge feature/user-profile",
-      date: "2024-03-17T14:20:00Z",
-      hash: "2b6a9c4",
-      author: {
-        name: "Alex Thompson",
-        avatar: "https://images.pexels.com/photos/5905521/pexels-photo-5905521.jpeg"
-      }
-    },
-    aheadBy: 8,
-    behindBy: 0
-  }
-];
-
-// More mock branches for the collapsed section
-const moreBranches: Branch[] = Array.from({ length: 6 }, (_, i) => ({
-  name: `feature/branch-${i + 1}`,
-  isDefault: false,
-  isProtected: false,
-  lastCommit: {
-    message: `Update component ${i + 1}`,
-    date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    hash: Math.random().toString(16).slice(2, 9),
-    author: {
-      name: ["David Lee", "Emma Brown", "James Wilson"][i % 3],
-      avatar: [
-        "https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg",
-        "https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg",
-        "https://images.pexels.com/photos/5905902/pexels-photo-5905902.jpeg"
-      ][i % 3]
-    }
-  },
-  aheadBy: Math.floor(Math.random() * 5),
-  behindBy: Math.floor(Math.random() * 3)
-}));
-
-export default function BranchesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+function BranchesPageContent() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [showMore, setShowMore] = useState(false);
-  
-  useEffect(() => {
-    // Simulate loading delay
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
-  const filteredBranches = [...mockBranches, ...(showMore ? moreBranches : [])].filter(
-    branch => branch.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  
-  const defaultBranch = filteredBranches.find(b => b.isDefault);
-  const otherBranches = filteredBranches.filter(b => !b.isDefault);
-  
+
+  const { data: departments, isLoading } = useDepartments();
+
+  const filteredDepartments =
+    departments?.filter((dept) => dept.name.toLowerCase().includes(searchQuery.toLowerCase())) || [];
+
+  const defaultDepartment = filteredDepartments.find((d) => d.isDefault);
+  const otherDepartments = filteredDepartments.filter((d) => !d.isDefault);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -173,163 +55,146 @@ export default function BranchesPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto mt-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex items-center justify-between mb-6">
+    <div className='mx-auto mt-4 max-w-5xl'>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <div className='mb-6 flex items-center justify-between'>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <GitBranch className="h-7 w-7 text-primary" />
+            <h1 className='flex items-center gap-2 text-3xl font-bold'>
+              <GitBranch className='text-primary h-7 w-7' />
               Repository Branches
             </h1>
-            <p className="text-muted-foreground mt-1">
-              View and manage repository branches
-            </p>
+            <p className='text-muted-foreground mt-1'>View and manage repository branches</p>
           </div>
-          
+
           <Button>
-            <GitFork className="mr-2 h-4 w-4" />
+            <GitFork className='mr-2 h-4 w-4' />
             New Branch
           </Button>
         </div>
-        
-        <Card className="mb-6">
-          <CardContent className="p-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+
+        <Card className='mb-6'>
+          <CardContent className='p-4'>
+            <div className='relative'>
+              <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform' />
               <Input
-                type="search"
-                placeholder="Find a branch..."
-                className="pl-9"
+                type='search'
+                placeholder='Find a branch...'
+                className='pl-9'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </CardContent>
         </Card>
-        
+
         {isLoading ? (
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {Array.from({ length: 4 }).map((_, i) => (
               <Card key={i}>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <Skeleton className="h-8 w-8 rounded-full" />
-                    <div className="flex-1">
-                      <Skeleton className="h-5 w-48 mb-2" />
-                      <Skeleton className="h-4 w-96" />
+                <CardContent className='p-4'>
+                  <div className='flex items-center gap-4'>
+                    <Skeleton className='h-8 w-8 rounded-full' />
+                    <div className='flex-1'>
+                      <Skeleton className='mb-2 h-5 w-48' />
+                      <Skeleton className='h-4 w-96' />
                     </div>
-                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className='h-8 w-24' />
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        ) : filteredBranches.length === 0 ? (
+        ) : filteredDepartments.length === 0 ? (
           <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-muted-foreground">No branches found matching your search.</p>
+            <CardContent className='p-6 text-center'>
+              <p className='text-muted-foreground'>No branches found matching your search.</p>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {/* Default Branch */}
-            {defaultBranch && (
-              <Card className="border-primary/20 bg-primary/5">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <GitBranch className="h-4 w-4 text-primary" />
+            {defaultDepartment && (
+              <Card className='border-primary/20 bg-primary/5'>
+                <CardContent className='p-4'>
+                  <div className='flex items-center gap-4'>
+                    <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
+                      <GitBranch className='text-primary h-4 w-4' />
                     </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-medium truncate">{defaultBranch.name}</h3>
-                        <Badge variant="secondary" className="shrink-0">Default</Badge>
-                        {defaultBranch.isProtected && (
-                          <Badge variant="outline" className="shrink-0">
-                            <Shield className="h-3 w-3 mr-1" />
+
+                    <div className='min-w-0 flex-1'>
+                      <div className='mb-1 flex items-center gap-2'>
+                        <h3 className='truncate font-medium'>{defaultDepartment.name}</h3>
+                        <Badge variant='secondary' className='shrink-0'>
+                          Default
+                        </Badge>
+                        {defaultDepartment.isProtected && (
+                          <Badge variant='outline' className='shrink-0'>
+                            <Shield className='mr-1 h-3 w-3' />
                             Protected
                           </Badge>
                         )}
                       </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="truncate">{defaultBranch.lastCommit.hash}</span>
+
+                      <div className='text-muted-foreground flex items-center gap-2 text-sm'>
+                        <span className='truncate'>{defaultDepartment.code}</span>
                         <span>•</span>
-                        <span className="truncate">{defaultBranch.lastCommit.message}</span>
+                        <span className='truncate'>{defaultDepartment.numProfessors} professors</span>
                         <span>•</span>
-                        <span className="whitespace-nowrap">{formatDate(defaultBranch.lastCommit.date)}</span>
+                        <span className='whitespace-nowrap'>{defaultDepartment.numReviews} reviews</span>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Avatar className="h-6 w-6">
-                        <AvatarImage src={defaultBranch.lastCommit.author.avatar} />
-                        <AvatarFallback>
-                          {defaultBranch.lastCommit.author.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <Button variant="outline" size="sm">
-                        <ChevronRight className="h-4 w-4" />
+
+                    <div className='flex shrink-0 items-center gap-2'>
+                      <Badge variant='outline'>{defaultDepartment.avgRating.toFixed(1)}</Badge>
+
+                      <Button variant='outline' size='sm' asChild>
+                        <Link href={`/branch/${defaultDepartment.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                          <ChevronRight className='h-4 w-4' />
+                        </Link>
                       </Button>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             )}
-            
+
             {/* Active Branches */}
-            <div className="space-y-2">
-              {otherBranches.map((branch) => (
-                <Card key={branch.name} className="hover:bg-muted/50 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                      <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
-                        <GitBranch className="h-4 w-4" />
+            <div className='space-y-2'>
+              {otherDepartments.map((dept) => (
+                <Card key={dept.id} className='hover:bg-muted/50 transition-colors'>
+                  <CardContent className='p-4'>
+                    <div className='flex items-center gap-4'>
+                      <div className='bg-secondary flex h-8 w-8 items-center justify-center rounded-full'>
+                        <GitBranch className='h-4 w-4' />
                       </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium truncate">{branch.name}</h3>
-                          {branch.isProtected && (
-                            <Badge variant="outline" className="shrink-0">
-                              <Shield className="h-3 w-3 mr-1" />
+
+                      <div className='min-w-0 flex-1'>
+                        <div className='mb-1 flex items-center gap-2'>
+                          <h3 className='truncate font-medium'>{dept.name}</h3>
+                          {dept.isProtected && (
+                            <Badge variant='outline' className='shrink-0'>
+                              <Shield className='mr-1 h-3 w-3' />
                               Protected
                             </Badge>
                           )}
-                          {(branch.aheadBy > 0 || branch.behindBy > 0) && (
-                            <Badge variant="secondary" className="shrink-0">
-                              {branch.aheadBy > 0 && `${branch.aheadBy} ahead`}
-                              {branch.aheadBy > 0 && branch.behindBy > 0 && ", "}
-                              {branch.behindBy > 0 && `${branch.behindBy} behind`}
-                            </Badge>
-                          )}
                         </div>
-                        
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span className="truncate">{branch.lastCommit.hash}</span>
+
+                        <div className='text-muted-foreground flex items-center gap-2 text-sm'>
+                          <span className='truncate'>{dept.code}</span>
                           <span>•</span>
-                          <span className="truncate">{branch.lastCommit.message}</span>
+                          <span className='truncate'>{dept.numProfessors} professors</span>
                           <span>•</span>
-                          <span className="whitespace-nowrap">{formatDate(branch.lastCommit.date)}</span>
+                          <span className='whitespace-nowrap'>{dept.numReviews} reviews</span>
                         </div>
                       </div>
-                      
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={branch.lastCommit.author.avatar} />
-                          <AvatarFallback>
-                            {branch.lastCommit.author.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        
-                        <Button variant="outline" size="sm">
-                          <ChevronRight className="h-4 w-4" />
+
+                      <div className='flex shrink-0 items-center gap-2'>
+                        <Badge variant='outline'>{dept.avgRating.toFixed(1)}</Badge>
+
+                        <Button variant='outline' size='sm' asChild>
+                          <Link href={`/branch/${dept.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                            <ChevronRight className='h-4 w-4' />
+                          </Link>
                         </Button>
                       </div>
                     </div>
@@ -337,24 +202,25 @@ export default function BranchesPage() {
                 </Card>
               ))}
             </div>
-            
+
             {/* Show More Button */}
             {!searchQuery && (
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => setShowMore(!showMore)}
-              >
-                <ChevronDown className={cn(
-                  "h-4 w-4 mr-2 transition-transform",
-                  showMore && "rotate-180"
-                )} />
-                {showMore ? "Show Less" : "Show More Branches"}
+              <Button variant='outline' className='w-full' onClick={() => setShowMore(!showMore)}>
+                <ChevronDown className={cn('mr-2 h-4 w-4 transition-transform', showMore && 'rotate-180')} />
+                {showMore ? 'Show Less' : 'Show More Branches'}
               </Button>
             )}
           </div>
         )}
       </motion.div>
     </div>
+  );
+}
+
+export default function BranchesPage() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BranchesPageContent />
+    </QueryClientProvider>
   );
 }

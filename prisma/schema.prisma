@@ -59,7 +59,7 @@ model User {
 
 model Department {
     id            String      @id @default(cuid())
-    name          String
+    name          String      @unique
     code          String      @unique
     avgRating     Float
     numProfessors Int
@@ -70,25 +70,20 @@ model Department {
 }
 
 model Professor {
-    id              String     @id @default(cuid())
-    name            String
-    departmentId    String
-    department      Department @relation(fields: [departmentId], references: [id])
-    university      String
-    photoUrl        String?
-    email           String?
-    officeHours     String?
-    website         String?
-    bio             String?
-    rating          Float
-    numReviews      Int
-    difficultyLevel Float
-    imageUrl        String?
-    tags            Tag[]
-    courses         Course[]
-    reviews         Review[]
-    createdAt       DateTime   @default(now())
-    updatedAt       DateTime   @updatedAt
+    id           String     @id @default(cuid())
+    name         String
+    departmentId String
+    department   Department @relation(fields: [departmentId], references: [id])
+    designation  String
+    photoUrl     String?
+    email        String?
+    website      String?
+    rating       Float
+    numReviews   Int
+    courses      Course[]
+    reviews      Review[]
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
 }
 
 model Course {
@@ -103,35 +98,26 @@ model Course {
 }
 
 model Review {
-    id               String    @id @default(cuid())
-    professorId      String
-    professor        Professor @relation(fields: [professorId], references: [id])
-    courseId         String
-    course           Course    @relation(fields: [courseId], references: [id])
-    userId           String
-    user             User      @relation(fields: [userId], references: [id])
-    semester         String
-    anonymous        Boolean   @default(false)
-    rating           Float
-    comment          String    @db.Text
-    wouldTakeAgain   Boolean
-    textbookRequired Boolean
-    attendance       String // 'mandatory', 'optional', 'unknown'
-    grade            String?
-    tags             Tag[]
-    upvotes          Int       @default(0)
-    downvotes        Int       @default(0)
-    createdAt        DateTime  @default(now())
-    updatedAt        DateTime  @updatedAt
-}
-
-model Tag {
-    id         String      @id @default(cuid())
-    name       String      @unique
-    professors Professor[]
-    reviews    Review[]
-    createdAt  DateTime    @default(now())
-    updatedAt  DateTime    @updatedAt
+    id             String    @id @default(cuid())
+    professorId    String
+    professor      Professor @relation(fields: [professorId], references: [id])
+    courseId       String
+    course         Course    @relation(fields: [courseId], references: [id])
+    userId         String
+    user           User      @relation(fields: [userId], references: [id])
+    semester       String
+    anonymous      Boolean   @default(false)
+    rating         Float
+    comment        String    @db.Text
+    wouldRecommend Boolean
+    attendance     String // 'percentage'
+    quizes         Boolean
+    assignments    Boolean
+    grade          String?
+    upvotes        Int       @default(0)
+    downvotes      Int       @default(0)
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
 }
 
 model ReviewVote {

@@ -1,126 +1,303 @@
 import { Professor } from '@/components/cards/professor-card';
 
-import { Department } from './types';
+import { Branch, BranchData, Department } from './types';
 
 // Mock data for branches
 export const departments: Department[] = [
-    {
-        id: 'd1',
-        name: 'Computer Science and Engineering',
-        code: 'CSE',
-        avgRating: 4.2,
-        numProfessors: 32,
-        numReviews: 428
-    },
-    {
-        id: 'd2',
-        name: 'Electrical Engineering',
-        code: 'EEE',
-        avgRating: 3.9,
-        numProfessors: 45,
-        numReviews: 371
-    },
-    {
-        id: 'd3',
-        name: 'Mechanical Engineering',
-        code: 'ME',
-        avgRating: 4.0,
-        numProfessors: 38,
-        numReviews: 305
-    },
-    {
-        id: 'd4',
-        name: 'Civil Engineering',
-        code: 'CE',
-        avgRating: 3.7,
-        numProfessors: 41,
-        numReviews: 289
-    },
-    {
-        id: 'd5',
-        name: 'Chemical Engineering',
-        code: 'CHE',
-        avgRating: 4.1,
-        numProfessors: 29,
-        numReviews: 198
-    },
-    {
-        id: 'd6',
-        name: 'Metallurgical Engineering',
-        code: 'MT',
-        avgRating: 3.8,
-        numProfessors: 33,
-        numReviews: 176
-    },
-    {
-        id: 'd7',
-        name: 'Electronics Engineering',
-        code: 'ECE',
-        avgRating: 4.3,
-        numProfessors: 36,
-        numReviews: 412
-    },
-    {
-        id: 'd8',
-        name: 'Mathematics',
-        code: 'MATH',
-        avgRating: 3.5,
-        numProfessors: 27,
-        numReviews: 310
-    },
-    {
-        id: 'd9',
-        name: 'Physics',
-        code: 'PHY',
-        avgRating: 3.6,
-        numProfessors: 23,
-        numReviews: 244
-    }
+  {
+    id: 'APD',
+    name: 'Architecture, Planning and Design',
+    code: 'APD',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'CER',
+    name: 'Ceramic Engineering',
+    code: 'CER',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'CHET',
+    name: 'Chemical Engineering and Technology',
+    code: 'CHET',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'CE',
+    name: 'Civil Engineering',
+    code: 'CE',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'CSE',
+    name: 'Computer Science and Engineering',
+    code: 'CSE',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'EEE',
+    name: 'Electrical Engineering',
+    code: 'EEE',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'ECE',
+    name: 'Electronics Engineering',
+    code: 'ECE',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'MECH',
+    name: 'Mechanical Engineering',
+    code: 'MECH',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'MET',
+    name: 'Metallurgical Engineering',
+    code: 'MET',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'MIN',
+    name: 'Mining Engineering',
+    code: 'MIN',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'PET',
+    name: 'Pharmaceutical Engineering and Technology',
+    code: 'PET',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'CHE',
+    name: 'Chemistry',
+    code: 'CHE',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'MATH',
+    name: 'Mathematical Sciences',
+    code: 'MATH',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'PHY',
+    name: 'Physics',
+    code: 'PHY',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'BCE',
+    name: 'Biochemical Engineering',
+    code: 'BCE',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'BME',
+    name: 'Biomedical Engineering',
+    code: 'BME',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'MST',
+    name: 'Materials Science and Technology',
+    code: 'MST',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  },
+  {
+    id: 'HS',
+    name: 'Humanistic Studies',
+    code: 'HS',
+    avgRating: 0,
+    numProfessors: 0,
+    numReviews: 0
+  }
 ];
 
 // Mock data for the professors
 export const mockProfessors: Professor[] = Array.from({ length: 20 }, (_, i) => ({
-    id: `prof-${i + 1}`,
-    name: [
-        'Dr. Sarah Johnson',
-        'Prof. Michael Williams',
-        'Dr. Emily Chen',
-        'Prof. James Smith',
-        'Dr. Olivia Martinez',
-        'Prof. David Wilson',
-        'Dr. Emma Brown',
-        'Prof. Robert Lee',
-        'Dr. Sophia Garcia',
-        'Prof. Thomas Anderson'
-    ][i % 10],
-    department: ['Computer Science', 'Engineering', 'Business', 'Physics', 'Mathematics'][i % 5],
-    branch: ['CS', 'ENG', 'BUS', 'PHY', 'MATH'][i % 5],
-    rating: 2 + Math.random() * 3,
-    numReviews: 10 + Math.floor(Math.random() * 190),
-    difficultyLevel: 2 + Math.random() * 3,
-    imageUrl: [
-        'https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg',
-        'https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg',
-        'https://images.pexels.com/photos/5905902/pexels-photo-5905902.jpeg',
-        'https://images.pexels.com/photos/5905521/pexels-photo-5905521.jpeg'
-    ][i % 4],
-    tags: [
-        ['Clear Explanations', 'Fair Grading', 'Engaging'],
-        ['Tough Grader', 'Inspirational', 'Respected'],
-        ['Accessible', 'Practical Assignments', 'Industry Experience'],
-        ['Challenging', 'Theoretical Focus', 'Research Opportunities']
-    ][i % 4],
-    topReview: {
-        rating: 3 + Math.random() * 2,
-        comment: [
-            'Very knowledgeable professor who challenges students to think deeply about the material.',
-            "Excellent at explaining complex concepts in a way that's easy to understand.",
-            "Tough but fair. Expect to work hard but you'll learn a lot in this class.",
-            'Always available during office hours and genuinely cares about student success.'
-        ][i % 4]
-    }
+  id: `prof-${i + 1}`,
+  name: [
+    'Dr. Sarah Johnson',
+    'Prof. Michael Williams',
+    'Dr. Emily Chen',
+    'Prof. James Smith',
+    'Dr. Olivia Martinez',
+    'Prof. David Wilson',
+    'Dr. Emma Brown',
+    'Prof. Robert Lee',
+    'Dr. Sophia Garcia',
+    'Prof. Thomas Anderson'
+  ][i % 10],
+  department: departments[i % departments.length].name,
+  branch: ['CS', 'ENG', 'BUS', 'PHY', 'MATH'][i % 5],
+  rating: 2 + Math.random() * 3,
+  numReviews: 10 + Math.floor(Math.random() * 190),
+  difficultyLevel: 2 + Math.random() * 3,
+  imageUrl: [
+    'https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg',
+    'https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg',
+    'https://images.pexels.com/photos/5905902/pexels-photo-5905902.jpeg',
+    'https://images.pexels.com/photos/5905521/pexels-photo-5905521.jpeg'
+  ][i % 4],
+  topReview: {
+    rating: 3 + Math.random() * 2,
+    comment: [
+      'Very knowledgeable professor who challenges students to think deeply about the material.',
+      "Excellent at explaining complex concepts in a way that's easy to understand.",
+      "Tough but fair. Expect to work hard but you'll learn a lot in this class.",
+      'Always available during office hours and genuinely cares about student success.'
+    ][i % 4]
+  }
 }));
 
+// Mock professor data
+export const mockProfessor = {
+  id: 'prof-1',
+  name: 'Dr. Sarah Johnson',
+  department: 'Computer Science',
+  university: 'Tech University',
+  photoUrl:
+    'https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+  email: 'sjohnson@techuniversity.edu',
+  officeHours: 'Mon, Wed 2-4 PM',
+  website: 'https://techuniversity.edu/faculty/sjohnson',
+  bio: 'Dr. Sarah Johnson is a Professor of Computer Science with a focus on artificial intelligence and machine learning. She received her Ph.D. from MIT and has been teaching for over 10 years.',
+  ratings: {
+    overall: 4.2,
+    teaching: 4.3,
+    helpfulness: 4.4,
+    fairness: 4.1,
+    clarity: 3.9,
+    communication: 4.3
+  },
+  numReviews: 128,
+  numCourses: 7,
+  statistics: {
+    wouldTakeAgain: 85,
+    difficultyLevel: 3.7,
+    attendanceMandatory: 62,
+    textbookRequired: 45
+  },
+  courses: [
+    { code: 'CS101', name: 'Introduction to Computer Science', reviewCount: 42 },
+    { code: 'CS305', name: 'Data Structures and Algorithms', reviewCount: 36 },
+    { code: 'CS412', name: 'Machine Learning', reviewCount: 28 },
+    { code: 'CS450', name: 'Advanced AI Techniques', reviewCount: 14 },
+    { code: 'CS501', name: 'Graduate Research Seminar', reviewCount: 8 }
+  ]
+};
+
+// Mock reviews
+export const mockReviews = Array.from({ length: 10 }, (_, i) => ({
+  id: `review-${i + 1}`,
+  userId: `user-${i + 1}`,
+  professorId: 'prof-1',
+  courseCode: mockProfessor.courses[i % mockProfessor.courses.length].code,
+  courseTitle: mockProfessor.courses[i % mockProfessor.courses.length].name,
+  semester: ['Fall 2023', 'Spring 2023', 'Summer 2022', 'Fall 2022'][i % 4],
+  anonymous: i % 3 === 0,
+  userName: i % 3 === 0 ? undefined : ['Alex Smith', 'Jamie Lee', 'Taylor Wong', 'Jordan Rivera'][i % 4],
+  date: new Date(Date.now() - i * 30 * 24 * 60 * 60 * 1000), // Days ago
+  ratings: {
+    overall: 3 + Math.random() * 2,
+    teaching: 3 + Math.random() * 2,
+    helpfulness: 3 + Math.random() * 2,
+    fairness: 3 + Math.random() * 2,
+    clarity: 3 + Math.random() * 2,
+    communication: 3 + Math.random() * 2
+  },
+  comment: [
+    "Professor Johnson is one of the best instructors I've had. She explains complex concepts in an accessible way and is always available during office hours. Her assignments are challenging but fair, and they really helped me understand the material.",
+    "Very knowledgeable and passionate about the subject. Classes can be challenging but you'll learn a lot if you put in the effort. Grading is fair and feedback is constructive.",
+    "Dr. Johnson's class was tough but rewarding. She has high expectations, but provides all the resources needed to succeed. The workload is heavy, but I learned more in this class than in most of my other courses combined.",
+    'I appreciate that Dr. Johnson connects theoretical concepts to real-world applications. Her industry background adds a lot of value to the course. Assignments are practical and relevant.'
+  ][i % 4],
+  wouldTakeAgain: i % 5 !== 0,
+  textbookRequired: i % 3 === 0,
+  attendance: ['mandatory', 'optional', 'unknown'][i % 3] as 'mandatory' | 'optional' | 'unknown',
+  grade: ['A', 'B+', 'B', 'C+', 'A-'][i % 5],
+  tags: [
+    ['Clear Explanations', 'Fair Grading', 'Engaging'],
+    ['Tough Grader', 'Inspirational', 'Respected'],
+    ['Accessible', 'Practical Assignments', 'Industry Experience'],
+    ['Challenging', 'Theoretical Focus', 'Research Opportunities']
+  ][i % 4],
+  upvotes: Math.floor(Math.random() * 20),
+  downvotes: Math.floor(Math.random() * 5),
+  userVote: i % 7 === 0 ? 'up' : i % 11 === 0 ? 'down' : (null as 'up' | 'down' | null)
+}));
+
+// Mock branch data for Computer Science
+export const mockBranchData: BranchData = {
+  name: 'Computer Science',
+  description:
+    'Computer Science is the study of computers and computational systems, including theory, development, design, and application. This branch covers algorithms, data structures, programming languages, computer architecture, artificial intelligence, and more.',
+  totalProfessors: 42,
+  totalReviews: 1248,
+  averageRating: 4.2,
+  statistics: {
+    wouldTakeAgain: 82,
+    difficultyLevel: 3.8,
+    attendanceMandatory: 65,
+    textbookRequired: 55
+  },
+  departments: [
+    { name: 'Software Engineering', professors: 14, averageRating: 4.3 },
+    { name: 'Data Science', professors: 9, averageRating: 4.5 },
+    { name: 'Artificial Intelligence', professors: 8, averageRating: 4.0 },
+    { name: 'Computer Systems', professors: 7, averageRating: 3.9 },
+    { name: 'Theoretical Computer Science', professors: 4, averageRating: 3.7 }
+  ],
+  tags: [
+    'Programming',
+    'Algorithms',
+    'Data Structures',
+    'Machine Learning',
+    'Web Development',
+    'Cybersecurity',
+    'Database Systems',
+    'Operating Systems',
+    'Computer Vision'
+  ]
+};
+
 export function getDepartmentsByRating() {
-    return [...departments].sort((a, b) => b.avgRating - a.avgRating);
+  return [...departments].sort((a, b) => b.avgRating - a.avgRating);
 }

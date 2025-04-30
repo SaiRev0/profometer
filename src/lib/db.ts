@@ -1,24 +1,24 @@
-import { PrismaClient } from '@prisma/client'
-import 'server-only'
+import { PrismaClient } from '../../prisma/generated/client';
+import 'server-only';
 
 const getPrismaClient = () => {
-  return new PrismaClient()
-}
-export type ExtendedPrismaClient = ReturnType<typeof getPrismaClient>
+  return new PrismaClient();
+};
+export type ExtendedPrismaClient = ReturnType<typeof getPrismaClient>;
 
 declare global {
-  // eslint-disable-next-line no-var, no-unused-vars
-  var cachedPrisma: ExtendedPrismaClient
+  // eslint-disable-next-line no-var
+  var cachedPrisma: ExtendedPrismaClient;
 }
 
-let prisma: ExtendedPrismaClient
+let prisma: ExtendedPrismaClient;
 if (process.env.NODE_ENV === 'production') {
-  prisma = getPrismaClient()
+  prisma = getPrismaClient();
 } else {
   if (!global.cachedPrisma) {
-    global.cachedPrisma = getPrismaClient()
+    global.cachedPrisma = getPrismaClient();
   }
-  prisma = global.cachedPrisma
+  prisma = global.cachedPrisma;
 }
 
-export const db = prisma
+export const db = prisma;
