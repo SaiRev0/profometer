@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 
@@ -29,7 +29,7 @@ async function updateDepartmentCounts() {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     // First delete all existing professors
     console.log('Deleting all existing professors...');

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 import { departments } from '@/lib/mock-data';
@@ -30,7 +30,7 @@ export default async function seedDepartments() {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     await seedDepartments();
     return NextResponse.json({ message: 'Successfully seeded departments' });
