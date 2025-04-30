@@ -23,11 +23,12 @@ const ErrorToast = () => {
   );
 };
 
-interface PageProps {
+type Props = {
+  params: {};
   searchParams: { [key: string]: string | string[] | undefined };
-}
+};
 
-const Page = ({ searchParams }: PageProps) => {
+const Page = ({ searchParams }: Props) => {
   const hasError = searchParams.error === 'true';
 
   return (
