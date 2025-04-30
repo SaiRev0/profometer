@@ -64,13 +64,19 @@ export default function ProfessorTabs({ professor, reviews, onReviewSubmit }: Pr
 
       <TabsContent value='courses'>
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-          {professor.courses.map((course) => (
-            <div key={course.code} className='bg-card text-card-foreground rounded-lg border p-4 shadow-sm'>
-              <h3 className='font-semibold'>{course.code}</h3>
-              <p className='text-muted-foreground text-sm'>{course.name}</p>
-              <p className='text-muted-foreground mt-2 text-sm'>{course.reviewCount} reviews</p>
+          {professor.courses && professor.courses.length > 0 ? (
+            professor.courses.map((course) => (
+              <div key={course.code} className='bg-card text-card-foreground rounded-lg border p-4 shadow-sm'>
+                <h3 className='font-semibold'>{course.code}</h3>
+                <p className='text-muted-foreground text-sm'>{course.name}</p>
+                <p className='text-muted-foreground mt-2 text-sm'>{course.reviews.length} reviews</p>
+              </div>
+            ))
+          ) : (
+            <div className='col-span-full py-8 text-center'>
+              <p className='text-muted-foreground'>No courses available for this professor.</p>
             </div>
-          ))}
+          )}
         </div>
       </TabsContent>
     </Tabs>

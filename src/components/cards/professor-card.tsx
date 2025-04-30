@@ -25,7 +25,6 @@ export interface Professor {
   branch: string;
   rating: number;
   numReviews: number;
-  tags?: string[];
   imageUrl?: string;
   difficultyLevel?: number;
   topReview?: {
@@ -104,16 +103,6 @@ export default function ProfessorCard({
                 ({professor.numReviews})
               </span>
             </div>
-
-            {!isCompact && professor.tags && (
-              <div className="flex flex-wrap gap-1 my-2">
-                {professor.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            )}
 
             {!isCompact && professor.topReview && (
               <blockquote className="mt-2 text-sm text-muted-foreground border-l-2 pl-2 border-primary/30 line-clamp-2">

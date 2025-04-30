@@ -32,7 +32,7 @@ export default function ProfessorHeader({ professor }: ProfessorHeaderProps) {
           <h1 className='text-2xl font-bold'>{professor.name}</h1>
           <div className='text-muted-foreground flex items-center gap-2'>
             <Building className='h-4 w-4' />
-            <span>{professor.department}</span>
+            <span>{typeof professor.department === 'string' ? professor.department : professor.department.name}</span>
             <span>•</span>
             <span>{professor.designation}</span>
           </div>

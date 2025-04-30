@@ -31,23 +31,32 @@ export interface BranchData {
   totalReviews: number;
   averageRating: number;
   statistics: {
-    wouldTakeAgain: number;
-    difficultyLevel: number;
+    wouldRecommend: number;
     attendanceMandatory: number;
-    textbookRequired: number;
+    quizes: number;
+    assignments: number;
   };
   departments: {
     name: string;
     professors: number;
     averageRating: number;
   }[];
-  tags: string[];
+}
+
+export interface Course {
+  id: string;
+  code: string;
+  name: string;
+  professorId: string;
+  reviews: Review[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Professor {
   id: string;
   name: string;
-  department: string;
+  department: string | Department;
   designation: string;
   photoUrl?: string;
   email?: string;
@@ -69,24 +78,16 @@ export interface Professor {
     quizes: number;
     assignments: number;
   };
-  tags: string[];
-  courses: {
-    code: string;
-    name: string;
-    reviewCount: number;
-  }[];
+  courses: Course[];
 }
 
 export interface Review {
   id: string;
   userId: string;
   professorId: string;
-  courseCode: string;
-  courseTitle: string;
+  courseId: string;
   semester: string;
   anonymous: boolean;
-  userName?: string;
-  date: Date;
   ratings: {
     overall: number;
     teaching: number;
@@ -96,14 +97,19 @@ export interface Review {
     communication: number;
   };
   comment: string;
-  wouldRecommend?: boolean;
-  quizes?: boolean;
-  assignments?: boolean;
-  attendance?: string;
+  wouldRecommend: boolean;
+  quizes: boolean;
+  assignments: boolean;
+  attendance: string;
   grade?: string;
-  tags: string[];
   upvotes: number;
   downvotes: number;
+  createdAt: Date;
+  updatedAt: Date;
+  user?: {
+    name: string | null;
+    image: string | null;
+  };
 }
 
 export type SortOption = 'recent' | 'rating-high' | 'rating-low' | 'reviews' | 'name-asc' | 'name-desc';

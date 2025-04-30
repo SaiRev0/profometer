@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 
+import { Professor, Review } from '@/lib/types';
+
 import ProfessorHeader from './ProfessorHeader';
 import ProfessorTabs from './ProfessorTabs';
-import { Professor, Review } from '@/lib/types';
 
 interface ProfessorDetailsProps {
   professor: Professor;

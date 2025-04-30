@@ -91,7 +91,6 @@ export default function ReviewForm({ professor, onSubmit, onClose }: ReviewFormP
       assignments,
       attendance,
       grade: reviewGrade || undefined,
-      tags: [],
       upvotes: 0,
       downvotes: 0
     };

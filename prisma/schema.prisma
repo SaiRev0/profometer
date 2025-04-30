@@ -107,7 +107,7 @@ model Review {
     user           User      @relation(fields: [userId], references: [id])
     semester       String
     anonymous      Boolean   @default(false)
-    rating         Float
+    ratings        Json // Stores all ratings as a JSON object
     comment        String    @db.Text
     wouldRecommend Boolean
     attendance     String // 'percentage'

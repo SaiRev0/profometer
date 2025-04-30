@@ -253,12 +253,6 @@ export const mockReviews = Array.from({ length: 10 }, (_, i) => ({
   textbookRequired: i % 3 === 0,
   attendance: ['mandatory', 'optional', 'unknown'][i % 3] as 'mandatory' | 'optional' | 'unknown',
   grade: ['A', 'B+', 'B', 'C+', 'A-'][i % 5],
-  tags: [
-    ['Clear Explanations', 'Fair Grading', 'Engaging'],
-    ['Tough Grader', 'Inspirational', 'Respected'],
-    ['Accessible', 'Practical Assignments', 'Industry Experience'],
-    ['Challenging', 'Theoretical Focus', 'Research Opportunities']
-  ][i % 4],
   upvotes: Math.floor(Math.random() * 20),
   downvotes: Math.floor(Math.random() * 5),
   userVote: i % 7 === 0 ? 'up' : i % 11 === 0 ? 'down' : (null as 'up' | 'down' | null)
@@ -273,10 +267,10 @@ export const mockBranchData: BranchData = {
   totalReviews: 1248,
   averageRating: 4.2,
   statistics: {
-    wouldTakeAgain: 82,
-    difficultyLevel: 3.8,
+    wouldRecommend: 82,
     attendanceMandatory: 65,
-    textbookRequired: 55
+    quizes: 55,
+    assignments: 55
   },
   departments: [
     { name: 'Software Engineering', professors: 14, averageRating: 4.3 },
@@ -285,17 +279,6 @@ export const mockBranchData: BranchData = {
     { name: 'Computer Systems', professors: 7, averageRating: 3.9 },
     { name: 'Theoretical Computer Science', professors: 4, averageRating: 3.7 }
   ],
-  tags: [
-    'Programming',
-    'Algorithms',
-    'Data Structures',
-    'Machine Learning',
-    'Web Development',
-    'Cybersecurity',
-    'Database Systems',
-    'Operating Systems',
-    'Computer Vision'
-  ]
 };
 
 export function getDepartmentsByRating() {
