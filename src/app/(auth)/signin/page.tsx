@@ -23,7 +23,13 @@ const ErrorToast = () => {
   );
 };
 
-const Page = ({ searchParams }: { searchParams: { error?: string } }) => {
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+const Page = ({ searchParams }: PageProps) => {
+  const hasError = searchParams.error === 'true';
+
   return (
     <div className='mt-20'>
       <div className='mx-auto flex h-full max-w-2xl flex-col items-center justify-center gap-12'>
@@ -52,7 +58,7 @@ const Page = ({ searchParams }: { searchParams: { error?: string } }) => {
           </div>
           <UserAuthForm />
         </div>
-        {searchParams.error && <ErrorToast />}
+        {hasError && <ErrorToast />}
       </div>
     </div>
   );
