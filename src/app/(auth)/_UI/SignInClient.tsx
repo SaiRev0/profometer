@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
 import { useToast } from '@/hooks/use-toast';
 
-const SignInClient = () => {
+const SignInClientContent = () => {
   const { toast } = useToast();
   const productID = useSearchParams().get('error');
 
@@ -31,6 +31,14 @@ const SignInClient = () => {
   }, [productID]);
 
   return null; // This component doesn't render anything
+};
+
+const SignInClient = () => {
+  return (
+    <Suspense fallback={null}>
+      <SignInClientContent />
+    </Suspense>
+  );
 };
 
 export default SignInClient;
