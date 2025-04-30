@@ -2,29 +2,29 @@
 
 import { useState } from 'react';
 
-
-
 import { ReportDialog } from '@/components/dialogs/report-dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import RatingStars from '@/components/ui/rating-stars';
 import { Review } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-
-
 import { formatDistanceToNow } from 'date-fns';
 import { Flag, MessageSquare, MoreHorizontal, ThumbsDown, ThumbsUp } from 'lucide-react';
 
-
-
-
-
 export interface ReviewCardType extends Review {
   userVote?: 'up' | 'down' | null;
+  userName?: string;
+  date?: string;
+  courseCode?: string;
 }
 
 interface ReviewCardProps {
@@ -91,7 +91,7 @@ export default function ReviewCard({ review, isLoading = false }: ReviewCardProp
             <div>
               <p className='font-medium'>{review.anonymous ? 'Anonymous Student' : review.userName}</p>
               <div className='text-muted-foreground flex items-center text-sm'>
-                <span>{formatDistanceToNow(review.date, { addSuffix: true })}</span>
+                <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
                 {review.courseCode && (
                   <>
                     <span className='mx-1.5'>•</span>
