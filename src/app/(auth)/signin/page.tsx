@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import UserAuthForm from '@/components/UserAuthForm';
@@ -9,13 +8,22 @@ import { cn } from '@/lib/utils';
 import { GraduationCap } from 'lucide-react';
 import { FaChevronLeft } from 'react-icons/fa';
 
-const SignInClient = dynamic(() => import('../_UI/SignInClient'));
-
 export const metadata: Metadata = {
   title: 'Sign-In'
 };
 
-const Page = () => {
+const ErrorToast = () => {
+  'use client';
+
+  return (
+    <div className='fixed top-4 right-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700'>
+      <strong className='font-bold'>Access Denied!</strong>
+      <span className='block sm:inline'> Use Your College ID to Sign Up</span>
+    </div>
+  );
+};
+
+const Page = ({ searchParams }: { searchParams: { error?: string } }) => {
   return (
     <div className='mt-20'>
       <div className='mx-auto flex h-full max-w-2xl flex-col items-center justify-center gap-12'>
@@ -44,7 +52,7 @@ const Page = () => {
           </div>
           <UserAuthForm />
         </div>
-        <SignInClient />
+        {searchParams.error && <ErrorToast />}
       </div>
     </div>
   );
