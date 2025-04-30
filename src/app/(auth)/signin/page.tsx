@@ -23,12 +23,7 @@ const ErrorToast = () => {
   );
 };
 
-type Props = {
-  params: {};
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-const Page = ({ searchParams }: Props) => {
+export default function Page({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const hasError = searchParams.error === 'true';
 
   return (
@@ -63,6 +58,4 @@ const Page = ({ searchParams }: Props) => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}
