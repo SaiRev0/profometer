@@ -25,7 +25,7 @@ export function DepartmentRankings() {
 
   if (isLoading) {
     return (
-      <section className='bg-slate-50 py-16 dark:bg-gray-900'>
+      <section className='py-16'>
         <div className='container mx-auto px-4'>
           <div className='text-center'>Loading departments...</div>
         </div>
@@ -34,7 +34,7 @@ export function DepartmentRankings() {
   }
 
   return (
-    <section className='bg-slate-50 py-16 dark:bg-gray-900'>
+    <section className='py-16'>
       <div className='container mx-auto px-4'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

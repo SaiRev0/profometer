@@ -57,7 +57,7 @@ export default function ProfessorCard({
 
   const cardContent = (
     <Card className={cn(
-      "overflow-hidden transition-all duration-200 hover:shadow-md border-border/70",
+      "overflow-hidden transition-all duration-200 hover:shadow-md border-border/70 dark:bg-gray-800",
       isCompact ? "h-40" : "h-full"
     )}>
       <CardContent className={cn(

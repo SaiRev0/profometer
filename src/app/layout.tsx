@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 import './globals.css';
 import { Providers } from './providers';
+import Footer from '@/components/layout/footer';
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
                 <Header />
                 {authModal}
                 <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
+                <Footer />
                 <BottomNavigation />
               </div>
               <Toaster />
