@@ -40,12 +40,13 @@ export async function GET(request: Request) {
         code: dept.code,
         avgRating: Number(avgRating.toFixed(1)),
         numProfessors: dept._count.professors,
-        numReviews: 0 // Since we don't have reviews count in the schema
+        numReviews: dept.numReviews
       };
     });
 
     // Sort by average rating after calculating it
     formattedDepartments.sort((a, b) => b.avgRating - a.avgRating);
+    console.log('formattedDepartments', formattedDepartments);
 
     return NextResponse.json(formattedDepartments);
   } catch (error) {
