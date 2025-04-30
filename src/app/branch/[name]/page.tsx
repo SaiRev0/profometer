@@ -15,20 +15,11 @@ import RatingStars from '@/components/ui/rating-stars';
 import { Separator } from '@/components/ui/separator';
 import { useDepartments } from '@/hooks/use-departments';
 import { useProfessors } from '@/hooks/use-professors';
+import { Department } from '@/lib/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { motion } from 'framer-motion';
 import { ArrowUpDown, BookCheck, BookOpen, BookmarkX, ChevronLeft, Filter, Star, Users } from 'lucide-react';
-
-interface Department {
-  id: string;
-  name: string;
-  code: string;
-  avgRating: number;
-  numProfessors: number;
-  numReviews: number;
-  description: string;
-}
 
 // Create a client
 const queryClient = new QueryClient();
@@ -135,8 +126,8 @@ function BranchPageContent() {
               </CardContent>
             </Card>
           </div>
-
-          <p className='text-muted-foreground mb-6'>{department.description}</p>
+          {/*
+          <p className='text-muted-foreground mb-6'>{department.description}</p> */}
 
           <Separator className='my-6' />
         </CardContent>

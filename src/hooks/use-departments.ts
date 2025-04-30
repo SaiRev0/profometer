@@ -7,6 +7,8 @@ interface Department {
   avgRating: number;
   numProfessors: number;
   numReviews: number;
+  isDefault?: boolean;
+  isProtected?: boolean;
 }
 
 interface DepartmentsParams {

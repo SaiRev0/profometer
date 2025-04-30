@@ -40,7 +40,9 @@ export async function GET(request: NextRequest) {
         code: dept.code,
         avgRating: Number(avgRating.toFixed(1)),
         numProfessors: dept._count.professors,
-        numReviews: dept.numReviews
+        numReviews: dept.numReviews,
+        isDefault: dept.code === 'CSE', // Example: CSE is default
+        isProtected: false
       };
     });
 

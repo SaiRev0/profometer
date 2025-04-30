@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -8,12 +10,8 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronLeft, Star, Users } from 'lucide-react';
 
-interface DepartmentPageProps {
-  params: Promise<{ code: string }>;
-}
-
-export default async function DepartmentPage({ params }: DepartmentPageProps) {
-  const { code } = await params;
+export default function DepartmentPage() {
+  const code = 'CSE';
   const departments = getDepartmentsByRating();
   const department = departments.find((dept) => dept.code.toLowerCase() === code.toLowerCase());
 
