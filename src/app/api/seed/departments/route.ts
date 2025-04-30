@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { departments } from '@/lib/mock-data';
 
-export default async function seedDepartments() {
+async function seedDepartments() {
   try {
     // First, check if departments already exist
     const existingDepartments = await db.department.findMany();
