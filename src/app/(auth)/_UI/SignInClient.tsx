@@ -1,44 +1,28 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { useToast } from '@/hooks/use-toast';
 
-const SignInClientContent = () => {
+const SignInClient = () => {
   const { toast } = useToast();
-  const productID = useSearchParams().get('error');
+  const router = useRouter();
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    const searchParams = new URLSearchParams(window.location.search);
+    const error = searchParams.get('error');
 
-    if (productID) {
-      timeoutId = setTimeout(() => {
-        toast({
-          title: 'Access Denied',
-          description: 'Use Your College ID to Sign Up'
-        });
-      }, 100);
+    if (error) {
+      toast({
+        title: 'Access Denied',
+        description: 'Use Your College ID to Sign Up'
+      });
     }
+  }, []);
 
-    // Clear the timeout if the component unmounts or productID changes
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [productID]);
-
-  return null; // This component doesn't render anything
-};
-
-const SignInClient = () => {
-  return (
-    <Suspense fallback={null}>
-      <SignInClientContent />
-    </Suspense>
-  );
+  return null;
 };
 
 export default SignInClient;

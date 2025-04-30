@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -46,9 +44,7 @@ const Page = () => {
           </div>
           <UserAuthForm />
         </div>
-        <Suspense fallback={null}>
-          <SignInClient />
-        </Suspense>
+        <SignInClient />
       </div>
     </div>
   );
