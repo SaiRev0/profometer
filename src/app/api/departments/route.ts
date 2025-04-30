@@ -48,7 +48,6 @@ export async function GET(request: NextRequest) {
 
     // Sort by average rating after calculating it
     formattedDepartments.sort((a, b) => b.avgRating - a.avgRating);
-    console.log('formattedDepartments', formattedDepartments);
 
     return NextResponse.json(formattedDepartments);
   } catch (error) {
