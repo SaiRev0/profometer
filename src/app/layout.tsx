@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
 import BottomNavigation from '@/components/layout/header/bottomNavigation';
 import AuthProvider from '@/components/providers/session-provider';
@@ -9,7 +10,6 @@ import { Toaster } from '@/components/ui/toaster';
 
 import './globals.css';
 import { Providers } from './providers';
-import Footer from '@/components/layout/footer';
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
