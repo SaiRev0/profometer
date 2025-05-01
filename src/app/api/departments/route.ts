@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
           }
         },
         professors: {
-          select: {
-            rating: true
+          include: {
+            reviews: true
           }
         }
       }
@@ -28,11 +28,28 @@ export async function GET(request: NextRequest) {
 
     // Calculate average ratings and format the response
     const formattedDepartments = departments.map((dept) => {
-      const totalRating = dept.professors.reduce(
-        (sum: number, prof: { rating: number | null }) => sum + (prof.rating || 0),
-        0
-      );
-      const avgRating = dept.professors.length > 0 ? totalRating / dept.professors.length : 0;
+      let totalRating = 0;
+      let totalReviews = 0;
+
+      // Calculate ratings from all professors' reviews
+      dept.professors.forEach((professor) => {
+        const professorReviews = professor.reviews;
+        totalReviews += professorReviews.length;
+
+        professorReviews.forEach((review) => {
+          const reviewRatings = review.ratings as {
+            overall: number;
+            teaching: number;
+            helpfulness: number;
+            fairness: number;
+            clarity: number;
+            communication: number;
+          };
+          totalRating += reviewRatings.overall;
+        });
+      });
+
+      const avgRating = totalReviews > 0 ? totalRating / totalReviews : 0;
 
       return {
         id: dept.id,
@@ -40,7 +57,7 @@ export async function GET(request: NextRequest) {
         code: dept.code,
         avgRating: Number(avgRating.toFixed(1)),
         numProfessors: dept._count.professors,
-        numReviews: dept.numReviews,
+        numReviews: totalReviews,
         isDefault: dept.code === 'CSE', // Example: CSE is default
         isProtected: false
       };

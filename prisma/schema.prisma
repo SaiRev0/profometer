@@ -79,8 +79,6 @@ model Professor {
     photoUrl     String?
     email        String?
     website      String?
-    rating       Float
-    numReviews   Int
     courses      Course[]
     reviews      Review[]
     createdAt    DateTime   @default(now())

@@ -1,143 +1,104 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import {
-  ChevronRight,
-  Bookmark,
-  UserCheck,
-  ThumbsUp,
-  ThumbsDown,
-  User
-} from "lucide-react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import RatingStars from "@/components/ui/rating-stars";
-import { cn } from "@/lib/utils";
+import Image from 'next/image';
+import Link from 'next/link';
 
-export interface Professor {
-  id: string;
-  name: string;
-  department: string;
-  branch: string;
-  rating: number;
-  numReviews: number;
-  imageUrl?: string;
-  difficultyLevel?: number;
-  topReview?: {
-    rating: number;
-    comment: string;
-  };
-}
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import RatingStars from '@/components/ui/rating-stars';
+import { Professor } from '@/lib/types';
+import { cn } from '@/lib/utils';
+
+import { motion } from 'framer-motion';
+import { Bookmark, ChevronRight, ThumbsDown, ThumbsUp, User, UserCheck } from 'lucide-react';
 
 interface ProfessorCardProps {
   professor: Professor;
-  variant?: "compact" | "detailed";
+  variant?: 'compact' | 'detailed';
   isLoading?: boolean;
 }
 
-export default function ProfessorCard({
-  professor,
-  variant = "detailed",
-  isLoading = false,
-}: ProfessorCardProps) {
+export default function ProfessorCard({ professor, variant = 'detailed', isLoading = false }: ProfessorCardProps) {
   if (isLoading) {
     return <ProfessorCardSkeleton variant={variant} />;
   }
+  console.log(professor);
 
-  const isCompact = variant === "compact";
+  const isCompact = variant === 'compact';
   const initials = professor.name
     .split(' ')
-    .map(n => n[0])
+    .map((n) => n[0])
     .join('')
     .toUpperCase();
 
   const cardContent = (
-    <Card className={cn(
-      "overflow-hidden transition-all duration-200 hover:shadow-md border-border/70 dark:bg-gray-800",
-      isCompact ? "h-40" : "h-full"
-    )}>
-      <CardContent className={cn(
-        "p-4",
-        isCompact ? "pb-2" : "pb-3"
+    <Card
+      className={cn(
+        'border-border/70 overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
+        isCompact ? 'h-40' : 'h-full'
       )}>
-        <div className="flex items-start gap-3">
-          <Avatar className="w-12 h-12">
-            {professor.imageUrl ? (
-              <AvatarImage src={professor.imageUrl} alt={professor.name} />
+      <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
+        <div className='flex items-start gap-3'>
+          <Avatar className='h-12 w-12'>
+            {professor.photoUrl ? (
+              <AvatarImage src={professor.photoUrl} alt={professor.name} />
             ) : (
-              <AvatarFallback className="bg-primary/10 text-primary">
-                {initials}
-              </AvatarFallback>
+              <AvatarFallback className='bg-primary/10 text-primary'>{initials}</AvatarFallback>
             )}
           </Avatar>
 
-          <div className="flex-1">
-            <div className="flex justify-between items-start">
+          <div className='flex-1'>
+            <div className='flex items-start justify-between'>
               <div>
-                <h3 className={cn(
-                  "font-bold line-clamp-1",
-                  isCompact ? "text-base" : "text-lg"
-                )}>
-                  {professor.name}
-                </h3>
-                <p className="text-muted-foreground text-sm line-clamp-1 mb-1">
-                  {professor.department}
-                </p>
+                <h3 className={cn('line-clamp-1 font-bold', isCompact ? 'text-base' : 'text-lg')}>{professor.name}</h3>
+                <p className='text-muted-foreground mb-1 line-clamp-1 text-sm'>{professor.department.name}</p>
               </div>
 
-              <Badge variant={professor.rating >= 4 ? "default" : professor.rating <= 2 ? "destructive" : "secondary"}>
-                {professor.rating.toFixed(1)}
+              <Badge
+                variant={
+                  professor.ratings.overall >= 4
+                    ? 'default'
+                    : professor.ratings.overall <= 2
+                      ? 'destructive'
+                      : 'secondary'
+                }>
+                {professor.ratings.overall.toFixed(1)}
               </Badge>
             </div>
 
-            <div className="flex items-center mt-1 mb-2">
-              <RatingStars
-                value={professor.rating}
-                size={isCompact ? "sm" : "md"}
-              />
-              <span className="text-xs text-muted-foreground ml-2">
-                ({professor.numReviews})
-              </span>
+            <div className='mt-1 mb-2 flex items-center'>
+              <RatingStars value={professor.ratings.overall} size={isCompact ? 'sm' : 'md'} />
+              <span className='text-muted-foreground ml-2 text-xs'>({professor.numReviews})</span>
             </div>
 
-            {!isCompact && professor.topReview && (
-              <blockquote className="mt-2 text-sm text-muted-foreground border-l-2 pl-2 border-primary/30 line-clamp-2">
-                "{professor.topReview.comment}"
+            {!isCompact && professor.reviews[0] && (
+              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-2 border-l-2 pl-2 text-sm'>
+                "{professor.reviews[0].comment}"
               </blockquote>
             )}
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className={cn(
-        "px-4 pb-4 pt-0 flex justify-between items-center",
-        isCompact && "pt-0"
-      )}>
-        <div className="flex gap-2">
-          <Button size="sm" variant="ghost" className="h-8 px-2 text-xs">
-            <ThumbsUp className="h-3.5 w-3.5 mr-1" />
+      <CardFooter className={cn('flex items-center justify-between px-4 pt-0 pb-4', isCompact && 'pt-0')}>
+        <div className='flex gap-2'>
+          <Button size='sm' variant='ghost' className='h-8 px-2 text-xs'>
+            <ThumbsUp className='mr-1 h-3.5 w-3.5' />
             Helpful
           </Button>
           {!isCompact && (
-            <Button size="sm" variant="ghost" className="h-8 px-2 text-xs">
-              <Bookmark className="h-3.5 w-3.5 mr-1" />
+            <Button size='sm' variant='ghost' className='h-8 px-2 text-xs'>
+              <Bookmark className='mr-1 h-3.5 w-3.5' />
               Save
             </Button>
           )}
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-8 px-2 text-xs"
-          asChild
-        >
+        <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
             View
-            <ChevronRight className="h-3.5 w-3.5 ml-1" />
+            <ChevronRight className='ml-1 h-3.5 w-3.5' />
           </div>
         </Button>
       </CardFooter>
@@ -145,61 +106,46 @@ export default function ProfessorCard({
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Link href={`/professor/${professor.id}`}>
-        {cardContent}
-      </Link>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <Link href={`/professor/${professor.id}`}>{cardContent}</Link>
     </motion.div>
   );
 }
 
-function ProfessorCardSkeleton({ variant = "detailed" }: { variant?: "compact" | "detailed" }) {
-  const isCompact = variant === "compact";
+function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
+  const isCompact = variant === 'compact';
 
   return (
-    <Card className={cn(
-      "overflow-hidden",
-      isCompact ? "h-40" : "h-full"
-    )}>
-      <CardContent className={cn(
-        "p-4",
-        isCompact ? "pb-2" : "pb-3"
-      )}>
-        <div className="flex gap-3">
-          <div className="w-12 h-12 rounded-full bg-muted" />
-          <div className="flex-1">
-            <div className="flex justify-between items-start">
+    <Card className={cn('overflow-hidden', isCompact ? 'h-40' : 'h-full')}>
+      <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
+        <div className='flex gap-3'>
+          <div className='bg-muted h-12 w-12 rounded-full' />
+          <div className='flex-1'>
+            <div className='flex items-start justify-between'>
               <div>
-                <div className="h-5 bg-muted rounded w-32 mb-2" />
-                <div className="h-4 bg-muted rounded w-24" />
+                <div className='bg-muted mb-2 h-5 w-32 rounded' />
+                <div className='bg-muted h-4 w-24 rounded' />
               </div>
-              <div className="h-6 w-10 bg-muted rounded" />
+              <div className='bg-muted h-6 w-10 rounded' />
             </div>
 
-            <div className="flex items-center gap-1 mb-2 mt-2">
+            <div className='mt-2 mb-2 flex items-center gap-1'>
               {[...Array(5)].map((_, i) => (
-                <div key={i} className={cn(
-                  "rounded-full bg-muted",
-                  isCompact ? "w-3 h-3" : "w-4 h-4"
-                )} />
+                <div key={i} className={cn('bg-muted rounded-full', isCompact ? 'h-3 w-3' : 'h-4 w-4')} />
               ))}
-              <div className="w-8 h-3 bg-muted rounded ml-2" />
+              <div className='bg-muted ml-2 h-3 w-8 rounded' />
             </div>
 
             {!isCompact && (
               <>
-                <div className="flex gap-1 my-2">
+                <div className='my-2 flex gap-1'>
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-5 w-16 bg-muted rounded" />
+                    <div key={i} className='bg-muted h-5 w-16 rounded' />
                   ))}
                 </div>
-                <div className="mt-2 space-y-1">
-                  <div className="h-3 bg-muted rounded w-full" />
-                  <div className="h-3 bg-muted rounded w-5/6" />
+                <div className='mt-2 space-y-1'>
+                  <div className='bg-muted h-3 w-full rounded' />
+                  <div className='bg-muted h-3 w-5/6 rounded' />
                 </div>
               </>
             )}
@@ -207,9 +153,9 @@ function ProfessorCardSkeleton({ variant = "detailed" }: { variant?: "compact" |
         </div>
       </CardContent>
 
-      <CardFooter className="px-4 pb-4 pt-0 flex justify-between">
-        <div className="h-8 w-20 bg-muted rounded" />
-        <div className="h-8 w-20 bg-muted rounded" />
+      <CardFooter className='flex justify-between px-4 pt-0 pb-4'>
+        <div className='bg-muted h-8 w-20 rounded' />
+        <div className='bg-muted h-8 w-20 rounded' />
       </CardFooter>
     </Card>
   );
