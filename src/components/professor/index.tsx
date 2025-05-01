@@ -56,7 +56,12 @@ export default function ProfessorDetails({ professor, initialReviews }: Professo
         </div>
       </motion.div>
       {/* Review Form Dialog */}
-      <ReviewForm professor={professor} modalState={reviewFormOpen} setModalState={setReviewFormOpen} setAddCourseDialogOpen={setAddCourseDialogOpen}/>
+      <ReviewForm
+        professor={professor}
+        modalState={reviewFormOpen}
+        setModalState={setReviewFormOpen}
+        setAddCourseDialogOpen={setAddCourseDialogOpen}
+      />
     </div>
   );
 }

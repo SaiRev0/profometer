@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import ProfessorCard, { Professor } from '@/components/cards/professor-card';
+import ProfessorCard from '@/components/cards/professor-card';
 import FilterDropdown, { FilterOption, SortOption } from '@/components/filters/filter-dropdown';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import RatingStars from '@/components/ui/rating-stars';
 import { Separator } from '@/components/ui/separator';
 import { useDepartments } from '@/hooks/use-departments';
 import { useProfessors } from '@/hooks/use-professors';
-import { Department } from '@/lib/types';
+import { Department, Professor } from '@/lib/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { motion } from 'framer-motion';

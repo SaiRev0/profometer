@@ -3,22 +3,23 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { NavigationProps } from '@/lib/types/navigation';
+
 // import { cn } from '@/lib/utils';
 
 import { Menu, Moon, Search, Sun } from 'lucide-react';
 
 export function MobileMenu({ navItems, moreLinks, theme, onThemeToggle, onSearchClick }: NavigationProps) {
-    return (
-        <div className='flex items-center gap-2 md:hidden'>
-            <Button variant='ghost' size='icon' className='md:hidden' onClick={onSearchClick}>
-                <Search className='h-5 w-5' />
-            </Button>
+  return (
+    <div className='flex items-center gap-2 md:hidden'>
+      <Button variant='ghost' size='icon' className='md:hidden' onClick={onSearchClick}>
+        <Search className='h-5 w-5' />
+      </Button>
 
-            <Button variant='ghost' size='icon' onClick={onThemeToggle} aria-label='Toggle theme'>
-                {theme === 'dark' ? <Sun className='h-5 w-5' /> : <Moon className='h-5 w-5' />}
-            </Button>
+      <Button variant='ghost' size='icon' onClick={onThemeToggle} aria-label='Toggle theme'>
+        {theme === 'dark' ? <Sun className='h-5 w-5' /> : <Moon className='h-5 w-5' />}
+      </Button>
 
-            {/* <Sheet>
+      {/* <Sheet>
                 <SheetTrigger asChild>
                     <Button variant='ghost' size='icon'>
                         <Menu className='h-5 w-5' />
@@ -44,6 +45,6 @@ export function MobileMenu({ navItems, moreLinks, theme, onThemeToggle, onSearch
                     </nav>
                 </SheetContent>
             </Sheet> */}
-        </div>
-    );
+    </div>
+  );
 }
