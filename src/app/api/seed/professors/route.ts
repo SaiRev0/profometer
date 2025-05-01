@@ -69,9 +69,7 @@ export async function POST(request: NextRequest) {
             designation: record.designation,
             photoUrl: record.image,
             email: record.email,
-            website: record.website,
-            rating: 0,
-            numReviews: 0
+            website: record.website
           }
         });
 
