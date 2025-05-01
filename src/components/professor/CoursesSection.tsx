@@ -1,11 +1,8 @@
+import { useState } from 'react';
+
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Professor } from '@/lib/types';
-import { useState } from 'react';
-
-
-
-
 
 function CoursesSection({ professor }: { professor: Professor }) {
   const [selectedCourse, setSelectedCourse] = useState<string>('all');

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Professor, Review } from '@/lib/types';
 
 import { Button } from '../ui/button';
+import CourseForm from './CourseForm';
 import CoursesSection from './CoursesSection';
 import RatingSummary from './RatingSummary';
 import ReviewForm from './ReviewForm';
@@ -22,6 +23,7 @@ interface ProfessorDetailsProps {
 
 export default function ProfessorDetails({ professor, initialReviews }: ProfessorDetailsProps) {
   const [reviewFormOpen, setReviewFormOpen] = useState(false);
+  const [addCourseDialogOpen, setAddCourseDialogOpen] = useState(false);
 
   return (
     <div className='mx-auto mt-4 max-w-4xl'>
@@ -49,10 +51,12 @@ export default function ProfessorDetails({ professor, initialReviews }: Professo
           <CoursesSection professor={professor} />
           {/* Reviews Section */}
           <ReviewList initialReviews={initialReviews} />
+          {/* Add Course Dialog */}
+          <CourseForm professor={professor} modalState={addCourseDialogOpen} setModalState={setAddCourseDialogOpen} />
         </div>
       </motion.div>
       {/* Review Form Dialog */}
-      <ReviewForm professor={professor} modalState={reviewFormOpen} setModalState={setReviewFormOpen} />
+      <ReviewForm professor={professor} modalState={reviewFormOpen} setModalState={setReviewFormOpen} setAddCourseDialogOpen={setAddCourseDialogOpen}/>
     </div>
   );
 }

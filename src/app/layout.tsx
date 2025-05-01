@@ -6,7 +6,7 @@ import Header from '@/components/layout/header';
 import BottomNavigation from '@/components/layout/header/bottomNavigation';
 import AuthProvider from '@/components/providers/session-provider';
 import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/sonner';
 
 import './globals.css';
 import { Providers } from './providers';

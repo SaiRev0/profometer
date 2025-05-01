@@ -2,17 +2,11 @@
 
 import { useState } from 'react';
 
-
-
 import ReviewCard from '@/components/cards/review-card';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Review } from '@/lib/types';
-
-
-
-
 
 interface ReviewListProps {
   initialReviews: Review[];
@@ -31,10 +25,6 @@ export default function ReviewList({ initialReviews }: ReviewListProps) {
       setVisibleReviews((prev) => prev + 5);
       setLoadingMore(false);
     }, 800);
-  };
-
-  const handleSortChange = (option: SortOption) => {
-    setSortOption(option);
   };
 
   const filteredReviews = reviews

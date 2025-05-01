@@ -18,14 +18,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Professor, Review } from '@/lib/types';
+import { Separator } from '@radix-ui/react-separator';
+
+import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ReviewFormProps {
   professor: Professor;
   modalState: boolean;
   setModalState: (state: boolean) => void;
+  setAddCourseDialogOpen: (state: boolean) => void;
 }
 
-export default function ReviewForm({ professor, modalState, setModalState }: ReviewFormProps) {
+export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
   const [reviewCourse, setReviewCourse] = useState('');
   const [reviewSemester, setReviewSemester] = useState('');
   const [reviewRatings, setReviewRatings] = useState({
@@ -45,39 +50,24 @@ export default function ReviewForm({ professor, modalState, setModalState }: Rev
   // Submit review function
   const handleSubmitReview = () => {
     // Check if all ratings are provided
-    // if (Object.values(reviewRatings).some(rating => rating === 0)) {
-    //   toast({
-    //     title: "Missing Ratings",
-    //     description: "Please provide ratings for all categories.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
+    if (Object.values(reviewRatings).some((rating) => rating === 0)) {
+      toast.error('Please provide ratings for all categories.');
+      return;
+    }
 
     // Check if comment is provided
-    // if (!reviewComment.trim()) {
-    //   Toast({
-    //     title: 'Missing Comment',
-    //     description: 'Please provide a written review.',
-    //     variant: 'destructive'
-    //   });
-    //   return;
-    // }
+    if (!reviewComment.trim()) {
+      toast.error('Please provide a written review.');
+      return;
+    }
 
     // Check if course is selected
-    // if (!reviewCourse) {
-    //   toast({
-    //     title: "Missing Course",
-    //     description: "Please select the course you took with this professor.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
+    if (!reviewCourse) {
+      toast.error('Please select the course you took with this professor.');
+      return;
+    }
 
-    // toast({
-    //   title: "Review Submitted!",
-    //   description: "Thank you for sharing your experience.",
-    // });
+    toast.success('Review Submitted!');
 
     // Reset form
     setReviewRatings({
@@ -95,6 +85,7 @@ export default function ReviewForm({ professor, modalState, setModalState }: Rev
     setWouldTakeAgain(undefined);
     setTextbookRequired(undefined);
     setAttendanceMandatory(undefined);
+    setModalState(false);
   };
 
   return (
@@ -117,6 +108,17 @@ export default function ReviewForm({ professor, modalState, setModalState }: Rev
                   <SelectValue placeholder='Select a course' />
                 </SelectTrigger>
                 <SelectContent>
+                  <div className='p-2'>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      className='flex w-full items-center justify-center gap-2'
+                      onClick={() => setAddCourseDialogOpen(true)}>
+                      <Plus className='h-4 w-4' />
+                      Add New Course
+                    </Button>
+                  </div>
+                  <Separator className='my-2' />
                   {professor.courses.map((course) => (
                     <SelectItem key={course.code} value={course.code}>
                       {course.code} - {course.name}
