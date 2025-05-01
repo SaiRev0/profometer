@@ -1,4 +1,4 @@
-import { Professor } from '@/components/cards/professor-card';
+import { Professor } from '@/lib/types';
 
 import { Branch, BranchData, Department } from './types';
 
@@ -151,41 +151,41 @@ export const departments: Department[] = [
 ];
 
 // Mock data for the professors
-export const mockProfessors: Professor[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `prof-${i + 1}`,
-  name: [
-    'Dr. Sarah Johnson',
-    'Prof. Michael Williams',
-    'Dr. Emily Chen',
-    'Prof. James Smith',
-    'Dr. Olivia Martinez',
-    'Prof. David Wilson',
-    'Dr. Emma Brown',
-    'Prof. Robert Lee',
-    'Dr. Sophia Garcia',
-    'Prof. Thomas Anderson'
-  ][i % 10],
-  department: departments[i % departments.length].name,
-  branch: ['CS', 'ENG', 'BUS', 'PHY', 'MATH'][i % 5],
-  rating: 2 + Math.random() * 3,
-  numReviews: 10 + Math.floor(Math.random() * 190),
-  difficultyLevel: 2 + Math.random() * 3,
-  imageUrl: [
-    'https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg',
-    'https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg',
-    'https://images.pexels.com/photos/5905902/pexels-photo-5905902.jpeg',
-    'https://images.pexels.com/photos/5905521/pexels-photo-5905521.jpeg'
-  ][i % 4],
-  topReview: {
-    rating: 3 + Math.random() * 2,
-    comment: [
-      'Very knowledgeable professor who challenges students to think deeply about the material.',
-      "Excellent at explaining complex concepts in a way that's easy to understand.",
-      "Tough but fair. Expect to work hard but you'll learn a lot in this class.",
-      'Always available during office hours and genuinely cares about student success.'
-    ][i % 4]
-  }
-}));
+// export const mockProfessors: Professor[] = Array.from({ length: 20 }, (_, i) => ({
+//   id: `prof-${i + 1}`,
+//   name: [
+//     'Dr. Sarah Johnson',
+//     'Prof. Michael Williams',
+//     'Dr. Emily Chen',
+//     'Prof. James Smith',
+//     'Dr. Olivia Martinez',
+//     'Prof. David Wilson',
+//     'Dr. Emma Brown',
+//     'Prof. Robert Lee',
+//     'Dr. Sophia Garcia',
+//     'Prof. Thomas Anderson'
+//   ][i % 10],
+//   department: departments[i % departments.length].name,
+//   branch: ['CS', 'ENG', 'BUS', 'PHY', 'MATH'][i % 5],
+//   rating: 2 + Math.random() * 3,
+//   numReviews: 10 + Math.floor(Math.random() * 190),
+//   difficultyLevel: 2 + Math.random() * 3,
+//   imageUrl: [
+//     'https://images.pexels.com/photos/3771807/pexels-photo-3771807.jpeg',
+//     'https://images.pexels.com/photos/5905445/pexels-photo-5905445.jpeg',
+//     'https://images.pexels.com/photos/5905902/pexels-photo-5905902.jpeg',
+//     'https://images.pexels.com/photos/5905521/pexels-photo-5905521.jpeg'
+//   ][i % 4],
+//   topReview: {
+//     rating: 3 + Math.random() * 2,
+//     comment: [
+//       'Very knowledgeable professor who challenges students to think deeply about the material.',
+//       "Excellent at explaining complex concepts in a way that's easy to understand.",
+//       "Tough but fair. Expect to work hard but you'll learn a lot in this class.",
+//       'Always available during office hours and genuinely cares about student success.'
+//     ][i % 4]
+//   }
+// }));
 
 // Mock professor data
 export const mockProfessor = {
@@ -278,7 +278,7 @@ export const mockBranchData: BranchData = {
     { name: 'Artificial Intelligence', professors: 8, averageRating: 4.0 },
     { name: 'Computer Systems', professors: 7, averageRating: 3.9 },
     { name: 'Theoretical Computer Science', professors: 4, averageRating: 3.7 }
-  ],
+  ]
 };
 
 export function getDepartmentsByRating() {
