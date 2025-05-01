@@ -14,9 +14,9 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
 
 import { Flag } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ReportDialogProps {
   open: boolean;
@@ -36,14 +36,11 @@ export function ReportDialog({ open, onOpenChange, reviewId }: ReportDialogProps
   const [reason, setReason] = useState<string>('');
   const [details, setDetails] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = async () => {
     if (!reason) {
-      toast({
-        title: 'Please select a reason',
-        description: 'You must select a reason for reporting this review.',
-        variant: 'destructive'
+      toast.error('Please select a reason', {
+        description: 'You must select a reason for reporting this review.'
       });
       return;
     }
@@ -61,8 +58,7 @@ export function ReportDialog({ open, onOpenChange, reviewId }: ReportDialogProps
       setIsSubmitting(false);
       onOpenChange(false);
 
-      toast({
-        title: 'Report submitted',
+      toast.success('Report submitted', {
         description: 'Thank you for helping keep RateThatProf accurate and appropriate.'
       });
 
