@@ -76,7 +76,7 @@ export default function DepartmentsPage() {
                 </div>
                 <div className='flex items-center'>
                   <Star className='mr-1 h-4 w-4 fill-amber-500 text-amber-500' />
-                  <span className='font-bold'>{department.avgRating.toFixed(1)}</span>
+                  <span className='font-bold'>{department.avgRating}</span>
                 </div>
               </div>
 
@@ -93,7 +93,7 @@ export default function DepartmentsPage() {
               <div className='mb-4'>
                 <div className='mb-1 flex justify-between text-sm'>
                   <span>Average Rating</span>
-                  <span className='font-medium'>{department.avgRating.toFixed(1)}/5.0</span>
+                  <span className='font-medium'>{department.avgRating}/5.0</span>
                 </div>
                 <div className='h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-gray-700'>
                   <div

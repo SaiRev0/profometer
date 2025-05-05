@@ -26,7 +26,7 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
-  const createReview = useCreateReview();
+  const { createReview, isLoading } = useCreateReview();
   const [reviewCourse, setReviewCourse] = useState('');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
   const [semesterYear, setSemesterYear] = useState('');
@@ -78,13 +78,23 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
       return;
     }
 
+    // Calculate overall rating as average of all ratings
+    const overallRating = Number(
+      (
+        Object.values(reviewRatings).reduce((sum, rating) => sum + rating, 0) / Object.keys(reviewRatings).length
+      ).toFixed(1)
+    );
+
     try {
-      await createReview.mutateAsync({
+      await createReview({
         professorId: professor.id,
         courseId: reviewCourse,
         semester: reviewSemester,
         anonymous: isAnonymous,
-        ratings: reviewRatings,
+        ratings: {
+          ...reviewRatings,
+          overall: overallRating
+        },
         comment: reviewComment,
         wouldRecommend: wouldRecommend!,
         attendance: attendanceScore,
@@ -151,7 +161,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
                   </div>
                   <Separator className='my-2' />
                   {professor.courses.map((course) => (
-                    <SelectItem key={course.code} value={course.code}>
+                    <SelectItem key={course.id} value={course.id}>
                       {course.code} - {course.name}
                     </SelectItem>
                   ))}
@@ -341,10 +351,12 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
           </div>
 
           <div className='mt-2 flex justify-end gap-2'>
-            <Button variant='outline' onClick={() => setModalState(false)}>
+            <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>
               Cancel
             </Button>
-            <Button onClick={handleSubmitReview}>Submit Review</Button>
+            <Button onClick={handleSubmitReview} disabled={isLoading}>
+              Submit Review
+            </Button>
           </div>
         </div>
       </DialogContent>

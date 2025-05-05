@@ -15,6 +15,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 name: true,
                 image: true
               }
+            },
+            course: {
+              select: {
+                code: true,
+              }
             }
           },
           orderBy: {

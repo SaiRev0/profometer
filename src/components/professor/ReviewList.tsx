@@ -17,7 +17,6 @@ export default function ReviewList({ initialReviews, selectedCourse }: ReviewLis
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [visibleReviews, setVisibleReviews] = useState(5);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [reviews, setReviews] = useState<Review[]>(initialReviews);
 
   const handleLoadMore = () => {
     setLoadingMore(true);
@@ -27,7 +26,7 @@ export default function ReviewList({ initialReviews, selectedCourse }: ReviewLis
     }, 800);
   };
 
-  const filteredReviews = reviews
+  const filteredReviews = initialReviews
     .filter((review) => selectedCourse === 'all' || review.courseId === selectedCourse)
     .sort((a, b) => {
       if (sortOption === 'recent') {

@@ -10,6 +10,7 @@ interface CreateReviewData {
   semester: string;
   anonymous: boolean;
   ratings: {
+    overall: number;
     teaching: number;
     helpfulness: number;
     fairness: number;
@@ -27,7 +28,7 @@ interface CreateReviewData {
 export function useCreateReview() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const { mutateAsync: createReview, isPending } = useMutation({
     mutationFn: async (data: CreateReviewData) => {
       const response = await fetch('/api/review/create', {
         method: 'POST',
@@ -46,9 +47,13 @@ export function useCreateReview() {
     onSuccess: async (_, variables) => {
       // Invalidate and refetch professor data
       await queryClient.invalidateQueries({
-        queryKey: PROFESSOR_QUERY_KEY(variables.professorId),
-        refetchType: 'all'
+        queryKey: PROFESSOR_QUERY_KEY(variables.professorId)
       });
     }
   });
+
+  return {
+    createReview,
+    isLoading: isPending
+  };
 }

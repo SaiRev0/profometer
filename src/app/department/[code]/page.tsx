@@ -73,7 +73,7 @@ export default function DepartmentPage() {
                   <Star className='mr-2 h-5 w-5 text-amber-500' />
                   <span className='font-medium'>Average Rating</span>
                 </div>
-                <p className='text-2xl font-bold'>{department.avgRating.toFixed(1)}/5.0</p>
+                <p className='text-2xl font-bold'>{department.avgRating}/5.0</p>
               </div>
             </div>
           </motion.div>
@@ -122,7 +122,7 @@ export default function DepartmentPage() {
               <div>
                 <div className='text-muted-foreground text-sm'>Professors per Review</div>
                 <div className='text-2xl font-bold'>
-                  {(department.numProfessors / department.numReviews).toFixed(1)}
+                  {(department.numProfessors / department.numReviews)}
                 </div>
               </div>
             </div>

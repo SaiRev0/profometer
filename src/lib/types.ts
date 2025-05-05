@@ -111,6 +111,9 @@ export interface Review {
     name: string | null;
     image: string | null;
   };
+  course?: {
+    code: string;
+  };
 }
 
 export type SortOption = 'recent' | 'rating-high' | 'rating-low' | 'reviews' | 'name-asc' | 'name-desc';

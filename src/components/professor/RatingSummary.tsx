@@ -27,7 +27,7 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
                     ? 'destructive'
                     : 'secondary'
               }>
-              {professor.ratings.overall.toFixed(1)}
+              {professor.ratings.overall}
             </Badge>
             <p className='text-muted-foreground text-sm'>{professor.numReviews} ratings</p>
           </div>
@@ -47,7 +47,7 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
                 <div key={key} className='flex items-center justify-between gap-2'>
                   <p className='w-28 text-sm capitalize'>{key}</p>
                   <Progress value={value * 20} className='h-2 flex-1' />
-                  <p className='w-8 text-right text-sm font-medium'>{value.toFixed(1)}</p>
+                  <p className='w-8 text-right text-sm font-medium'>{value}</p>
                 </div>
               ))}
           </div>

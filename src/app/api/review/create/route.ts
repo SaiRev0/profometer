@@ -98,17 +98,11 @@ export async function POST(req: Request) {
         wouldRecommend:
           (currentStats.percentages.wouldRecommend * totalReviews + (wouldRecommend ? 100 : 0)) / newTotalReviews,
         attendanceRating:
-          (currentStats.percentages.attendanceRating * totalReviews + (attendance ? 100 : 0)) / newTotalReviews,
+          (currentStats.percentages.attendanceRating * totalReviews + parseInt(attendance.toString())) /
+          newTotalReviews,
         quizes: (currentStats.percentages.quizes * totalReviews + (quizes ? 100 : 0)) / newTotalReviews,
         assignments: (currentStats.percentages.assignments * totalReviews + (assignments ? 100 : 0)) / newTotalReviews
       };
-
-      // Calculate attendance mandatory percentage
-      const attendancePercentage = parseInt(attendance.toString());
-      const isAttendanceMandatory = !isNaN(attendancePercentage) && attendancePercentage >= 80;
-      newPercentages.attendanceRating =
-        (currentStats.percentages.attendanceRating * totalReviews + (isAttendanceMandatory ? 100 : 0)) /
-        newTotalReviews;
 
       // Round all numbers to 1 decimal place
       Object.keys(newRatings).forEach((key) => {

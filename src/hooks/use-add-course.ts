@@ -15,7 +15,7 @@ interface AddCourseData {
 export function useAddCourse() {
   const queryClient = useQueryClient();
 
-  const { mutate: addCourse, isPending } = useMutation({
+  const { mutateAsync: addCourse, isPending } = useMutation({
     mutationFn: async (data: AddCourseData) => {
       const response = await fetch('/api/courses/create', {
         method: 'POST',

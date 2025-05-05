@@ -64,7 +64,7 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
                       ? 'destructive'
                       : 'secondary'
                 }>
-                {professor.ratings.overall.toFixed(1)}
+                {professor.ratings.overall}
               </Badge>
             </div>
 

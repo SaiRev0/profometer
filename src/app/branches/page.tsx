@@ -145,7 +145,7 @@ function BranchesPageContent() {
                     </div>
 
                     <div className='flex shrink-0 items-center gap-2'>
-                      <Badge variant='outline'>{defaultDepartment.avgRating.toFixed(1)}</Badge>
+                      <Badge variant='outline'>{defaultDepartment.avgRating}</Badge>
 
                       <Button variant='outline' size='sm' asChild>
                         <Link href={`/branch/${defaultDepartment.name.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -189,7 +189,7 @@ function BranchesPageContent() {
                       </div>
 
                       <div className='flex shrink-0 items-center gap-2'>
-                        <Badge variant='outline'>{dept.avgRating.toFixed(1)}</Badge>
+                        <Badge variant='outline'>{dept.avgRating}</Badge>
 
                         <Button variant='outline' size='sm' asChild>
                           <Link href={`/branch/${dept.name.toLowerCase().replace(/\s+/g, '-')}`}>

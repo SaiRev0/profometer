@@ -77,7 +77,7 @@ function BranchPageContent() {
                 variant={
                   department.avgRating >= 4 ? 'default' : department.avgRating <= 3 ? 'destructive' : 'secondary'
                 }>
-                {department.avgRating.toFixed(1)}
+                {department.avgRating}
               </Badge>
               <RatingStars value={department.avgRating} size='sm' />
             </div>
