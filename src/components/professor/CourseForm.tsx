@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import Image from 'next/image';
+
 import {
   Dialog,
   DialogContent,
@@ -13,8 +15,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
+import { useAddCourse } from '@/hooks/use-add-course';
+import { PROFESSOR_QUERY_KEY } from '@/hooks/use-professor';
 import { Professor } from '@/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
@@ -26,44 +32,45 @@ interface CourseFormProps {
 }
 
 function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
+  const { addCourse, isLoading } = useAddCourse();
+  const queryClient = useQueryClient();
+
   // Add new state for course modal
   const [newCourseCode, setNewCourseCode] = useState('');
   const [newCourseName, setNewCourseName] = useState('');
   const [newCourseDescription, setNewCourseDescription] = useState('');
   const [newCourseCredits, setNewCourseCredits] = useState('3');
   const [newCourseDifficulty, setNewCourseDifficulty] = useState('3');
+  const [showCreditsHelp, setShowCreditsHelp] = useState(false);
 
   // Function to handle adding a new course
-  const handleAddCourse = () => {
+  const handleAddCourse = async () => {
     if (!newCourseCode || !newCourseName) {
       toast.error('Please provide both course code and name');
       return;
     }
 
-    // Add the new course to professor's courses
-    professor.courses = [
-      ...professor.courses,
-      {
-        id: '',
-        professorId: professor.id,
-        code: newCourseCode.toUpperCase(),
+    try {
+      await addCourse({
+        code: newCourseCode,
         name: newCourseName,
-        reviewCount: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        reviews: []
-      }
-    ];
-
-    // Reset form and close dialog
-    setNewCourseCode('');
-    setNewCourseName('');
-    setNewCourseDescription('');
-    setNewCourseCredits('3');
-    setNewCourseDifficulty('3');
-    setModalState(false);
-
-    toast.success('Course added successfully');
+        description: newCourseDescription,
+        credits: newCourseCredits,
+        difficulty: newCourseDifficulty,
+        professorId: professor.id
+      });
+      queryClient.invalidateQueries({ queryKey: PROFESSOR_QUERY_KEY(professor.id) });
+      // Reset form and close dialog
+      setNewCourseCode('');
+      setNewCourseName('');
+      setNewCourseDescription('');
+      setNewCourseCredits('9');
+      setNewCourseDifficulty('3');
+      setModalState(false);
+    } catch (error) {
+      // Error is already handled in the hook
+      console.error('Failed to add course:', error);
+    }
   };
 
   return (
@@ -89,19 +96,23 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
               />
             </div>
             <div>
-              <Label htmlFor='credits'>Credits</Label>
-              <Select value={newCourseCredits} onValueChange={setNewCourseCredits}>
-                <SelectTrigger>
-                  <SelectValue placeholder='Select credits' />
-                </SelectTrigger>
-                <SelectContent>
-                  {['1', '2', '3', '4', '5'].map((credit) => (
-                    <SelectItem key={credit} value={credit}>
-                      {credit} {parseInt(credit) === 1 ? 'Credit' : 'Credits'}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor='credits'>
+                Credits: {newCourseCredits}
+                <span
+                  className='ml-2 cursor-pointer text-sm text-blue-600 underline'
+                  onClick={() => setShowCreditsHelp(true)}>
+                  Don't know?
+                </span>
+              </Label>
+              <Slider
+                id='credits'
+                min={2}
+                max={13}
+                step={1}
+                value={[parseInt(newCourseCredits)]}
+                onValueChange={(value) => setNewCourseCredits(value[0].toString())}
+                className='mt-2'
+              />
             </div>
           </div>
 
@@ -146,9 +157,49 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
           <Button variant='outline' onClick={() => setModalState(false)}>
             Cancel
           </Button>
-          <Button onClick={handleAddCourse}>Add Course</Button>
+          <Button onClick={handleAddCourse} disabled={isLoading}>
+            {isLoading ? 'Adding...' : 'Add Course'}
+          </Button>
         </DialogFooter>
       </DialogContent>
+
+      <Dialog open={showCreditsHelp} onOpenChange={setShowCreditsHelp}>
+        <DialogContent className='sm:max-w-[500px]'>
+          <DialogHeader>
+            <DialogTitle>How to Find Course Credits</DialogTitle>
+          </DialogHeader>
+          <div className='space-y-2'>
+            <ol className='list-inside list-decimal space-y-1'>
+              <li>
+                Visit the{' '}
+                <a
+                  href='https://prev.iitbhu.ac.in/dept'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-blue-600 underline'>
+                  IIT BHU Department Page
+                </a>
+              </li>
+              <li>Select your course department</li>
+              <li>Then click on your course on the top bar to view details</li>
+            </ol>
+            <div>
+              <Image
+                src='/images/courceCredit.png'
+                alt='How to find credits'
+                width={400}
+                height={150}
+                className='w-full rounded border'
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setShowCreditsHelp(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 }

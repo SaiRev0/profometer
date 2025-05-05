@@ -32,6 +32,8 @@ interface ReviewFormProps {
 
 export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
   const [reviewCourse, setReviewCourse] = useState('');
+  const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
+  const [semesterYear, setSemesterYear] = useState('');
   const [reviewSemester, setReviewSemester] = useState('');
   const [reviewRatings, setReviewRatings] = useState({
     teaching: 0,
@@ -46,6 +48,18 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
   const [attendanceMandatory, setAttendanceMandatory] = useState<'mandatory' | 'optional' | undefined>(undefined);
   const [reviewGrade, setReviewGrade] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
+
+  // Remove useEffect and update the handlers
+  const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
+    setSemesterType(value);
+    setReviewSemester(`${value}-${semesterYear}`);
+  };
+
+  const handleSemesterYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const year = e.target.value;
+    setSemesterYear(year);
+    setReviewSemester(`${semesterType}-${year}`);
+  };
 
   // Submit review function
   const handleSubmitReview = () => {
@@ -130,18 +144,24 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
 
             <div>
               <Label htmlFor='semester'>Semester</Label>
-              <Select value={reviewSemester} onValueChange={setReviewSemester}>
-                <SelectTrigger id='semester'>
-                  <SelectValue placeholder='Select a semester' />
-                </SelectTrigger>
-                <SelectContent>
-                  {['Fall 2023', 'Summer 2023', 'Spring 2023', 'Fall 2022', 'Summer 2022', 'Spring 2022'].map((sem) => (
-                    <SelectItem key={sem} value={sem}>
-                      {sem}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className='flex gap-2'>
+                <Select value={semesterType} onValueChange={handleSemesterTypeChange}>
+                  <SelectTrigger className='w-[120px]'>
+                    <SelectValue placeholder='Select type' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='Odd'>Odd</SelectItem>
+                    <SelectItem value='Even'>Even</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  type='number'
+                  placeholder='Year'
+                  value={semesterYear}
+                  onChange={handleSemesterYearChange}
+                  className='w-[100px]'
+                />
+              </div>
             </div>
           </div>
 

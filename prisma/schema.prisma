@@ -89,6 +89,9 @@ model Course {
     id          String    @id @default(cuid())
     code        String
     name        String
+    description String
+    credits     Int
+    difficulty  Int
     professorId String
     professor   Professor @relation(fields: [professorId], references: [id])
     reviews     Review[]
