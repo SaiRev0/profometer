@@ -114,7 +114,7 @@ export default function ReviewCard({ review, isLoading = false }: ReviewCardProp
               variant={
                 review.ratings.overall >= 4 ? 'default' : review.ratings.overall <= 2 ? 'destructive' : 'secondary'
               }>
-              {review.ratings.overall.toFixed(1)}
+              {review.ratings.overall}
             </Badge>
 
             <DropdownMenu>

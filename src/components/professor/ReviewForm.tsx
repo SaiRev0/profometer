@@ -3,20 +3,15 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import RatingStars from '@/components/ui/rating-stars';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useCreateReview } from '@/hooks/use-create-review';
 import { Professor, Review } from '@/lib/types';
 import { Separator } from '@radix-ui/react-separator';
 
@@ -31,6 +26,7 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
+  const createReview = useCreateReview();
   const [reviewCourse, setReviewCourse] = useState('');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
   const [semesterYear, setSemesterYear] = useState('');
@@ -43,9 +39,10 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     communication: 0
   });
   const [reviewComment, setReviewComment] = useState('');
-  const [wouldTakeAgain, setWouldTakeAgain] = useState<boolean | undefined>(undefined);
-  const [textbookRequired, setTextbookRequired] = useState<boolean | undefined>(undefined);
-  const [attendanceMandatory, setAttendanceMandatory] = useState<'mandatory' | 'optional' | undefined>(undefined);
+  const [wouldRecommend, setWouldRecommend] = useState<boolean | undefined>(undefined);
+  const [quizzes, setQuizzes] = useState<boolean | undefined>(undefined);
+  const [assignments, setAssignments] = useState<boolean | undefined>(undefined);
+  const [attendanceScore, setAttendanceScore] = useState<number>(50);
   const [reviewGrade, setReviewGrade] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
 
@@ -62,7 +59,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
   };
 
   // Submit review function
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     // Check if all ratings are provided
     if (Object.values(reviewRatings).some((rating) => rating === 0)) {
       toast.error('Please provide ratings for all categories.');
@@ -81,25 +78,45 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
       return;
     }
 
-    toast.success('Review Submitted!');
+    try {
+      await createReview.mutateAsync({
+        professorId: professor.id,
+        courseId: reviewCourse,
+        semester: reviewSemester,
+        anonymous: isAnonymous,
+        ratings: reviewRatings,
+        comment: reviewComment,
+        wouldRecommend: wouldRecommend!,
+        attendance: attendanceScore,
+        quizes: quizzes!,
+        assignments: assignments!,
+        grade: reviewGrade || undefined
+      });
 
-    // Reset form
-    setReviewRatings({
-      teaching: 0,
-      helpfulness: 0,
-      fairness: 0,
-      clarity: 0,
-      communication: 0
-    });
-    setReviewComment('');
-    setReviewCourse('');
-    setReviewSemester('');
-    setReviewGrade('');
-    setIsAnonymous(true);
-    setWouldTakeAgain(undefined);
-    setTextbookRequired(undefined);
-    setAttendanceMandatory(undefined);
-    setModalState(false);
+      toast.success('Review Submitted!');
+
+      // Reset form
+      setReviewRatings({
+        teaching: 0,
+        helpfulness: 0,
+        fairness: 0,
+        clarity: 0,
+        communication: 0
+      });
+      setReviewComment('');
+      setReviewCourse('');
+      setReviewSemester('');
+      setReviewGrade('');
+      setIsAnonymous(true);
+      setWouldRecommend(undefined);
+      setQuizzes(undefined);
+      setAssignments(undefined);
+      setAttendanceScore(50);
+      setModalState(false);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast.error('Failed to submit review. Please try again.');
+    }
   };
 
   return (
@@ -205,63 +222,100 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
 
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
             <div className='space-y-2'>
-              <Label>Would Take Again?</Label>
+              <Label>Would Recommend?</Label>
               <div className='flex gap-2'>
                 <Button
                   type='button'
-                  variant={wouldTakeAgain === true ? 'default' : 'outline'}
+                  variant={wouldRecommend === true ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => setWouldTakeAgain(true)}>
+                  onClick={() => setWouldRecommend(true)}>
                   Yes
                 </Button>
                 <Button
                   type='button'
-                  variant={wouldTakeAgain === false ? 'default' : 'outline'}
+                  variant={wouldRecommend === false ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => setWouldTakeAgain(false)}>
+                  onClick={() => setWouldRecommend(false)}>
                   No
                 </Button>
               </div>
             </div>
 
             <div className='space-y-2'>
-              <Label>Textbook Required?</Label>
+              <Label>Quizzes?</Label>
               <div className='flex gap-2'>
                 <Button
                   type='button'
-                  variant={textbookRequired === true ? 'default' : 'outline'}
+                  variant={quizzes === true ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => setTextbookRequired(true)}>
+                  onClick={() => setQuizzes(true)}>
                   Yes
                 </Button>
                 <Button
                   type='button'
-                  variant={textbookRequired === false ? 'default' : 'outline'}
+                  variant={quizzes === false ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => setTextbookRequired(false)}>
+                  onClick={() => setQuizzes(false)}>
                   No
                 </Button>
               </div>
             </div>
 
             <div className='space-y-2'>
-              <Label>Attendance</Label>
+              <Label>Assignments?</Label>
               <div className='flex gap-2'>
                 <Button
                   type='button'
-                  variant={attendanceMandatory === 'mandatory' ? 'default' : 'outline'}
+                  variant={assignments === true ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => setAttendanceMandatory('mandatory')}>
-                  Mandatory
+                  onClick={() => setAssignments(true)}>
+                  Yes
                 </Button>
                 <Button
                   type='button'
-                  variant={attendanceMandatory === 'optional' ? 'default' : 'outline'}
+                  variant={assignments === false ? 'default' : 'outline'}
                   size='sm'
-                  onClick={() => setAttendanceMandatory('optional')}>
-                  Optional
+                  onClick={() => setAssignments(false)}>
+                  No
                 </Button>
               </div>
+            </div>
+          </div>
+
+          <div className='space-y-2'>
+            <Label>Attendance Rating</Label>
+            <div className='relative mx-auto w-[95%] pt-12'>
+              <div className='pointer-events-none absolute top-0 left-0 flex w-full'>
+                <div className='absolute left-0 flex w-12 translate-x-[-35%] flex-col items-center'>
+                  <span className='text-base sm:text-lg'>🚫</span>
+                  <span className='text-center text-xs leading-tight sm:text-sm'>Strict</span>
+                </div>
+                <div className='absolute left-1/4 flex w-12 translate-x-[-50%] flex-col items-center'>
+                  <span className='text-base sm:text-lg'>😓</span>
+                  <span className='text-center text-xs leading-tight sm:text-sm'>Tight</span>
+                </div>
+                <div className='absolute left-1/2 flex w-12 translate-x-[-50%] flex-col items-center'>
+                  <span className='text-base sm:text-lg'>😐</span>
+                  <span className='text-center text-xs leading-tight sm:text-sm'>Okay</span>
+                </div>
+                <div className='absolute left-3/4 flex w-12 translate-x-[-50%] flex-col items-center'>
+                  <span className='text-base sm:text-lg'>🙂</span>
+                  <span className='text-center text-xs leading-tight sm:text-sm'>Chill</span>
+                </div>
+                <div className='absolute left-full flex w-12 translate-x-[-65%] flex-col items-center'>
+                  <span className='text-base sm:text-lg'>😎</span>
+                  <span className='text-center text-xs leading-tight sm:text-sm'>Loose</span>
+                </div>
+              </div>
+              <Slider
+                id='attendanceScore'
+                min={0}
+                max={100}
+                step={12.5}
+                value={[attendanceScore]}
+                onValueChange={(value) => setAttendanceScore(value[0])}
+                className='mt-2'
+              />
             </div>
           </div>
 
@@ -272,13 +326,11 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
                 <SelectValue placeholder='Select your grade' />
               </SelectTrigger>
               <SelectContent>
-                {['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F', 'Audit', 'Withdraw', 'Incomplete'].map(
-                  (grade) => (
-                    <SelectItem key={grade} value={grade}>
-                      {grade}
-                    </SelectItem>
-                  )
-                )}
+                {['A*', 'A', 'A-', 'B', 'B-', 'C', 'C-', 'F', 'Z', 'S', 'I'].map((grade) => (
+                  <SelectItem key={grade} value={grade}>
+                    {grade}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

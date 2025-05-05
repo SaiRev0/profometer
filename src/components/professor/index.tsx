@@ -24,6 +24,7 @@ interface ProfessorDetailsProps {
 export default function ProfessorDetails({ professor, initialReviews }: ProfessorDetailsProps) {
   const [reviewFormOpen, setReviewFormOpen] = useState(false);
   const [addCourseDialogOpen, setAddCourseDialogOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<string>('all');
 
   return (
     <div className='mx-auto mt-4 max-w-4xl'>
@@ -48,9 +49,9 @@ export default function ProfessorDetails({ professor, initialReviews }: Professo
           {/* Rating Summary */}
           <RatingSummary professor={professor} setModalState={setReviewFormOpen} />
           {/* Courses Section */}
-          <CoursesSection professor={professor} />
+          <CoursesSection professor={professor} selectedCourse={selectedCourse} onCourseSelect={setSelectedCourse} />
           {/* Reviews Section */}
-          <ReviewList initialReviews={initialReviews} />
+          <ReviewList initialReviews={initialReviews} selectedCourse={selectedCourse} />
           {/* Add Course Dialog */}
           <CourseForm professor={professor} modalState={addCourseDialogOpen} setModalState={setAddCourseDialogOpen} />
         </div>

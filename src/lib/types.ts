@@ -75,7 +75,7 @@ export interface Professor {
   reviews: Review[];
   statistics: {
     wouldRecommend: number;
-    attendanceMandatory: number;
+    attendanceRating: number;
     quizes: number;
     assignments: number;
   };

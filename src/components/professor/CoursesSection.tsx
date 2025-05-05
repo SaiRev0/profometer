@@ -4,8 +4,13 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Professor } from '@/lib/types';
 
-function CoursesSection({ professor }: { professor: Professor }) {
-  const [selectedCourse, setSelectedCourse] = useState<string>('all');
+interface CoursesSectionProps {
+  professor: Professor;
+  selectedCourse: string;
+  onCourseSelect: (courseCode: string) => void;
+}
+
+function CoursesSection({ professor, selectedCourse, onCourseSelect }: CoursesSectionProps) {
   return (
     <Card className='mb-6'>
       <CardHeader className='pb-2'>
@@ -18,17 +23,17 @@ function CoursesSection({ professor }: { professor: Professor }) {
           <Badge
             variant={selectedCourse === 'all' ? 'default' : 'outline'}
             className='cursor-pointer'
-            onClick={() => setSelectedCourse('all')}>
+            onClick={() => onCourseSelect('all')}>
             All Courses
           </Badge>
 
           {professor.courses.map((course) => (
             <Badge
               key={course.code}
-              variant={selectedCourse === course.code ? 'default' : 'outline'}
+              variant={selectedCourse === course.id ? 'default' : 'outline'}
               className='cursor-pointer'
-              onClick={() => setSelectedCourse(course.code)}>
-              {course.code} ({course.reviewCount})
+              onClick={() => onCourseSelect(course.id)}>
+              {course.code} ({course.reviewCount || 0})
             </Badge>
           ))}
         </div>

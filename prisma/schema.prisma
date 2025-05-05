@@ -81,6 +81,8 @@ model Professor {
     website      String?
     courses      Course[]
     reviews      Review[]
+    // Statistics stored as JSON
+    statistics   Json       @default("{\"ratings\":{\"overall\":0,\"teaching\":0,\"helpfulness\":0,\"fairness\":0,\"clarity\":0,\"communication\":0},\"percentages\":{\"wouldRecommend\":0,\"attendanceRating\":0,\"quizes\":0,\"assignments\":0},\"totalReviews\":0}")
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @updatedAt
 }
@@ -95,6 +97,7 @@ model Course {
     professorId String
     professor   Professor @relation(fields: [professorId], references: [id])
     reviews     Review[]
+    reviewCount Int       @default(0)
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
 }

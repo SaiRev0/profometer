@@ -18,9 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { useAddCourse } from '@/hooks/use-add-course';
-import { PROFESSOR_QUERY_KEY } from '@/hooks/use-professor';
 import { Professor } from '@/lib/types';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
@@ -33,7 +31,6 @@ interface CourseFormProps {
 
 function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
   const { addCourse, isLoading } = useAddCourse();
-  const queryClient = useQueryClient();
 
   // Add new state for course modal
   const [newCourseCode, setNewCourseCode] = useState('');
@@ -59,7 +56,7 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
         difficulty: newCourseDifficulty,
         professorId: professor.id
       });
-      queryClient.invalidateQueries({ queryKey: PROFESSOR_QUERY_KEY(professor.id) });
+
       // Reset form and close dialog
       setNewCourseCode('');
       setNewCourseName('');

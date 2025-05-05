@@ -65,9 +65,9 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
               </div>
 
               <div className='flex items-center justify-between'>
-                <p className='text-sm'>Attendance Mandatory</p>
+                <p className='text-sm'>Attendance Rating</p>
                 <Badge variant='outline' className='bg-chart-2/10'>
-                  {professor.statistics.attendanceMandatory.toFixed(1)}/5
+                  {professor.statistics.attendanceRating}%
                 </Badge>
               </div>
 

@@ -10,13 +10,13 @@ import { Review } from '@/lib/types';
 
 interface ReviewListProps {
   initialReviews: Review[];
+  selectedCourse: string;
 }
 
-export default function ReviewList({ initialReviews }: ReviewListProps) {
+export default function ReviewList({ initialReviews, selectedCourse }: ReviewListProps) {
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [visibleReviews, setVisibleReviews] = useState(5);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<string>('all');
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
 
   const handleLoadMore = () => {
@@ -57,7 +57,6 @@ export default function ReviewList({ initialReviews }: ReviewListProps) {
         <Card>
           <CardContent className='p-6 text-center'>
             <p className='text-muted-foreground mb-4'>No reviews found for the selected filters.</p>
-            <Button onClick={() => setSelectedCourse('all')}>View All Reviews</Button>
           </CardContent>
         </Card>
       ) : (
