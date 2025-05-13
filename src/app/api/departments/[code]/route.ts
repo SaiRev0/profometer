@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
-import type { Course, Department, Professor, Review } from '@/lib/types';
 
-export async function GET(request: NextRequest, { params }: { params: { code: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   try {
-    const { code } = params;
+    const { code } = await params;
 
     const department = await db.department.findUnique({
       where: {
