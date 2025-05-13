@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
       include: {
         _count: {
           select: {
-            professors: true
+            professors: true,
+            courses: true
           }
         },
         professors: {
@@ -57,6 +58,7 @@ export async function GET(request: NextRequest) {
         code: dept.code,
         avgRating: Number(avgRating.toFixed(1)),
         numProfessors: dept._count.professors,
+        numCourses: dept._count.courses,
         numReviews: totalReviews,
         isDefault: dept.code === 'CSE', // Example: CSE is default
         isProtected: false

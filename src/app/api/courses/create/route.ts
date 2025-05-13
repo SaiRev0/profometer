@@ -13,9 +13,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { code, name, description, credits, difficulty, professorId } = body;
+    const { code, name, description, credits, departmentId } = body;
 
-    if (!code || !name || !professorId) {
+    if (!code || !name || !departmentId) {
       return new NextResponse('Missing required fields', { status: 400 });
     }
 
@@ -23,10 +23,10 @@ export async function POST(request: Request) {
       data: {
         code: code.toUpperCase(),
         name,
-        professorId,
+        departmentId: departmentId,
         description,
         credits: parseInt(credits),
-        difficulty: parseInt(difficulty)
+        verified: false
       }
     });
 
@@ -40,15 +40,16 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const professorId = searchParams.get('professorId');
+    const departmentId = searchParams.get('departmentId');
 
-    if (!professorId) {
-      return new NextResponse('Professor ID is required', { status: 400 });
+    if (!departmentId) {
+      return new NextResponse('Department ID is required', { status: 400 });
     }
 
     const courses = await db.course.findMany({
       where: {
-        professorId
+        departmentId: departmentId,
+        verified: true
       },
       orderBy: {
         createdAt: 'desc'

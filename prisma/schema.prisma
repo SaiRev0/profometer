@@ -97,6 +97,7 @@ model Course {
     department   Department @relation(fields: [departmentId], references: [id])
     reviews      Review[]
     reviewCount  Int        @default(0)
+    verified     Boolean    @default(false)
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @updatedAt
 }

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import Link from 'next/link';
 
-import ProfessorCard from '@/components/cards/professor-card';
+import ProfessorCard from '@/components/cards/ProfessorCard';
 import { Button } from '@/components/ui/button';
 import { Professor } from '@/lib/types';
 

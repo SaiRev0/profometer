@@ -47,9 +47,12 @@ export interface Course {
   id: string;
   code: string;
   name: string;
-  professorId: string;
+  description: string;
+  credits: number;
+  departmentId: string;
   reviews: Review[];
   reviewCount: number;
+  verified: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -80,6 +83,7 @@ export interface Professor {
     assignments: number;
   };
   courses: Course[];
+  departmentCourses: Course[];
 }
 
 export interface Review {

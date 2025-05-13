@@ -37,7 +37,6 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
   const [newCourseName, setNewCourseName] = useState('');
   const [newCourseDescription, setNewCourseDescription] = useState('');
   const [newCourseCredits, setNewCourseCredits] = useState('3');
-  const [newCourseDifficulty, setNewCourseDifficulty] = useState('3');
   const [showCreditsHelp, setShowCreditsHelp] = useState(false);
 
   // Function to handle adding a new course
@@ -53,8 +52,7 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
         name: newCourseName,
         description: newCourseDescription,
         credits: newCourseCredits,
-        difficulty: newCourseDifficulty,
-        professorId: professor.id
+        departmentId: professor.department.id
       });
 
       // Reset form and close dialog
@@ -62,7 +60,6 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
       setNewCourseName('');
       setNewCourseDescription('');
       setNewCourseCredits('9');
-      setNewCourseDifficulty('3');
       setModalState(false);
     } catch (error) {
       // Error is already handled in the hook
@@ -131,22 +128,6 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
               value={newCourseDescription}
               onChange={(e) => setNewCourseDescription(e.target.value)}
             />
-          </div>
-
-          <div>
-            <Label htmlFor='difficulty'>Expected Difficulty</Label>
-            <Select value={newCourseDifficulty} onValueChange={setNewCourseDifficulty}>
-              <SelectTrigger>
-                <SelectValue placeholder='Select difficulty' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='1'>Very Easy</SelectItem>
-                <SelectItem value='2'>Easy</SelectItem>
-                <SelectItem value='3'>Moderate</SelectItem>
-                <SelectItem value='4'>Challenging</SelectItem>
-                <SelectItem value='5'>Very Challenging</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 

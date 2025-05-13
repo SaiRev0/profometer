@@ -15,7 +15,7 @@ import { useCreateReview } from '@/hooks/use-create-review';
 import { Professor, Review } from '@/lib/types';
 import { Separator } from '@radix-ui/react-separator';
 
-import { Plus } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ReviewFormProps {
@@ -45,6 +45,10 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
   const [attendanceScore, setAttendanceScore] = useState<number>(50);
   const [reviewGrade, setReviewGrade] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [courseSearch, setCourseSearch] = useState('');
+
+  // Add helper function to get current year
+  const getCurrentYear = () => new Date().getFullYear();
 
   // Remove useEffect and update the handlers
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
@@ -58,8 +62,23 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     setReviewSemester(`${semesterType}-${year}`);
   };
 
+  // Add this function to filter courses
+  const filteredCourses = professor.departmentCourses.filter((course) => {
+    const searchTerm = courseSearch.toLowerCase();
+    return course.code.toLowerCase().includes(searchTerm) || course.name.toLowerCase().includes(searchTerm);
+  });
+
   // Submit review function
   const handleSubmitReview = async () => {
+    // Validate year
+    const year = parseInt(semesterYear);
+    const currentYear = getCurrentYear();
+
+    if (isNaN(year) || year < 2012 || year > currentYear) {
+      toast.error(`Year must be between 2012 and ${currentYear}`);
+      return;
+    }
+
     // Check if all ratings are provided
     if (Object.values(reviewRatings).some((rating) => rating === 0)) {
       toast.error('Please provide ratings for all categories.');
@@ -146,25 +165,39 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
               <Label htmlFor='course'>Course Taken</Label>
               <Select value={reviewCourse} onValueChange={setReviewCourse}>
                 <SelectTrigger id='course'>
-                  <SelectValue placeholder='Select a course' />
+                  <SelectValue placeholder='Select a course' className='flex-1 truncate' />
                 </SelectTrigger>
-                <SelectContent>
-                  <div className='p-2'>
+                <SelectContent showScrollButtons={false}>
+                  <div className='bg-background sticky top-0 z-10 border-b p-2'>
+                    <div className='relative'>
+                      <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
+                      <Input
+                        placeholder='Search courses...'
+                        value={courseSearch}
+                        onChange={(e) => setCourseSearch(e.target.value)}
+                        className='pl-8'
+                      />
+                    </div>
                     <Button
                       variant='outline'
                       size='sm'
-                      className='flex w-full items-center justify-center gap-2'
+                      className='mt-2 flex w-full items-center justify-center gap-2'
                       onClick={() => setAddCourseDialogOpen(true)}>
                       <Plus className='h-4 w-4' />
                       Add New Course
                     </Button>
                   </div>
-                  <Separator className='my-2' />
-                  {professor.courses.map((course) => (
-                    <SelectItem key={course.id} value={course.id}>
-                      {course.code} - {course.name}
-                    </SelectItem>
-                  ))}
+                  <div className='max-h-[300px] overflow-y-auto pt-1 pb-1'>
+                    {filteredCourses.length === 0 ? (
+                      <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
+                    ) : (
+                      filteredCourses.map((course) => (
+                        <SelectItem key={course.id} value={course.id} className='py-2'>
+                          {course.code} - {course.name}
+                        </SelectItem>
+                      ))
+                    )}
+                  </div>
                 </SelectContent>
               </Select>
             </div>

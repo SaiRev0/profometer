@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
-import { PROFESSOR_QUERY_KEY } from './use-professor';
+// import { PROFESSOR_QUERY_KEY } from './use-professor';
 import { toast } from 'sonner';
 
 interface AddCourseData {
@@ -8,12 +8,11 @@ interface AddCourseData {
   name: string;
   description?: string;
   credits: string;
-  difficulty: string;
-  professorId: string;
+  departmentId: string;
 }
 
 export function useAddCourse() {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const { mutateAsync: addCourse, isPending } = useMutation({
     mutationFn: async (data: AddCourseData) => {
@@ -32,12 +31,14 @@ export function useAddCourse() {
       return response.json();
     },
     onSuccess: (_, variables) => {
-      toast.success('Course added successfully');
-      // Invalidate and refetch professor data
-      queryClient.invalidateQueries({
-        queryKey: PROFESSOR_QUERY_KEY(variables.professorId),
-        refetchType: 'all'
+      toast.success('Course added successfully', {
+        description: 'It will be verified soon'
       });
+      // // Invalidate and refetch professor data
+      // queryClient.invalidateQueries({
+      //   queryKey: PROFESSOR_QUERY_KEY(variables.professorId),
+      //   refetchType: 'all'
+      // });
     },
     onError: () => {
       toast.error('Failed to add course');

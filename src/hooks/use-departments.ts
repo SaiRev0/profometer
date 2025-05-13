@@ -6,6 +6,7 @@ interface Department {
   code: string;
   avgRating: number;
   numProfessors: number;
+  numCourses: number;
   numReviews: number;
   isDefault?: boolean;
   isProtected?: boolean;

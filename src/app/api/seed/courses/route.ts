@@ -47,7 +47,8 @@ async function seedCourses() {
         name: record['Course Name'],
         description: `Course offered by ${department.name} department`,
         credits: parseInt(record['Credits']),
-        departmentId: department.id
+        departmentId: department.id,
+        verified: true
       }));
 
       // Insert courses in batches

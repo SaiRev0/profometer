@@ -67,6 +67,13 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       new Map(professor.reviews.map((review) => [review.course.id, review.course])).values()
     );
 
+    const departmentCourses = await db.course.findMany({
+      where: {
+        departmentId: professor.departmentId,
+        verified: true
+      }
+    });
+
     // Combine all data
     const response = {
       ...professor,
@@ -74,7 +81,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       statistics: statistics.percentages,
       numReviews: statistics.totalReviews,
       numCourses: uniqueCourses.length,
-      courses: uniqueCourses
+      courses: uniqueCourses,
+      departmentCourses: departmentCourses
     };
 
     return NextResponse.json(response);

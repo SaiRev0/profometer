@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import ReviewCard from '@/components/cards/review-card';
+import ReviewCard from '@/components/cards/ReviewCard';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';

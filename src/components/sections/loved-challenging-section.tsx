@@ -1,4 +1,4 @@
-import ProfessorCard from '@/components/cards/professor-card';
+import ProfessorCard from '@/components/cards/ProfessorCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Professor } from '@/lib/types';
 

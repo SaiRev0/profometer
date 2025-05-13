@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import ProfessorCard from '@/components/cards/professor-card';
+import ProfessorCard from '@/components/cards/ProfessorCard';
 import FilterDropdown, { FilterOption, SortOption } from '@/components/filters/filter-dropdown';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
