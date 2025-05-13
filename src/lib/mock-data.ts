@@ -1,9 +1,5 @@
-import { Professor } from '@/lib/types';
-
-import { Branch, BranchData, Department } from './types';
-
 // Mock data for branches
-export const departments: Department[] = [
+export const departments = [
   {
     id: 'APD',
     name: 'Architecture, Planning and Design',
@@ -259,7 +255,7 @@ export const mockReviews = Array.from({ length: 10 }, (_, i) => ({
 }));
 
 // Mock branch data for Computer Science
-export const mockBranchData: BranchData = {
+export const mockBranchData = {
   name: 'Computer Science',
   description:
     'Computer Science is the study of computers and computational systems, including theory, development, design, and application. This branch covers algorithms, data structures, programming languages, computer architecture, artificial intelligence, and more.',
