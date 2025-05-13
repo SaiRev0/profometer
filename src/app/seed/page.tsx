@@ -6,6 +6,22 @@ export default function SeedPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const handleSeedCourses = async () => {
+    try {
+      setLoading(true);
+      setMessage('');
+      const response = await fetch('/api/seed/courses', {
+        method: 'POST'
+      });
+      const data = await response.json();
+      setMessage(data.message || data.error);
+    } catch (error) {
+      setMessage('Failed to seed courses');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSeedDepartments = async () => {
     try {
       setLoading(true);
@@ -54,6 +70,12 @@ export default function SeedPage() {
             disabled={loading}
             className='rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:bg-gray-400'>
             {loading ? 'Seeding...' : 'Seed Professors'}
+          </button>
+          <button
+            onClick={handleSeedCourses}
+            disabled={loading}
+            className='rounded bg-purple-500 px-4 py-2 text-white hover:bg-purple-600 disabled:bg-gray-400'>
+            {loading ? 'Seeding...' : 'Seed Courses'}
           </button>
         </div>
         {message && (

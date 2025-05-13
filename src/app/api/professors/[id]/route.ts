@@ -18,7 +18,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             },
             course: {
               select: {
+                id: true,
                 code: true,
+                name: true,
+                credits: true,
+                department: {
+                  select: {
+                    code: true,
+                    name: true
+                  }
+                }
               }
             }
           },
@@ -26,7 +35,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             createdAt: 'desc'
           }
         },
-        courses: true,
         department: true
       }
     });
@@ -54,13 +62,19 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       totalReviews: number;
     };
 
+    // Get unique courses from reviews
+    const uniqueCourses = Array.from(
+      new Map(professor.reviews.map((review) => [review.course.id, review.course])).values()
+    );
+
     // Combine all data
     const response = {
       ...professor,
       ratings: statistics.ratings,
       statistics: statistics.percentages,
       numReviews: statistics.totalReviews,
-      numCourses: professor.courses.length
+      numCourses: uniqueCourses.length,
+      courses: uniqueCourses
     };
 
     return NextResponse.json(response);

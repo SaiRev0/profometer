@@ -30,8 +30,17 @@ export async function GET(request: NextRequest) {
         skip,
         take: limit,
         include: {
-          reviews: true,
-          courses: true,
+          reviews: {
+            include: {
+              course: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true
+                }
+              }
+            }
+          },
           department: true
         }
       }),
@@ -41,6 +50,11 @@ export async function GET(request: NextRequest) {
     // Calculate ratings for each professor
     const professorsWithRatings = professors.map((professor) => {
       const totalReviews = professor.reviews.length;
+
+      // Get unique courses from reviews
+      const uniqueCourses = Array.from(
+        new Map(professor.reviews.map((review) => [review.course.id, review.course])).values()
+      );
 
       // Initialize ratings object
       const ratings = {
@@ -106,7 +120,8 @@ export async function GET(request: NextRequest) {
         ratings,
         statistics,
         numReviews: totalReviews,
-        numCourses: professor.courses.length
+        numCourses: uniqueCourses.length,
+        courses: uniqueCourses
       };
     });
 
