@@ -5,7 +5,11 @@ export interface Department {
   avgRating: number;
   numProfessors: number;
   numReviews: number;
+  numCourses: number;
+  professors: Professor[];
+  courses: Course[];
 }
+
 export interface Branch {
   name: string;
   isDefault: boolean;
@@ -50,8 +54,10 @@ export interface Course {
   description: string;
   credits: number;
   departmentId: string;
+  avgRating: number;
+  numReviews: number;
+  numProfessors: number;
   reviews: Review[];
-  reviewCount: number;
   verified: boolean;
   createdAt: Date;
   updatedAt: Date;

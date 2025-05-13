@@ -2,34 +2,27 @@
 
 import Link from 'next/link';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import RatingStars from '@/components/ui/rating-stars';
-import { Professor } from '@/lib/types';
+import { Course } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
-import { Bookmark, ChevronRight, ThumbsDown, ThumbsUp, User, UserCheck } from 'lucide-react';
+import { BookOpen, ChevronRight } from 'lucide-react';
 
-interface ProfessorCardProps {
-  professor: Professor;
+interface CourseCardProps {
+  course: Course;
   variant?: 'compact' | 'detailed';
   isLoading?: boolean;
 }
 
-export default function ProfessorCard({ professor, variant = 'detailed', isLoading = false }: ProfessorCardProps) {
+export default function CourseCard({ course, variant = 'detailed', isLoading = false }: CourseCardProps) {
   if (isLoading) {
-    return <ProfessorCardSkeleton variant={variant} />;
+    return <CourseCardSkeleton variant={variant} />;
   }
 
   const isCompact = variant === 'compact';
-  const initials = professor.name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase();
 
   const cardContent = (
     <Card
@@ -39,62 +32,25 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
       )}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex items-start gap-3'>
-          <Avatar className='h-12 w-12'>
-            {professor.photoUrl ? (
-              <AvatarImage src={professor.photoUrl} alt={professor.name} />
-            ) : (
-              <AvatarFallback className='bg-primary/10 text-primary'>{initials}</AvatarFallback>
-            )}
-          </Avatar>
-
+          <div className='bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full'>
+            <BookOpen className='h-6 w-6' />
+          </div>
           <div className='flex-1'>
             <div className='flex items-start justify-between'>
               <div>
-                <h3 className={cn('line-clamp-1 font-bold', isCompact ? 'text-base' : 'text-lg')}>{professor.name}</h3>
-                {!isCompact && (
-                  <p className='text-muted-foreground mb-1 line-clamp-1 text-sm'>{professor.department.name}</p>
-                )}
+                <h3 className={cn('line-clamp-1 font-bold', isCompact ? 'text-base' : 'text-lg')}>{course.code}</h3>
+                <p className='text-muted-foreground line-clamp-1 text-sm'>{course.name}</p>
               </div>
 
-              <Badge
-                variant={
-                  professor.ratings.overall >= 4
-                    ? 'default'
-                    : professor.ratings.overall <= 2
-                      ? 'destructive'
-                      : 'secondary'
-                }>
-                {professor.ratings.overall}
+              <Badge variant={course.avgRating >= 4 ? 'default' : course.avgRating <= 2 ? 'destructive' : 'secondary'}>
+                {course.avgRating.toFixed(1)}
               </Badge>
             </div>
-
-            <div className='mt-1 mb-2 flex items-center'>
-              <RatingStars value={professor.ratings.overall} size={isCompact ? 'sm' : 'md'} />
-              <span className='text-muted-foreground ml-2 text-xs'>({professor.numReviews})</span>
-            </div>
-
-            {!isCompact && professor.reviews[0] && (
-              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-2 border-l-2 pl-2 text-sm'>
-                "{professor.reviews[0].comment}"
-              </blockquote>
-            )}
           </div>
         </div>
       </CardContent>
 
       <CardFooter className={cn('flex items-center justify-between px-4 pt-0 pb-4', isCompact && 'pt-0')}>
-        <div className='flex gap-2'>
-          <Button size='sm' variant='ghost' className='h-8 px-2 text-xs'>
-            <ThumbsUp className='mr-1 h-3.5 w-3.5' />
-            Helpful
-          </Button>
-          {!isCompact && (
-            <Button size='sm' variant='ghost' className='h-8 px-2 text-xs'>
-              <Bookmark className='mr-1 h-3.5 w-3.5' />
-              Save
-            </Button>
-          )}
-        </div>
         <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
             View
@@ -107,12 +63,12 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-      <Link href={`/professor/${professor.id}`}>{cardContent}</Link>
+      <Link href={`/course/${course.id}`}>{cardContent}</Link>
     </motion.div>
   );
 }
 
-function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
+function CourseCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
   const isCompact = variant === 'compact';
 
   return (

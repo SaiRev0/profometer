@@ -1,31 +1,54 @@
 'use client';
 
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { useCallback, useState } from 'react';
 
+import Link from 'next/link';
+import { notFound, useParams } from 'next/navigation';
+
+import CourseCard from '@/components/cards/CourseCard';
+import ProfessorCard from '@/components/cards/ProfessorCard';
 import { Button } from '@/components/ui/button';
-import { getDepartmentsByRating } from '@/lib/mock-data';
-import { cn } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useDepartment } from '@/hooks/use-department';
 
 import { motion } from 'framer-motion';
-import { BookOpen, ChevronLeft, Star, Users } from 'lucide-react';
+import { BookOpen, ChevronLeft, Search, Star, Users } from 'lucide-react';
 
 export default function DepartmentPage() {
-  const code = 'CSE';
-  const departments = getDepartmentsByRating();
-  const department = departments.find((dept) => dept.code.toLowerCase() === code.toLowerCase());
+  const params = useParams();
+  const code = params.code as string;
+  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState<'professors' | 'courses'>('professors');
+  const debouncedSearch = useDebounce(search, 300);
 
-  if (!department) {
-    notFound();
+  const {
+    data: department,
+    isLoading,
+    error
+  } = useDepartment({
+    code,
+    search: debouncedSearch
+  });
+
+  console.log(department);
+
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  }, []);
+
+  if (error) {
+    if (error.message === 'Department not found') {
+      notFound();
+    }
+    throw error;
   }
 
-  const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) return 'bg-success';
-    if (rating >= 4.0) return 'bg-primary';
-    if (rating >= 3.5) return 'bg-amber-500';
-    if (rating >= 3.0) return 'bg-orange-500';
-    return 'bg-error';
-  };
+  if (isLoading || !department) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -52,21 +75,31 @@ export default function DepartmentPage() {
         </div>
       </motion.div>
 
-      <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
-        <div className='lg:col-span-2'>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className='mb-8 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800'>
-            <h2 className='mb-4 text-2xl font-semibold'>Department Overview</h2>
-            <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+      {/* Department Stats */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className='mt-8'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Department Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
               <div>
                 <div className='mb-2 flex items-center'>
                   <Users className='text-primary mr-2 h-5 w-5' />
                   <span className='font-medium'>Number of Professors</span>
                 </div>
-                <p className='text-2xl font-bold'>{department.numProfessors}</p>
+                <p className='text-2xl font-bold'>{department._count.professors}</p>
+              </div>
+              <div>
+                <div className='mb-2 flex items-center'>
+                  <BookOpen className='text-primary mr-2 h-5 w-5' />
+                  <span className='font-medium'>Number of Courses</span>
+                </div>
+                <p className='text-2xl font-bold'>{department._count.courses}</p>
               </div>
               <div>
                 <div className='mb-2 flex items-center'>
@@ -76,59 +109,78 @@ export default function DepartmentPage() {
                 <p className='text-2xl font-bold'>{department.avgRating}/5.0</p>
               </div>
             </div>
-          </motion.div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className='rounded-lg bg-white p-6 shadow-md dark:bg-gray-800'>
-            <h2 className='mb-4 text-2xl font-semibold'>Rating Distribution</h2>
-            <div className='space-y-4'>
-              {[5, 4, 3, 2, 1].map((rating) => (
-                <div key={rating} className='flex items-center'>
-                  <div className='w-12 text-sm font-medium'>{rating} stars</div>
-                  <div className='mx-4 h-4 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-gray-700'>
-                    <div
-                      className={cn('h-full rounded-full', getRatingColor(rating))}
-                      style={{ width: `${(rating / 5) * 100}%` }}
-                    />
-                  </div>
-                  <div className='w-12 text-right text-sm'>
-                    {Math.round((rating / 5) * department.numReviews)} reviews
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className='rounded-lg bg-white p-6 shadow-md dark:bg-gray-800'>
-            <h2 className='mb-4 text-2xl font-semibold'>Quick Stats</h2>
-            <div className='space-y-4'>
-              <div>
-                <div className='text-muted-foreground text-sm'>Total Reviews</div>
-                <div className='text-2xl font-bold'>{department.numReviews}</div>
-              </div>
-              <div>
-                <div className='text-muted-foreground text-sm'>Department Code</div>
-                <div className='text-2xl font-bold'>{department.code}</div>
-              </div>
-              <div>
-                <div className='text-muted-foreground text-sm'>Professors per Review</div>
-                <div className='text-2xl font-bold'>
-                  {(department.numProfessors / department.numReviews)}
-                </div>
-              </div>
-            </div>
-          </motion.div>
+      <div className='my-8'>
+        <div className='relative'>
+          <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
+          <Input
+            placeholder='Search professors or courses...'
+            value={search}
+            onChange={handleSearch}
+            className='pl-9'
+          />
         </div>
       </div>
+
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => {
+          setActiveTab(value as 'professors' | 'courses');
+          setSearch(''); // Clear search when changing tabs
+        }}
+        className='mb-8'>
+        <TabsList className='grid w-full grid-cols-2'>
+          <TabsTrigger value='professors'>Professors ({department.professors.length})</TabsTrigger>
+          <TabsTrigger value='courses'>Courses ({department.courses.length})</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value='professors'>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}>
+            <Card>
+              <CardContent className='pt-6'>
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+                  {department.professors.map((professor) => (
+                    <div key={professor.id} className='min-w-[300px] snap-start sm:min-w-[320px]'>
+                      <ProfessorCard professor={professor} variant='compact' />
+                    </div>
+                  ))}
+                  {department.professors.length === 0 && (
+                    <p className='text-muted-foreground text-center'>No professors found</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value='courses'>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}>
+            <Card>
+              <CardContent className='pt-6'>
+                <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                  {department.courses.map((course) => (
+                    <div key={course.id} className='min-w-[300px] snap-start sm:min-w-[320px]'>
+                      <CourseCard course={course} variant='compact' />
+                    </div>
+                  ))}
+                  {department.courses.length === 0 && (
+                    <p className='text-muted-foreground col-span-full text-center'>No courses found</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
