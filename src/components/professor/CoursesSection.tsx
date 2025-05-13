@@ -24,7 +24,7 @@ function CoursesSection({ professor, selectedCourse, onCourseSelect }: CoursesSe
             variant={selectedCourse === 'all' ? 'default' : 'outline'}
             className='cursor-pointer'
             onClick={() => onCourseSelect('all')}>
-            All Courses
+            All Courses {professor.numReviews || 0}
           </Badge>
 
           {professor.courses.map((course) => (
@@ -33,7 +33,7 @@ function CoursesSection({ professor, selectedCourse, onCourseSelect }: CoursesSe
               variant={selectedCourse === course.id ? 'default' : 'outline'}
               className='cursor-pointer'
               onClick={() => onCourseSelect(course.id)}>
-              {course.code} ({course.reviewCount || 0})
+              {course.code} ({course.numReviews || 0})
             </Badge>
           ))}
         </div>

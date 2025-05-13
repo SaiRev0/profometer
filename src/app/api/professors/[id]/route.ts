@@ -10,24 +10,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       include: {
         reviews: {
           include: {
-            user: {
-              select: {
-                name: true,
-                image: true
-              }
-            },
+            user: true,
             course: {
-              select: {
-                id: true,
-                code: true,
-                name: true,
-                credits: true,
-                department: {
-                  select: {
-                    code: true,
-                    name: true
-                  }
-                }
+              include: {
+                reviews: true
               }
             }
           },
@@ -62,17 +48,34 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       totalReviews: number;
     };
 
-    // Get unique courses from reviews
+    // Get unique courses from reviews with their review counts
     const uniqueCourses = Array.from(
-      new Map(professor.reviews.map((review) => [review.course.id, review.course])).values()
+      new Map(
+        professor.reviews.map((review) => [
+          review.course.id,
+          {
+            ...review.course,
+            numReviews: review.course.reviews.length
+          }
+        ])
+      ).values()
     );
 
     const departmentCourses = await db.course.findMany({
       where: {
         departmentId: professor.departmentId,
         verified: true
+      },
+      include: {
+        reviews: true
       }
     });
+
+    // Add numReviews to department courses
+    const departmentCoursesWithReviews = departmentCourses.map((course) => ({
+      ...course,
+      numReviews: course.reviews.length
+    }));
 
     // Combine all data
     const response = {
@@ -82,7 +85,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       numReviews: statistics.totalReviews,
       numCourses: uniqueCourses.length,
       courses: uniqueCourses,
-      departmentCourses: departmentCourses
+      departmentCourses: departmentCoursesWithReviews
     };
 
     return NextResponse.json(response);

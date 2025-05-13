@@ -79,6 +79,12 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
       return;
     }
 
+    // Validate semester
+    if (!semesterType || !semesterYear) {
+      toast.error('Please select both semester type and year.');
+      return;
+    }
+
     // Check if all ratings are provided
     if (Object.values(reviewRatings).some((rating) => rating === 0)) {
       toast.error('Please provide ratings for all categories.');
@@ -94,6 +100,24 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     // Check if course is selected
     if (!reviewCourse) {
       toast.error('Please select the course you took with this professor.');
+      return;
+    }
+
+    // Validate would recommend
+    if (wouldRecommend === undefined) {
+      toast.error('Please indicate if you would recommend this professor.');
+      return;
+    }
+
+    // Validate quizzes
+    if (quizzes === undefined) {
+      toast.error('Please indicate if the course had quizzes.');
+      return;
+    }
+
+    // Validate assignments
+    if (assignments === undefined) {
+      toast.error('Please indicate if the course had assignments.');
       return;
     }
 
