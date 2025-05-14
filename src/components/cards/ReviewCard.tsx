@@ -276,3 +276,5 @@ function ReviewCardSkeleton() {
     </Card>
   );
 }
+
+export { ReviewCardSkeleton };
