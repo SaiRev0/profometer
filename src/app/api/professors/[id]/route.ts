@@ -29,25 +29,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Professor not found' }, { status: 404 });
     }
 
-    // Parse statistics from JSON
-    const statistics = professor.statistics as {
-      ratings: {
-        overall: number;
-        teaching: number;
-        helpfulness: number;
-        fairness: number;
-        clarity: number;
-        communication: number;
-      };
-      percentages: {
-        wouldRecommend: number;
-        attendanceRating: number;
-        quizes: number;
-        assignments: number;
-      };
-      totalReviews: number;
-    };
-
     // Get unique courses from reviews with their review counts
     const uniqueCourses = Array.from(
       new Map(
@@ -80,9 +61,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Combine all data
     const response = {
       ...professor,
-      ratings: statistics.ratings,
-      statistics: statistics.percentages,
-      numReviews: statistics.totalReviews,
       numCourses: uniqueCourses.length,
       courses: uniqueCourses,
       departmentCourses: departmentCoursesWithReviews

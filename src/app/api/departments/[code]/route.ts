@@ -40,25 +40,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     // Format professors data
     const formattedProfessors = department.professors.map((prof) => {
-      // Parse statistics from JSON
-      const statistics = prof.statistics as {
-        ratings: {
-          overall: number;
-          teaching: number;
-          helpfulness: number;
-          fairness: number;
-          clarity: number;
-          communication: number;
-        };
-        percentages: {
-          wouldRecommend: number;
-          attendanceRating: number;
-          quizes: number;
-          assignments: number;
-        };
-        totalReviews: number;
-      };
-
       // Get unique courses from reviews
       const uniqueCourses = Array.from(
         new Map(prof.reviews.map((review) => [review.course.id, review.course])).values()
@@ -66,9 +47,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
       return {
         ...prof,
-        ratings: statistics.ratings,
-        statistics: statistics.percentages,
-        numReviews: statistics.totalReviews,
         numCourses: uniqueCourses.length,
         courses: uniqueCourses
       };
