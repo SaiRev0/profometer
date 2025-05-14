@@ -3,6 +3,7 @@
 import { notFound } from 'next/navigation';
 
 import ProfessorDetails from '@/components/professor';
+import ProfessorDetailsSkeleton from '@/components/professor/ProfessorDetailsSkeleton';
 import { useGetProfessorById } from '@/hooks/useGetProfessorById';
 
 export default function ProfessorClientWrapper({ id }: { id: string }) {
@@ -13,7 +14,7 @@ export default function ProfessorClientWrapper({ id }: { id: string }) {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <ProfessorDetailsSkeleton />;
   }
 
   if (!professor) {
