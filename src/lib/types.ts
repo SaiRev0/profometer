@@ -6,8 +6,8 @@ export interface Department {
   numProfessors: number;
   numReviews: number;
   numCourses: number;
-  professors: Professor[];
-  courses: Course[];
+  professors?: Professor[];
+  courses?: Course[];
 }
 
 export interface Branch {

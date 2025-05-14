@@ -81,36 +81,8 @@ export async function GET(request: NextRequest) {
         })
       : professors;
 
-    // Transform professors to include statistics
-    const professorsWithStats = sortedProfessors.map((professor) => {
-      const statistics = professor.statistics as {
-        ratings: {
-          overall: number;
-          teaching: number;
-          helpfulness: number;
-          fairness: number;
-          clarity: number;
-          communication: number;
-        };
-        percentages: {
-          wouldRecommend: number;
-          attendanceRating: number;
-          quizes: number;
-          assignments: number;
-        };
-        totalReviews: number;
-      };
-
-      return {
-        ...professor,
-        ratings: statistics.ratings,
-        statistics: statistics.percentages,
-        numReviews: statistics.totalReviews
-      };
-    });
-
     return NextResponse.json({
-      professors: professorsWithStats,
+      professors: sortedProfessors,
       total,
       page,
       totalPages: Math.ceil(total / limit)

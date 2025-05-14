@@ -7,23 +7,12 @@ import Link from 'next/link';
 import { DepartmentCard } from '@/components/cards/DepartmentCard';
 import { Button } from '@/components/ui/button';
 import { useGetDepartments } from '@/hooks/useGetDepartments';
+import { Department } from '@/lib/types';
 
 import { motion } from 'framer-motion';
 
-interface Department {
-  id: string;
-  name: string;
-  code: string;
-  avgRating: number;
-  numProfessors: number;
-  numCourses: number;
-  numReviews: number;
-}
-
 export function DepartmentRankings() {
   const { data: departments = [], isLoading } = useGetDepartments({ limit: 8 });
-
-  console.log(departments);
 
   const getRatingColor = (rating: number) => {
     if (rating >= 4.5) return 'bg-success';
