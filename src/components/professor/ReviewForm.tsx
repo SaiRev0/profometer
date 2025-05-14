@@ -63,7 +63,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
   };
 
   // Add this function to filter courses
-  const filteredCourses = professor.departmentCourses.filter((course) => {
+  const filteredCourses = professor.departmentCourses?.filter((course) => {
     const searchTerm = courseSearch.toLowerCase();
     return course.code.toLowerCase().includes(searchTerm) || course.name.toLowerCase().includes(searchTerm);
   });
@@ -212,10 +212,10 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
                     </Button>
                   </div>
                   <div className='max-h-[300px] overflow-y-auto pt-1 pb-1'>
-                    {filteredCourses.length === 0 ? (
+                    {filteredCourses?.length === 0 ? (
                       <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
                     ) : (
-                      filteredCourses.map((course) => (
+                      filteredCourses?.map((course) => (
                         <SelectItem key={course.id} value={course.id} className='py-2'>
                           {course.code} - {course.name}
                         </SelectItem>

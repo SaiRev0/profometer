@@ -58,19 +58,19 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
 
               <Badge
                 variant={
-                  professor.ratings.overall >= 4
+                  professor.statistics.ratings.overall >= 4
                     ? 'default'
-                    : professor.ratings.overall <= 2
+                    : professor.statistics.ratings.overall <= 2
                       ? 'destructive'
                       : 'secondary'
                 }>
-                {professor.ratings.overall}
+                {professor.statistics.ratings.overall}
               </Badge>
             </div>
 
             <div className='mt-1 mb-2 flex items-center'>
-              <RatingStars value={professor.ratings.overall} size={isCompact ? 'sm' : 'md'} />
-              <span className='text-muted-foreground ml-2 text-xs'>({professor.numReviews})</span>
+              <RatingStars value={professor.statistics.ratings.overall} size={isCompact ? 'sm' : 'md'} />
+              <span className='text-muted-foreground ml-2 text-xs'>({professor.statistics.totalReviews})</span>
             </div>
 
             {!isCompact && professor.reviews[0] && (

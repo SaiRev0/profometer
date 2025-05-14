@@ -1,44 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import ProfessorCard from '@/components/cards/ProfessorCard';
-import ReviewCard, { ReviewCardSkeleton, ReviewCardType } from '@/components/cards/ReviewCard';
+import ReviewCard, { ReviewCardSkeleton } from '@/components/cards/ReviewCard';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Professor, Review } from '@/lib/types';
+import { Course, Professor } from '@/lib/types';
 
 import { motion } from 'framer-motion';
-import { ArrowUpDown, BookCheck, BookOpen, Building, ChevronLeft, GraduationCap, Star, Users } from 'lucide-react';
-
-interface Course {
-  id: string;
-  code: string;
-  name: string;
-  department: string;
-  description: string;
-  credits: number;
-  prerequisites?: string[];
-  professors: Professor[];
-  statistics: {
-    averageRating: number;
-    totalReviews: number;
-    difficultyLevel: number;
-    wouldTakeAgain: number;
-    averageGrade: string;
-    textbookRequired: number;
-    attendanceMandatory: number;
-  };
-  learningOutcomes: string[];
-  topics: string[];
-  reviews: Review[];
-}
+import { BookCheck, BookOpen, Building, ChevronLeft, GraduationCap, Star, Users } from 'lucide-react';
 
 export function CoursePageSkeleton() {
   return (
@@ -149,7 +125,7 @@ export function CoursePageSkeleton() {
 }
 
 interface CoursePageProps {
-  course: any; // Use the correct type if available
+  course: Course;
 }
 
 export default function CoursePage({ course }: CoursePageProps) {
@@ -207,21 +183,21 @@ export default function CoursePage({ course }: CoursePageProps) {
                 <Badge
                   className='mr-2 px-3 py-1 text-lg'
                   variant={
-                    (course.avgRating || 0) >= 4
+                    course.statistics.ratings.overall >= 4
                       ? 'default'
-                      : (course.avgRating || 0) <= 3
+                      : course.statistics.ratings.overall <= 3
                         ? 'destructive'
                         : 'secondary'
                   }>
-                  {(course.avgRating || 0).toFixed(1)}
+                  {course.statistics.ratings.overall}
                 </Badge>
-                <p className='text-muted-foreground text-sm'>{course.numReviews || 0} reviews</p>
+                <p className='text-muted-foreground text-sm'>{course.statistics.totalReviews || 0} reviews</p>
               </div>
             </div>
           </CardHeader>
 
           <CardContent>
-            <div className='mb-6 grid grid-cols-2 gap-4 md:grid-cols-4'>
+            <div className='mb-6 grid grid-cols-1 gap-4 md:grid-cols-3'>
               <Card className='bg-primary/5 border-primary/20'>
                 <CardContent className='p-4'>
                   <div className='flex flex-col items-center text-center'>
@@ -231,12 +207,28 @@ export default function CoursePage({ course }: CoursePageProps) {
                   </div>
                 </CardContent>
               </Card>
-              {/* Add more cards for other statistics if available */}
+              <Card className='bg-chart-1/5 border-chart-1/20'>
+                <CardContent className='p-4'>
+                  <div className='flex flex-col items-center text-center'>
+                    <BookCheck className='text-chart-1 mb-2 h-6 w-6' />
+                    <p className='text-sm font-medium'>Would Take Again</p>
+                    <p className='text-2xl font-bold'>{course.statistics.percentages.wouldRecommend}%</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className='bg-chart-3/5 border-chart-3/20'>
+                <CardContent className='p-4'>
+                  <div className='flex flex-col items-center text-center'>
+                    <GraduationCap className='text-chart-3 mb-2 h-6 w-6' />
+                    <p className='text-sm font-medium'>Average Grade</p>
+                    <p className='text-2xl font-bold'>{course.statistics.percentages.averageGrade}</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             <p className='text-muted-foreground mb-6'>{course.description}</p>
-
-            {/* Add more course details if available */}
           </CardContent>
         </Card>
 
@@ -250,8 +242,8 @@ export default function CoursePage({ course }: CoursePageProps) {
           </div>
 
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            {(course.professors || []).map((professor: any) => (
-              <ProfessorCard key={professor.id} professor={professor} variant='detailed' />
+            {(course.professors || []).map((professor: Professor) => (
+              <ProfessorCard key={professor.id} professor={professor} variant='compact' />
             ))}
           </div>
         </div>

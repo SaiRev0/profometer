@@ -21,15 +21,15 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
             <Badge
               className='mr-2 px-3 py-1 text-lg'
               variant={
-                professor.ratings.overall >= 4
+                professor.statistics.ratings.overall >= 4
                   ? 'success'
-                  : professor.ratings.overall <= 2
+                  : professor.statistics.ratings.overall <= 2
                     ? 'destructive'
                     : 'secondary'
               }>
-              {professor.ratings.overall}
+              {professor.statistics.ratings.overall}
             </Badge>
-            <p className='text-muted-foreground text-sm'>{professor.numReviews} ratings</p>
+            <p className='text-muted-foreground text-sm'>{professor.statistics.totalReviews} ratings</p>
           </div>
         </div>
         <CardDescription>Based on student ratings and reviews</CardDescription>
@@ -41,7 +41,7 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
           <div className='space-y-3'>
             <h3 className='text-sm font-medium'>Rating Breakdown</h3>
 
-            {Object.entries(professor.ratings)
+            {Object.entries(professor.statistics.ratings)
               .filter(([key]) => key !== 'overall')
               .map(([key, value]) => (
                 <div key={key} className='flex items-center justify-between gap-2'>
@@ -60,28 +60,28 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
               <div className='flex items-center justify-between'>
                 <p className='text-sm'>Would Recommend</p>
                 <Badge variant='outline' className='bg-chart-1/10'>
-                  {professor.statistics.wouldRecommend}%
+                  {professor.statistics.percentages.wouldRecommend}%
                 </Badge>
               </div>
 
               <div className='flex items-center justify-between'>
                 <p className='text-sm'>Attendance Rating</p>
                 <Badge variant='outline' className='bg-chart-2/10'>
-                  {professor.statistics.attendanceRating}%
+                  {professor.statistics.percentages.attendanceRating}%
                 </Badge>
               </div>
 
               <div className='flex items-center justify-between'>
                 <p className='text-sm'>Quizes</p>
                 <Badge variant='outline' className='bg-chart-3/10'>
-                  {professor.statistics.quizes}%
+                  {professor.statistics.percentages.quizes}%
                 </Badge>
               </div>
 
               <div className='flex items-center justify-between'>
                 <p className='text-sm'>Assignments</p>
                 <Badge variant='outline' className='bg-chart-4/10'>
-                  {professor.statistics.assignments}%
+                  {professor.statistics.percentages.assignments}%
                 </Badge>
               </div>
             </div>

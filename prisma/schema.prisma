@@ -96,8 +96,7 @@ model Course {
     departmentId String
     department   Department @relation(fields: [departmentId], references: [id])
     reviews      Review[]
-    reviewCount  Int        @default(0)
-    avgRating    Float      @default(0) 
+    statistics   Json       @default("{\"ratings\":{\"overall\":0},\"percentages\":{\"wouldRecommend\":0, \"averageGrade\": \"NA\"},\"totalReviews\":0}")
     verified     Boolean    @default(false)
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @updatedAt

@@ -42,8 +42,15 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
                 <p className='text-muted-foreground line-clamp-1 text-sm'>{course.name}</p>
               </div>
 
-              <Badge variant={course.avgRating >= 4 ? 'default' : course.avgRating <= 2 ? 'destructive' : 'secondary'}>
-                {course.avgRating.toFixed(1)}
+              <Badge
+                variant={
+                  course.statistics.ratings.overall >= 4
+                    ? 'default'
+                    : course.statistics.ratings.overall <= 2
+                      ? 'destructive'
+                      : 'secondary'
+                }>
+                {course.statistics.ratings.overall.toFixed(1)}
               </Badge>
             </div>
           </div>

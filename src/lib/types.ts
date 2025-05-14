@@ -54,9 +54,18 @@ export interface Course {
   description: string;
   credits: number;
   departmentId: string;
-  avgRating: number;
-  numReviews: number;
-  numProfessors: number;
+  department?: Department;
+  professors?: Professor[];
+  statistics: {
+    ratings: {
+      overall: number;
+    };
+    percentages: {
+      wouldRecommend: number;
+      averageGrade: string;
+    };
+    totalReviews: number;
+  };
   reviews: Review[];
   verified: boolean;
   createdAt: Date;
@@ -68,28 +77,31 @@ export interface Professor {
   name: string;
   department: Department;
   designation: string;
-  photoUrl?: string;
-  email?: string;
-  website?: string;
-  ratings: {
-    overall: number;
-    teaching: number;
-    helpfulness: number;
-    fairness: number;
-    clarity: number;
-    communication: number;
-  };
+  photoUrl: string;
+  email: string;
+  website: string;
   numReviews: number;
   numCourses: number;
   reviews: Review[];
   statistics: {
-    wouldRecommend: number;
-    attendanceRating: number;
-    quizes: number;
-    assignments: number;
+    ratings: {
+      overall: number;
+      teaching: number;
+      helpfulness: number;
+      fairness: number;
+      clarity: number;
+      communication: number;
+    };
+    percentages: {
+      wouldRecommend: number;
+      attendanceRating: number;
+      quizes: number;
+      assignments: number;
+    };
+    totalReviews: number;
   };
-  courses: Course[];
-  departmentCourses: Course[];
+  courses?: Course[];
+  departmentCourses?: Course[];
 }
 
 export interface Review {

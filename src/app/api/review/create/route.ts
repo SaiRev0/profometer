@@ -61,8 +61,17 @@ export async function POST(req: Request) {
         throw new Error('Professor not found');
       }
 
-      // Parse current statistics
-      const currentStats = professor.statistics as {
+      // Get current course statistics
+      const course = await tx.course.findUnique({
+        where: { id: courseId }
+      });
+
+      if (!course) {
+        throw new Error('Course not found');
+      }
+
+      // Parse current professor statistics
+      const currentProfStats = professor.statistics as {
         ratings: {
           overall: number;
           teaching: number;
@@ -80,38 +89,85 @@ export async function POST(req: Request) {
         totalReviews: number;
       };
 
-      const totalReviews = currentStats.totalReviews;
-      const newTotalReviews = totalReviews + 1;
-
-      // Calculate new averages
-      const newRatings = {
-        overall: (currentStats.ratings.overall * totalReviews + ratings.overall) / newTotalReviews,
-        teaching: (currentStats.ratings.teaching * totalReviews + ratings.teaching) / newTotalReviews,
-        helpfulness: (currentStats.ratings.helpfulness * totalReviews + ratings.helpfulness) / newTotalReviews,
-        fairness: (currentStats.ratings.fairness * totalReviews + ratings.fairness) / newTotalReviews,
-        clarity: (currentStats.ratings.clarity * totalReviews + ratings.clarity) / newTotalReviews,
-        communication: (currentStats.ratings.communication * totalReviews + ratings.communication) / newTotalReviews
+      // Parse current course statistics
+      const currentCourseStats = course.statistics as {
+        ratings: {
+          overall: number;
+        };
+        percentages: {
+          wouldRecommend: number;
+          averageGrade: string;
+        };
+        totalReviews: number;
       };
 
-      // Calculate new percentages
-      const newPercentages = {
+      const profTotalReviews = currentProfStats.totalReviews;
+      const courseTotalReviews = currentCourseStats.totalReviews;
+      const newProfTotalReviews = profTotalReviews + 1;
+      const newCourseTotalReviews = courseTotalReviews + 1;
+
+      // Calculate new professor averages
+      const newProfRatings = {
+        overall: (currentProfStats.ratings.overall * profTotalReviews + ratings.overall) / newProfTotalReviews,
+        teaching: (currentProfStats.ratings.teaching * profTotalReviews + ratings.teaching) / newProfTotalReviews,
+        helpfulness:
+          (currentProfStats.ratings.helpfulness * profTotalReviews + ratings.helpfulness) / newProfTotalReviews,
+        fairness: (currentProfStats.ratings.fairness * profTotalReviews + ratings.fairness) / newProfTotalReviews,
+        clarity: (currentProfStats.ratings.clarity * profTotalReviews + ratings.clarity) / newProfTotalReviews,
+        communication:
+          (currentProfStats.ratings.communication * profTotalReviews + ratings.communication) / newProfTotalReviews
+      };
+
+      // Calculate new course averages
+      const newCourseRatings = {
+        overall: (currentCourseStats.ratings.overall * courseTotalReviews + ratings.overall) / newCourseTotalReviews
+      };
+
+      // Calculate new professor percentages
+      const newProfPercentages = {
         wouldRecommend:
-          (currentStats.percentages.wouldRecommend * totalReviews + (wouldRecommend ? 100 : 0)) / newTotalReviews,
+          (currentProfStats.percentages.wouldRecommend * profTotalReviews + (wouldRecommend ? 100 : 0)) /
+          newProfTotalReviews,
         attendanceRating:
-          (currentStats.percentages.attendanceRating * totalReviews + parseInt(attendance.toString())) /
-          newTotalReviews,
-        quizes: (currentStats.percentages.quizes * totalReviews + (quizes ? 100 : 0)) / newTotalReviews,
-        assignments: (currentStats.percentages.assignments * totalReviews + (assignments ? 100 : 0)) / newTotalReviews
+          (currentProfStats.percentages.attendanceRating * profTotalReviews + parseInt(attendance.toString())) /
+          newProfTotalReviews,
+        quizes: (currentProfStats.percentages.quizes * profTotalReviews + (quizes ? 100 : 0)) / newProfTotalReviews,
+        assignments:
+          (currentProfStats.percentages.assignments * profTotalReviews + (assignments ? 100 : 0)) / newProfTotalReviews
+      };
+
+      // Calculate new course percentages
+      const newCoursePercentages = {
+        wouldRecommend:
+          (currentCourseStats.percentages.wouldRecommend * courseTotalReviews + (wouldRecommend ? 100 : 0)) /
+          newCourseTotalReviews,
+        averageGrade: grade || currentCourseStats.percentages.averageGrade // Keep existing grade if no new grade provided
       };
 
       // Round all numbers to 1 decimal place
-      Object.keys(newRatings).forEach((key) => {
-        newRatings[key as keyof typeof newRatings] = Number(newRatings[key as keyof typeof newRatings].toFixed(1));
-      });
-      Object.keys(newPercentages).forEach((key) => {
-        newPercentages[key as keyof typeof newPercentages] = Number(
-          newPercentages[key as keyof typeof newPercentages].toFixed(1)
+      Object.keys(newProfRatings).forEach((key) => {
+        newProfRatings[key as keyof typeof newProfRatings] = Number(
+          newProfRatings[key as keyof typeof newProfRatings].toFixed(1)
         );
+      });
+      Object.keys(newCourseRatings).forEach((key) => {
+        newCourseRatings[key as keyof typeof newCourseRatings] = Number(
+          newCourseRatings[key as keyof typeof newCourseRatings].toFixed(1)
+        );
+      });
+      Object.keys(newProfPercentages).forEach((key) => {
+        if (typeof newProfPercentages[key as keyof typeof newProfPercentages] === 'number') {
+          newProfPercentages[key as keyof typeof newProfPercentages] = Number(
+            newProfPercentages[key as keyof typeof newProfPercentages].toFixed(1)
+          );
+        }
+      });
+      Object.keys(newCoursePercentages).forEach((key) => {
+        if (typeof newCoursePercentages[key as keyof typeof newCoursePercentages] === 'number') {
+          newCoursePercentages[key as keyof typeof newCoursePercentages] = Number(
+            newCoursePercentages[key as keyof typeof newCoursePercentages].toFixed(1)
+          );
+        }
       });
 
       // Update professor statistics
@@ -119,19 +175,21 @@ export async function POST(req: Request) {
         where: { id: professorId },
         data: {
           statistics: {
-            ratings: newRatings,
-            percentages: newPercentages,
-            totalReviews: newTotalReviews
+            ratings: newProfRatings,
+            percentages: newProfPercentages,
+            totalReviews: newProfTotalReviews
           }
         }
       });
 
-      // Increment course review count
+      // Update course statistics
       await tx.course.update({
         where: { id: courseId },
         data: {
-          reviewCount: {
-            increment: 1
+          statistics: {
+            ratings: newCourseRatings,
+            percentages: newCoursePercentages,
+            totalReviews: newCourseTotalReviews
           }
         }
       });

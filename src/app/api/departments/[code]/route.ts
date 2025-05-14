@@ -76,13 +76,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     // Format courses data
     const formattedCourses = department.courses.map((course) => {
-      const courseTotalReviews = course.reviews.length;
       // Get unique professors who taught this course
       const uniqueProfessors = new Set(course.reviews.map((review) => review.professorId)).size;
 
       return {
         ...course,
-        numReviews: courseTotalReviews,
         numProfessors: uniqueProfessors
       };
     });
