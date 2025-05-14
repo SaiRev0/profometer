@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { DepartmentCard } from '@/components/cards/DepartmentCard';
 import { Button } from '@/components/ui/button';
-import { useDepartments } from '@/hooks/use-departments';
+import { useGetDepartments } from '@/hooks/useGetDepartments';
 
 import { motion } from 'framer-motion';
 
@@ -21,7 +21,7 @@ interface Department {
 }
 
 export function DepartmentRankings() {
-  const { data: departments = [], isLoading } = useDepartments({ limit: 8 });
+  const { data: departments = [], isLoading } = useGetDepartments({ limit: 8 });
 
   console.log(departments);
 

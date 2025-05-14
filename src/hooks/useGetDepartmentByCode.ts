@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import type { Course, Department, Professor } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 
@@ -8,7 +6,7 @@ interface UseDepartmentParams {
   search?: string;
 }
 
-export function useDepartment({ code, search }: UseDepartmentParams) {
+export function useGetDepartmentByCode({ code, search }: UseDepartmentParams) {
   const { data, ...rest } = useQuery<
     Department & {
       professors: Professor[];

@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { PROFESSOR_QUERY_KEY } from './use-professor';
+import { PROFESSOR_QUERY_KEY } from './useGetProfessorById';
 
 interface CreateReviewData {
   professorId: string;

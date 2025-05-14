@@ -82,19 +82,7 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
         </div>
       </CardContent>
 
-      <CardFooter className={cn('flex items-center justify-between px-4 pt-0 pb-4', isCompact && 'pt-0')}>
-        <div className='flex gap-2'>
-          <Button size='sm' variant='ghost' className='h-8 px-2 text-xs'>
-            <ThumbsUp className='mr-1 h-3.5 w-3.5' />
-            Helpful
-          </Button>
-          {!isCompact && (
-            <Button size='sm' variant='ghost' className='h-8 px-2 text-xs'>
-              <Bookmark className='mr-1 h-3.5 w-3.5' />
-              Save
-            </Button>
-          )}
-        </div>
+      <CardFooter className={cn('flex flex-row-reverse items-center px-4 pt-0 pb-4', isCompact && 'pt-0')}>
         <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
             View
@@ -116,7 +104,11 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
   const isCompact = variant === 'compact';
 
   return (
-    <Card className={cn('overflow-hidden', isCompact ? 'h-40' : 'h-full')}>
+    <Card
+      className={cn(
+        'border-border/70 overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
+        isCompact ? 'h-30' : 'h-full'
+      )}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex gap-3'>
           <div className='bg-muted h-12 w-12 rounded-full' />

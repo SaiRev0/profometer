@@ -16,7 +16,7 @@ interface DepartmentsParams {
   limit?: number;
 }
 
-export function useDepartments(params: DepartmentsParams = {}) {
+export function useGetDepartments(params: DepartmentsParams = {}) {
   const { limit } = params;
 
   return useQuery<Department[]>({

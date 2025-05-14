@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 
-// import { PROFESSOR_QUERY_KEY } from './use-professor';
 import { toast } from 'sonner';
 
 interface AddCourseData {
@@ -12,8 +11,6 @@ interface AddCourseData {
 }
 
 export function useAddCourse() {
-  // const queryClient = useQueryClient();
-
   const { mutateAsync: addCourse, isPending } = useMutation({
     mutationFn: async (data: AddCourseData) => {
       const response = await fetch('/api/courses/create', {
@@ -34,11 +31,6 @@ export function useAddCourse() {
       toast.success('Course added successfully', {
         description: 'It will be verified soon'
       });
-      // // Invalidate and refetch professor data
-      // queryClient.invalidateQueries({
-      //   queryKey: PROFESSOR_QUERY_KEY(variables.professorId),
-      //   refetchType: 'all'
-      // });
     },
     onError: () => {
       toast.error('Failed to add course');

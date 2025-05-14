@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const COURSE_QUERY_KEY = (code: string) => ['course', code];
 
-export function useCourse(code: string) {
+export function useGetCourse(code: string) {
   return useQuery<
     Course & {
       reviews: Review[];

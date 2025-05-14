@@ -3,10 +3,10 @@
 import { notFound } from 'next/navigation';
 
 import ProfessorDetails from '@/components/professor';
-import { useProfessor } from '@/hooks/use-professor';
+import { useGetProfessorById } from '@/hooks/useGetProfessorById';
 
 export default function ProfessorClientWrapper({ id }: { id: string }) {
-  const { data: professor, isLoading, error } = useProfessor(id);
+  const { data: professor, isLoading, error } = useGetProfessorById(id);
 
   if (error) {
     notFound();

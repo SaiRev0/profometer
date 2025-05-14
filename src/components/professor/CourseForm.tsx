@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { useAddCourse } from '@/hooks/use-add-course';
+import { useAddCourse } from '@/hooks/useAddCourse';
 import { Professor } from '@/lib/types';
 
 import { Button } from '../ui/button';

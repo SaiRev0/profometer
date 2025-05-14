@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useDepartment } from '@/hooks/use-department';
+import { useGetDepartmentByCode } from '@/hooks/useGetDepartmentByCode';
 
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronLeft, Search, Star, Users } from 'lucide-react';
@@ -28,7 +28,7 @@ export default function DepartmentPage() {
     data: department,
     isLoading,
     error
-  } = useDepartment({
+  } = useGetDepartmentByCode({
     code,
     search: debouncedSearch
   });

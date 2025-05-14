@@ -2,16 +2,12 @@
 
 import React, { useState } from 'react';
 
-import Link from 'next/link';
-
 import { DepartmentCard } from '@/components/cards/DepartmentCard';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useDepartments } from '@/hooks/use-departments';
-import { cn } from '@/lib/utils';
+import { useGetDepartments } from '@/hooks/useGetDepartments';
 
 import { motion } from 'framer-motion';
-import { BookOpen, Search, Star, Users } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 interface Department {
   id: string;
@@ -25,7 +21,7 @@ interface Department {
 
 export default function DepartmentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: departments = [], isLoading } = useDepartments();
+  const { data: departments = [], isLoading } = useGetDepartments();
 
   const filteredDepartments = departments.filter(
     (dept) =>

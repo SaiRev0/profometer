@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const PROFESSOR_QUERY_KEY = (id: string) => ['professor', id];
 
-export function useProfessor(id: string) {
+export function useGetProfessorById(id: string) {
   return useQuery<Professor>({
     queryKey: PROFESSOR_QUERY_KEY(id),
     queryFn: async () => {

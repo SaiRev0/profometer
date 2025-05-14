@@ -1,24 +1,19 @@
 import ProfessorCard from '@/components/cards/ProfessorCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Professor } from '@/lib/types';
+import { useGetProfessors } from '@/hooks/useGetProfessors';
 
 import { ArrowUpDown, ThumbsUp } from 'lucide-react';
 
-interface LovedChallengingSectionProps {
-  professors: Professor[];
-  isLoading: boolean;
-}
+export default function LovedChallengingSection() {
+  const { data: lovedData, isLoading: isLoadingLoved } = useGetProfessors({
+    variant: 'loved',
+    limit: 3
+  });
 
-export default function LovedChallengingSection({ professors, isLoading }: LovedChallengingSectionProps) {
-  const lovedProfessors = professors
-    .filter((p) => p.ratings.overall >= 4.3)
-    .sort((a, b) => b.ratings.overall - a.ratings.overall)
-    .slice(0, 3);
-
-  const challengingProfessors = professors
-    .filter((p) => p.ratings.overall >= 3.0)
-    .sort((a, b) => b.ratings.overall - a.ratings.overall)
-    .slice(0, 3);
+  const { data: challengingData, isLoading: isLoadingChallenging } = useGetProfessors({
+    variant: 'challenging',
+    limit: 3
+  });
 
   return (
     <section className='mt-8'>
@@ -35,11 +30,11 @@ export default function LovedChallengingSection({ professors, isLoading }: Loved
             <CardDescription>These professors consistently receive top ratings from students.</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
-            {isLoading
+            {isLoadingLoved
               ? Array.from({ length: 3 }).map((_, index) => (
-                  <ProfessorCard key={index} professor={professors[0]} isLoading={true} variant='detailed' />
+                  <ProfessorCard key={index} professor={lovedData?.professors[0]} isLoading={true} variant='detailed' />
                 ))
-              : lovedProfessors.map((professor) => (
+              : lovedData?.professors.map((professor) => (
                   <ProfessorCard key={professor.id} professor={professor} variant='detailed' />
                 ))}
           </CardContent>
@@ -55,11 +50,16 @@ export default function LovedChallengingSection({ professors, isLoading }: Loved
             <CardDescription>Students find these professors' courses particularly demanding.</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
-            {isLoading
+            {isLoadingChallenging
               ? Array.from({ length: 3 }).map((_, index) => (
-                  <ProfessorCard key={index} professor={professors[0]} isLoading={true} variant='detailed' />
+                  <ProfessorCard
+                    key={index}
+                    professor={challengingData?.professors[0]}
+                    isLoading={true}
+                    variant='detailed'
+                  />
                 ))
-              : challengingProfessors.map((professor) => (
+              : challengingData?.professors.map((professor) => (
                   <ProfessorCard key={professor.id} professor={professor} variant='detailed' />
                 ))}
           </CardContent>

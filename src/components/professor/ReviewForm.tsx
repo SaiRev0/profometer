@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { useCreateReview } from '@/hooks/use-create-review';
+import { useCreateReview } from '@/hooks/useCreateReview';
 import { Professor, Review } from '@/lib/types';
 import { Separator } from '@radix-ui/react-separator';
 
