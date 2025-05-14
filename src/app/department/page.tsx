@@ -37,14 +37,6 @@ export default function DepartmentsPage() {
     return 'bg-error';
   };
 
-  if (isLoading) {
-    return (
-      <div className='container mx-auto px-4 py-8'>
-        <div className='text-center'>Loading departments...</div>
-      </div>
-    );
-  }
-
   return (
     <div className='container mx-auto px-4 py-8'>
       <motion.div
@@ -68,9 +60,13 @@ export default function DepartmentsPage() {
       </div>
 
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {filteredDepartments.map((department: Department, index: number) => (
-          <DepartmentCard key={department.id} department={department} index={index} />
-        ))}
+        {isLoading
+          ? // Show skeleton loaders when loading
+            Array.from({ length: 8 }).map((_, index) => <DepartmentCard key={index} isLoading={true} />)
+          : // Show departments when loaded
+            filteredDepartments.map((department: Department, index: number) => (
+              <DepartmentCard key={department.id} department={department} index={index} />
+            ))}
       </div>
     </div>
   );

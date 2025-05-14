@@ -3,13 +3,14 @@ import React from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 
 interface DepartmentCardProps {
-  department: {
+  department?: {
     id: string;
     name: string;
     code: string;
@@ -19,9 +20,43 @@ interface DepartmentCardProps {
     numReviews: number;
   };
   index?: number;
+  isLoading?: boolean;
 }
 
-export function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
+export function DepartmentCardSkeleton() {
+  return (
+    <div className='border-border overflow-hidden rounded-lg border bg-white shadow-md dark:bg-gray-800'>
+      <div className='p-6'>
+        <div className='mb-4 flex items-start justify-between'>
+          <Skeleton className='h-10 w-10 rounded-full' />
+          <Skeleton className='h-6 w-14' />
+        </div>
+
+        <Skeleton className='mb-1 h-6 w-3/4' />
+        <Skeleton className='mb-4 h-4 w-1/2' />
+
+        <div className='mb-4'>
+          <div className='mb-1 flex justify-between'>
+            <Skeleton className='h-4 w-24' />
+            <Skeleton className='h-4 w-16' />
+          </div>
+          <Skeleton className='h-2 w-full rounded-full' />
+        </div>
+
+        <div className='flex items-center justify-between'>
+          <Skeleton className='h-4 w-20' />
+          <Skeleton className='h-4 w-32' />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function DepartmentCard({ department, index = 0, isLoading = false }: DepartmentCardProps) {
+  if (isLoading) {
+    return <DepartmentCardSkeleton />;
+  }
+
   const getRatingColor = (rating: number) => {
     if (rating >= 4.5) return 'bg-success';
     if (rating >= 4.0) return 'bg-primary';
@@ -32,7 +67,7 @@ export function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
 
   return (
     <motion.div
-      key={department.id}
+      key={department?.id}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -45,41 +80,41 @@ export function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
           </div>
           <div className='flex items-center'>
             <Star className='mr-1 h-4 w-4 fill-amber-500 text-amber-500' />
-            <span className='font-bold'>{department.avgRating}</span>
+            <span className='font-bold'>{department?.avgRating}</span>
           </div>
         </div>
 
-        <h3 className='font-heading mb-1 line-clamp-1 text-lg font-semibold'>{department.name}</h3>
+        <h3 className='font-heading mb-1 line-clamp-1 text-lg font-semibold'>{department?.name}</h3>
         <div className='text-muted-foreground mb-4 flex items-center text-sm'>
-          <span className='text-primary font-medium'>{department.code}</span>
+          <span className='text-primary font-medium'>{department?.code}</span>
           <span className='mx-2'>•</span>
           <div className='flex items-center'>
             <Users className='mr-1 h-3 w-3' />
-            {department.numProfessors} profs
+            {department?.numProfessors} profs
           </div>
           <div className='flex items-center'>
             <BookOpen className='mr-1 ml-2 h-3 w-3' />
-            {department.numCourses} courses
+            {department?.numCourses} courses
           </div>
         </div>
 
         <div className='mb-4'>
           <div className='mb-1 flex justify-between text-sm'>
             <span>Average Rating</span>
-            <span className='font-medium'>{department.avgRating}/5.0</span>
+            <span className='font-medium'>{department?.avgRating}/5.0</span>
           </div>
           <div className='h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-gray-700'>
             <div
-              className={cn('h-full rounded-full', getRatingColor(department.avgRating))}
-              style={{ width: `${(department.avgRating / 5) * 100}%` }}
+              className={cn('h-full rounded-full', getRatingColor(department?.avgRating || 0))}
+              style={{ width: `${((department?.avgRating || 0) / 5) * 100}%` }}
             />
           </div>
         </div>
 
         <div className='flex items-center justify-between text-sm'>
-          <span>{department.numReviews} reviews</span>
+          <span>{department?.numReviews} reviews</span>
           <Button variant='ghost' size='sm' className='h-auto p-0' asChild>
-            <Link href={`/department/${department.code}`} className='text-primary flex items-center'>
+            <Link href={`/department/${department?.code}`} className='text-primary flex items-center'>
               View Department <ChevronRight className='ml-1 h-4 w-4' />
             </Link>
           </Button>
