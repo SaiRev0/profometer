@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { FC, useEffect, useState } from 'react';
+import { FC, Suspense, useEffect, useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -16,14 +16,9 @@ import { toast } from 'sonner';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
+// Separate component for search params logic
+const SearchParamsHandler: FC = () => {
   const searchParams = useSearchParams();
-  const [signInUrl, _, removeSignInUrl] = useLocalStorage<string>({
-    key: 'redirectURLfromSignIn',
-    defaultValue: '/'
-  });
 
   useEffect(() => {
     const error = searchParams.get('error');
@@ -41,6 +36,17 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
       }, 0);
     }
   }, [searchParams]);
+
+  return null;
+};
+
+const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const [signInUrl, _, removeSignInUrl] = useLocalStorage<string>({
+    key: 'redirectURLfromSignIn',
+    defaultValue: '/'
+  });
 
   const loginWithGoogle = async () => {
     setIsLoading(true);
@@ -71,6 +77,9 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
 
   return (
     <div className={cn('flex justify-center', className)} {...props}>
+      <Suspense fallback={null}>
+        <SearchParamsHandler />
+      </Suspense>
       <Button
         isLoading={isLoading}
         type='button'
