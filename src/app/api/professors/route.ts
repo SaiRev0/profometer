@@ -57,13 +57,7 @@ export async function GET(request: NextRequest) {
             },
             take: 1,
             include: {
-              course: {
-                select: {
-                  id: true,
-                  code: true,
-                  name: true
-                }
-              }
+              course: true
             }
           },
           department: true

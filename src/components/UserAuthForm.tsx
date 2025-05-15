@@ -1,10 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Icons } from '@/components/Icons';
 import { Button } from '@/components/ui/button';
+import { type AuthError, authErrorMessages } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { useLocalStorage } from '@mantine/hooks';
 
@@ -14,21 +17,52 @@ import { toast } from 'sonner';
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [signInUrl, _, removeSignInUrl] = useLocalStorage<string>({
     key: 'redirectURLfromSignIn',
     defaultValue: '/'
   });
 
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (!error) return;
+
+    const errorType = error as AuthError['type'];
+    if (errorType in authErrorMessages) {
+      // Use setTimeout to ensure the toast is shown after the component is mounted
+      setTimeout(() => {
+        toast.error(authErrorMessages[errorType]);
+      }, 0);
+    } else {
+      setTimeout(() => {
+        toast.error(authErrorMessages.Unknown);
+      }, 0);
+    }
+  }, [searchParams]);
+
   const loginWithGoogle = async () => {
     setIsLoading(true);
 
     try {
-      await signIn('google', { callbackUrl: signInUrl });
-    } catch (error) {
-      toast.error('Error', {
-        description: 'There was an error logging in with Google'
+      const result = await signIn('google', {
+        callbackUrl: signInUrl,
+        redirect: false
       });
+
+      if (result?.error) {
+        const errorType = result.error as AuthError['type'];
+        if (errorType in authErrorMessages) {
+          toast.error(authErrorMessages[errorType]);
+        } else {
+          toast.error(authErrorMessages.Unknown);
+        }
+      } else if (result?.url) {
+        router.push(result.url);
+      }
+    } catch (error) {
+      toast.error(authErrorMessages.Unknown);
     } finally {
       setIsLoading(false);
       removeSignInUrl();

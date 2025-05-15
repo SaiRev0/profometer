@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const formattedProfessors = department.professors.map((prof) => {
       // Get unique courses from reviews
       const uniqueCourses = Array.from(
-        new Map(prof.reviews.map((review) => [review.course.id, review.course])).values()
+        new Map(prof.reviews.map((review) => [review.course.code, review.course])).values()
       );
 
       return {

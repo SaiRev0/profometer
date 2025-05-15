@@ -216,7 +216,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
                       <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
                     ) : (
                       filteredCourses?.map((course) => (
-                        <SelectItem key={course.id} value={course.id} className='py-2'>
+                        <SelectItem key={course.code} value={course.code} className='py-2'>
                           {course.code} - {course.name}
                         </SelectItem>
                       ))

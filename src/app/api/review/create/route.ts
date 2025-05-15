@@ -38,8 +38,8 @@ export async function POST(req: Request) {
       const review = await tx.review.create({
         data: {
           professorId,
-          courseId,
-          userId: session.user.id,
+          courseCode: courseId,
+          userId: (session.user as { id: string }).id,
           semester,
           anonymous,
           ratings,
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
       // Get current course statistics
       const course = await tx.course.findUnique({
-        where: { id: courseId }
+        where: { code: courseId }
       });
 
       if (!course) {
@@ -184,7 +184,7 @@ export async function POST(req: Request) {
 
       // Update course statistics
       await tx.course.update({
-        where: { id: courseId },
+        where: { code: courseId },
         data: {
           statistics: {
             ratings: newCourseRatings,

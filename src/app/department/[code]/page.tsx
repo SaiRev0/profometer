@@ -168,7 +168,7 @@ export default function DepartmentPage() {
               <CardContent className='pt-6'>
                 <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
                   {department.courses.map((course) => (
-                    <div key={course.id} className='min-w-[300px] snap-start sm:min-w-[320px]'>
+                    <div key={course.code} className='min-w-[300px] snap-start sm:min-w-[320px]'>
                       <CourseCard course={course} variant='compact' />
                     </div>
                   ))}

@@ -1,5 +1,4 @@
 export interface Department {
-  id: string;
   name: string;
   code: string;
   avgRating: number;
@@ -9,46 +8,7 @@ export interface Department {
   professors?: Professor[];
   courses?: Course[];
 }
-
-export interface Branch {
-  name: string;
-  isDefault: boolean;
-  isProtected: boolean;
-  lastCommit: {
-    message: string;
-    date: string;
-    hash: string;
-    author: {
-      name: string;
-      avatar: string;
-    };
-  };
-  aheadBy: number;
-  behindBy: number;
-}
-
-// Mock data for the branch
-export interface BranchData {
-  name: string;
-  description: string;
-  totalProfessors: number;
-  totalReviews: number;
-  averageRating: number;
-  statistics: {
-    wouldRecommend: number;
-    attendanceMandatory: number;
-    quizes: number;
-    assignments: number;
-  };
-  departments: {
-    name: string;
-    professors: number;
-    averageRating: number;
-  }[];
-}
-
 export interface Course {
-  id: string;
   code: string;
   name: string;
   description: string;
@@ -71,7 +31,6 @@ export interface Course {
   createdAt: Date;
   updatedAt: Date;
 }
-
 export interface Professor {
   id: string;
   name: string;
@@ -103,7 +62,6 @@ export interface Professor {
   courses?: Course[];
   departmentCourses?: Course[];
 }
-
 export interface Review {
   id: string;
   userId: string;
@@ -136,6 +94,21 @@ export interface Review {
   course?: {
     code: string;
   };
+}
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  departmentCode: string;
+  department: Department;
+  reviews: Review[];
+  statistics: {
+    helpfulVotes: number;
+    totalReviews: number;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type SortOption = 'recent' | 'rating-high' | 'rating-low' | 'reviews' | 'name-asc' | 'name-desc';

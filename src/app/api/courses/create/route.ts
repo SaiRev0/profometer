@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       data: {
         code: code.toUpperCase(),
         name,
-        departmentId: departmentId,
+        departmentCode: departmentId,
         description,
         credits: parseInt(credits),
         verified: false
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
 
     const courses = await db.course.findMany({
       where: {
-        departmentId: departmentId,
+        departmentCode: departmentId,
         verified: true
       },
       orderBy: {

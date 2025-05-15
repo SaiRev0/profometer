@@ -52,6 +52,8 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    departmentCode String?
+    department     Department?  @relation(fields: [departmentCode], references: [code])
     reviews       Review[]
     reviewVotes   ReviewVote[]
     createdAt     DateTime     @default(now())
@@ -59,14 +61,14 @@ model User {
 }
 
 model Department {
-    id            String      @id @default(cuid())
+    code          String      @id
     name          String      @unique
-    code          String      @unique
     avgRating     Float
     numProfessors Int
     numReviews    Int
     professors    Professor[]
     courses       Course[]
+    users         User[]
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
 }
@@ -74,27 +76,25 @@ model Department {
 model Professor {
     id           String     @id @default(cuid())
     name         String
-    departmentId String
-    department   Department @relation(fields: [departmentId], references: [id])
+    departmentCode String
+    department   Department @relation(fields: [departmentCode], references: [code])
     designation  String
     photoUrl     String?
     email        String?
     website      String?
     reviews      Review[]
-    // Statistics stored as JSON
     statistics   Json       @default("{\"ratings\":{\"overall\":0,\"teaching\":0,\"helpfulness\":0,\"fairness\":0,\"clarity\":0,\"communication\":0},\"percentages\":{\"wouldRecommend\":0,\"attendanceRating\":0,\"quizes\":0,\"assignments\":0},\"totalReviews\":0}")
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @updatedAt
 }
 
 model Course {
-    id           String     @id @default(cuid())
-    code         String     @unique
+    code         String     @id
     name         String
     description  String
     credits      Int
-    departmentId String
-    department   Department @relation(fields: [departmentId], references: [id])
+    departmentCode String
+    department   Department @relation(fields: [departmentCode], references: [code])
     reviews      Review[]
     statistics   Json       @default("{\"ratings\":{\"overall\":0},\"percentages\":{\"wouldRecommend\":0, \"averageGrade\": \"NA\"},\"totalReviews\":0}")
     verified     Boolean    @default(false)
@@ -106,10 +106,10 @@ model Review {
     id             String    @id @default(cuid())
     professorId    String
     professor      Professor @relation(fields: [professorId], references: [id])
-    courseId       String
-    course         Course    @relation(fields: [courseId], references: [id])
-    userId         String
-    user           User      @relation(fields: [userId], references: [id])
+    courseCode     String
+    course         Course    @relation(fields: [courseCode], references: [code])
+    userId         String?
+    user           User?     @relation(fields: [userId], references: [id])
     semester       String
     anonymous      Boolean   @default(false)
     ratings        Json // Stores all ratings as a JSON object
@@ -123,6 +123,8 @@ model Review {
     downvotes      Int       @default(0)
     createdAt      DateTime  @default(now())
     updatedAt      DateTime  @updatedAt
+
+    @@index([userId])
 }
 
 model ReviewVote {

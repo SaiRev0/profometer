@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const uniqueCourses = Array.from(
       new Map(
         professor.reviews.map((review) => [
-          review.course.id,
+          review.course.code,
           {
             ...review.course,
             numReviews: review.course.reviews.length
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const departmentCourses = await db.course.findMany({
       where: {
-        departmentId: professor.departmentId,
+        departmentCode: professor.department.code,
         verified: true
       },
       include: {

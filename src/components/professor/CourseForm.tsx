@@ -52,7 +52,7 @@ function CourseForm({ professor, modalState, setModalState }: CourseFormProps) {
         name: newCourseName,
         description: newCourseDescription,
         credits: newCourseCredits,
-        departmentId: professor.department.id
+        departmentId: professor.department.code
       });
 
       // Reset form and close dialog

@@ -69,7 +69,7 @@ export default function DepartmentsPage() {
 
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {filteredDepartments.map((department: Department, index: number) => (
-          <DepartmentCard key={department.id} department={department} index={index} />
+          <DepartmentCard key={department.code} department={department} index={index} />
         ))}
       </div>
     </div>

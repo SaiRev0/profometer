@@ -30,9 +30,9 @@ function CoursesSection({ professor, selectedCourse, onCourseSelect }: CoursesSe
           {professor.courses?.map((course) => (
             <Badge
               key={course.code}
-              variant={selectedCourse === course.id ? 'default' : 'outline'}
+              variant={selectedCourse === course.code ? 'default' : 'outline'}
               className='cursor-pointer'
-              onClick={() => onCourseSelect(course.id)}>
+              onClick={() => onCourseSelect(course.code)}>
               {course.code} ({course.reviews.length || 0})
             </Badge>
           ))}

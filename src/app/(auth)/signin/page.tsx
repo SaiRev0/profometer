@@ -9,7 +9,7 @@ import { GraduationCap } from 'lucide-react';
 import { FaChevronLeft } from 'react-icons/fa';
 
 export const metadata: Metadata = {
-  title: 'Sign-In'
+  title: 'Sign In | RateThatProf'
 };
 
 export default function Page() {

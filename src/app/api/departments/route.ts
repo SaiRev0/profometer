@@ -53,7 +53,6 @@ export async function GET(request: NextRequest) {
       const avgRating = totalReviews > 0 ? totalRating / totalReviews : 0;
 
       return {
-        id: dept.id,
         name: dept.name,
         code: dept.code,
         avgRating: Number(avgRating.toFixed(1)),

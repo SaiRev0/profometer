@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { ReportDialog } from '@/components/dialogs/report-dialog';
+import { ReportDialog } from '@/components/dialogs/ReportDialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,8 +17,9 @@ import RatingStars from '@/components/ui/rating-stars';
 import { Review } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
+import { DeleteDialog } from '../dialogs/DeleteDialog';
 import { formatDistanceToNow } from 'date-fns';
-import { Flag, MessageSquare, MoreHorizontal, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 
 export interface ReviewCardType extends Review {
   userVote?: 'up' | 'down' | null;
@@ -30,10 +31,12 @@ export interface ReviewCardType extends Review {
 interface ReviewCardProps {
   review: ReviewCardType;
   isLoading?: boolean;
+  variant?: 'default' | 'own';
 }
 
-export default function ReviewCard({ review, isLoading = false }: ReviewCardProps) {
+export default function ReviewCard({ review, isLoading = false, variant = 'default' }: ReviewCardProps) {
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userVote, setUserVote] = useState<'up' | 'down' | null>(review.userVote || null);
   const [upvoteCount, setUpvoteCount] = useState(review.upvotes);
   const [downvoteCount, setDownvoteCount] = useState(review.downvotes);
@@ -117,20 +120,26 @@ export default function ReviewCard({ review, isLoading = false }: ReviewCardProp
               {review.ratings.overall}
             </Badge>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='ghost' size='icon' className='h-8 w-8'>
-                  <MoreHorizontal className='h-4 w-4' />
-                  <span className='sr-only'>More options</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
-                <DropdownMenuItem onClick={() => setReportDialogOpen(true)}>
-                  <Flag className='mr-2 h-4 w-4' />
-                  Report review
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {variant === 'own' && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant='ghost' size='icon' className='h-8 w-8'>
+                    <MoreHorizontal className='h-4 w-4' />
+                    <span className='sr-only'>More options</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align='end'>
+                  <DropdownMenuItem>
+                    <Edit className='text-primary mr-2 h-4 w-4' />
+                    Edit review
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)}>
+                    <Trash2 className='mr-2 h-4 w-4 text-red-500' />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
 
@@ -191,36 +200,36 @@ export default function ReviewCard({ review, isLoading = false }: ReviewCardProp
         </div>
       </CardContent>
 
-      <CardFooter className='flex justify-between px-4 pt-0 pb-3'>
-        <div className='flex items-center gap-2'>
-          <Button
-            variant={userVote === 'up' ? 'secondary' : 'ghost'}
-            size='sm'
-            className='h-8'
-            onClick={() => handleVote('up')}>
-            <ThumbsUp className={cn('mr-1.5 h-4 w-4', userVote === 'up' && 'fill-current')} />
-            Helpful
-            {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
-          </Button>
+      {variant === 'default' && (
+        <CardFooter className='flex justify-between px-4 pt-0 pb-3'>
+          <div className='flex items-center gap-2'>
+            <Button
+              variant={userVote === 'up' ? 'secondary' : 'ghost'}
+              size='sm'
+              className='h-8'
+              onClick={() => handleVote('up')}>
+              <ThumbsUp className={cn('mr-1.5 h-4 w-4', userVote === 'up' && 'fill-current')} />
+              {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
+            </Button>
 
-          <Button
-            variant={userVote === 'down' ? 'secondary' : 'ghost'}
-            size='sm'
-            className='h-8'
-            onClick={() => handleVote('down')}>
-            <ThumbsDown className={cn('mr-1.5 h-4 w-4', userVote === 'down' && 'fill-current')} />
-            Unhelpful
-            {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}
-          </Button>
-        </div>
+            <Button
+              variant={userVote === 'down' ? 'secondary' : 'ghost'}
+              size='sm'
+              className='h-8'
+              onClick={() => handleVote('down')}>
+              <ThumbsDown className={cn('mr-1.5 h-4 w-4', userVote === 'down' && 'fill-current')} />
+              {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}
+            </Button>
+          </div>
 
-        <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
-          <Flag className='mr-1.5 h-4 w-4' />
-          Report
-        </Button>
-      </CardFooter>
+          <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
+            <Flag className='mr-1.5 h-4 w-4 text-red-500' />
+          </Button>
+        </CardFooter>
+      )}
 
       <ReportDialog open={reportDialogOpen} onOpenChange={setReportDialogOpen} reviewId={review.id} />
+      <DeleteDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} reviewId={review.id} />
     </Card>
   );
 }

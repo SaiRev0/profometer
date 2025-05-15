@@ -47,7 +47,7 @@ async function seedCourses() {
         name: record['Course Name'],
         description: `Course offered by ${department.name} department`,
         credits: parseInt(record['Credits']),
-        departmentId: department.id,
+        departmentCode: department.code,
         verified: true
       }));
 

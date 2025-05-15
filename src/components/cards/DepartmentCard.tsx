@@ -3,21 +3,14 @@ import React from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { Department } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 
 interface DepartmentCardProps {
-  department: {
-    id: string;
-    name: string;
-    code: string;
-    avgRating: number;
-    numProfessors: number;
-    numCourses?: number;
-    numReviews: number;
-  };
+  department: Department;
   index?: number;
 }
 
@@ -32,7 +25,7 @@ export function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
 
   return (
     <motion.div
-      key={department.id}
+      key={department.code}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}

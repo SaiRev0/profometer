@@ -37,7 +37,7 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
                 <Footer />
                 <BottomNavigation />
               </div>
-              <Toaster />
+              <Toaster richColors position='top-right' closeButton />
             </ThemeProvider>
           </AuthProvider>
         </Providers>

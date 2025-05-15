@@ -20,6 +20,7 @@ export function Navigation({ navItems, theme, onThemeToggle }: NavigationProps) 
           {navItems.map((item) => (
             <NavigationMenuItem key={item.label}>
               <NavigationMenuLink href={item.href ?? ''} className={navigationMenuTriggerStyle()} active={item.active}>
+                {item.icon && <item.icon className='text-primary mr-2 h-4 w-4' />}
                 {item.label}
               </NavigationMenuLink>
             </NavigationMenuItem>

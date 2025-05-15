@@ -21,7 +21,7 @@ async function updateDepartmentCounts() {
   // Update each department's numProfessors field
   for (const dept of departments) {
     await db.department.update({
-      where: { id: dept.id },
+      where: { code: dept.code },
       data: {
         numProfessors: dept._count.professors
       }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
         await db.professor.create({
           data: {
             name: record.name,
-            departmentId: department.id,
+            departmentCode: department.code,
             designation: record.designation,
             photoUrl: record.image,
             email: record.email,

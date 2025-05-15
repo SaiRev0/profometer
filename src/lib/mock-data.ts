@@ -17,17 +17,17 @@ export const departments = [
     numReviews: 0
   },
   {
-    id: 'CHET',
+    id: 'CHE',
     name: 'Chemical Engineering and Technology',
-    code: 'CHET',
+    code: 'CHE',
     avgRating: 0,
     numProfessors: 0,
     numReviews: 0
   },
   {
-    id: 'CE',
+    id: 'CIV',
     name: 'Civil Engineering',
-    code: 'CE',
+    code: 'CIV',
     avgRating: 0,
     numProfessors: 0,
     numReviews: 0
@@ -57,9 +57,9 @@ export const departments = [
     numReviews: 0
   },
   {
-    id: 'MECH',
+    id: 'MEC',
     name: 'Mechanical Engineering',
-    code: 'MECH',
+    code: 'MEC',
     avgRating: 0,
     numProfessors: 0,
     numReviews: 0
@@ -81,25 +81,25 @@ export const departments = [
     numReviews: 0
   },
   {
-    id: 'PET',
+    id: 'PHE',
     name: 'Pharmaceutical Engineering and Technology',
-    code: 'PET',
+    code: 'PHE',
     avgRating: 0,
     numProfessors: 0,
     numReviews: 0
   },
   {
-    id: 'CHE',
+    id: 'CHY',
     name: 'Chemistry',
-    code: 'CHE',
+    code: 'CHY',
     avgRating: 0,
     numProfessors: 0,
     numReviews: 0
   },
   {
-    id: 'MATH',
+    id: 'MAT',
     name: 'Mathematical Sciences',
-    code: 'MATH',
+    code: 'MAT',
     avgRating: 0,
     numProfessors: 0,
     numReviews: 0
