@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Department } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -12,9 +13,43 @@ import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 interface DepartmentCardProps {
   department: Department;
   index?: number;
+  isLoading?: boolean;
 }
 
-export function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
+export function DepartmentCardSkeleton() {
+  return (
+    <div className='border-border overflow-hidden rounded-lg border bg-white shadow-md dark:bg-gray-800'>
+      <div className='p-6'>
+        <div className='mb-4 flex items-start justify-between'>
+          <Skeleton className='h-10 w-10 rounded-full' />
+          <Skeleton className='h-6 w-14' />
+        </div>
+
+        <Skeleton className='mb-1 h-6 w-3/4' />
+        <Skeleton className='mb-4 h-4 w-1/2' />
+
+        <div className='mb-4'>
+          <div className='mb-1 flex justify-between'>
+            <Skeleton className='h-4 w-24' />
+            <Skeleton className='h-4 w-16' />
+          </div>
+          <Skeleton className='h-2 w-full rounded-full' />
+        </div>
+
+        <div className='flex items-center justify-between'>
+          <Skeleton className='h-4 w-20' />
+          <Skeleton className='h-4 w-32' />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function DepartmentCard({ department, index = 0, isLoading = false }: DepartmentCardProps) {
+  if (isLoading) {
+    return <DepartmentCardSkeleton />;
+  }
+
   const getRatingColor = (rating: number) => {
     if (rating >= 4.5) return 'bg-success';
     if (rating >= 4.0) return 'bg-primary';

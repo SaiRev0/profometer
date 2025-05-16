@@ -1,7 +1,7 @@
 import type { Course, Professor, Review } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 
-export const COURSE_QUERY_KEY = (code: string) => ['course', code];
+export const COURSE_QUERY_KEY = (code: string) => ['course', code] as const;
 
 export function useGetCourse(code: string) {
   return useQuery<

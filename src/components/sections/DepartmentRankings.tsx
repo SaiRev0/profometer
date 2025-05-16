@@ -23,16 +23,6 @@ export function DepartmentRankings() {
     return 'bg-error';
   };
 
-  if (isLoading) {
-    return (
-      <section className='py-16'>
-        <div className='container mx-auto px-4'>
-          <div className='text-center'>Loading departments...</div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className='py-16'>
       <div className='container mx-auto px-4'>
@@ -48,9 +38,13 @@ export function DepartmentRankings() {
         </motion.div>
 
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
-          {departments.map((department: Department, index: number) => (
-            <DepartmentCard key={department.code} department={department} index={index} />
-          ))}
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <DepartmentCard department={departments[0]} key={index} isLoading={true} />
+              ))
+            : departments.map((department: Department, index: number) => (
+                <DepartmentCard key={department.code} department={department} index={index} />
+              ))}
         </div>
 
         <div className='mt-10 text-center'>

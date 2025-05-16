@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 
+import DepartmentSkeleton from '@/app/department/_UI/DepartmentSkeleton';
 import CourseCard from '@/components/cards/CourseCard';
 import ProfessorCard from '@/components/cards/ProfessorCard';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,7 @@ export default function DepartmentPage() {
   }
 
   if (isLoading || !department) {
-    return <div>Loading...</div>;
+    return <DepartmentSkeleton />;
   }
 
   return (

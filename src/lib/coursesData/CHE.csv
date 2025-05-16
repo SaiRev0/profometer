@@ -1,37 +1,37 @@
 Course Code,Course Name,Credits
-CHO-101,Heat and Mass Transfer,11
-CHO-102,Fluid Mechanics,11
-CHE-101,Chemical Engineering Practices,6
-CHE-201,Chemical Engineering Thermodynamics,11
-CHE-202,Fluid Flow and Mechanical Operations,8
-CHE-291,Exploratory Project,5
-CY-103,Essentials of Biochemistry,11
-CHE-203,Heat Transfer Operations,8
-CHE-204,Mass Transfer Operations-I,11
-CHE-205,Fluid Flow and Mechanical Operations Laboratory,2
-CHE-301,Properties of Engineering Materials,11
-CHE-231,Energy Resources and Utilization,8
-CHE-241,Industrial Pollution and Control,8
-CHE-321,New Separation Process,9
-CHE-331,Petroleum Refinery Engineering,9
-CHE-351,Kinetics of Complex Reactions,9
-CHE-302,Heat Transfer Operation Lab,2
-CHE-304,Process Dynamics & Control,9
-CHE-305,Mass Transfer Operations – II,9
-CHE-211,Equipment Design,8
-CHE-312,Process Engineering and Plant Design,9
-CHE-322,Fluidization Engineering,9
-CHE-352,Biochemical Engineering,9
-CHE-401,Transport Phenomena,9
-CHE-402,Process Instrumentation,6
-CHE-421,Multi component Distillation,3
-CHE-431,Solar Energy Engineering,3
-CHE-451,Heterogeneous Catalysis,3
-CHE-403,Instrumentation & Process Control Laboratory,2
-CHE-404,CAD and Simulation Laboratory,2
-CHE-405,Modeling Simulation and Optimization,9
-CHE-422,Biotransport Processes,9
-CHE-432,Electrochemical Engineering,9
-CHE-452,Reactor Design and Analysis,9
-CHE-461,"Polymer Science and Technology, Polymer Science and Technology Lab",8
-CHE-462,"Computational Fluid Dynamics, Computational Fluid Dynamics Lab",8
+CY-101,Chemistry - I,10
+CY-102,Chemistry - II,13
+CHO-103,Process Calculation,8
+CHI-101,Industrial Chemistry Practice Course,6
+CHO-201,Chemical Reaction Engineering - I,8
+CHI-211,Classical and Statistical Thermodynamics,9
+CHI-291,Exploratory Project,5
+CHO-203,Chemical Reaction Engineering - II,8
+CHO-204,Chemical Reaction Engineering Laboratory,2
+CHI-212,Quantum Chemistry and Molecular Spectroscopy,9
+CHI-241,Chemistry of Coordination Compounds,12
+CHI-341,Chemistry of Transition and Inner Transition Elements,11
+CHI-351,Chemistry of Heterocylic Compounds,12
+CHI-321,Reaction Kinetics,11
+CHI-391,Stream Project (Hons.)@,10
+CHO-301,Chemical Technology - I,6
+CHI-301,Petrochemicals and Polymers,9
+CHI-331,Environmental Chemistry,6
+CHI-352,Synthesis and Mechanism in Organic Chemistry,11
+CHI-322,Electro Chemistry and Surface Phenomena,9
+CHI-311,Molecular Simulation & Cheminformatics,9
+CHI-332,Waste Management Technology,9
+CHI-441,Organometallic Chemistry,9
+CHI-451,Spectroscopic Identification of Organic Compounds,9
+CHI-403,Nuclear and Radiation Chemistry,9
+CHI-421,Solid State Chemistry,9
+CHI-422,Corrosion Chemistry,9
+CHI-431,Bioremediation,9
+CHI-452,Chemistry of Bio-molecules,9
+CHI-442,Bio-inorganic Chemistry,9
+CHI-461,Instrumental Methods of Chemical Analysis,9
+CHI-423,Adsorption and Heterogeneous Catalysis,9
+CHI-432,Advance Treatement Proceses for Water and Waste Water,9
+CHI-561,Sensor Science and Technology,9
+CHI-541,Supramolecular Chemistry,9
+CHI-501,Green Chemistry,9
