@@ -22,19 +22,10 @@ export default function DepartmentPage() {
   const params = useParams();
   const code = params.code as string;
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 100);
   const [activeTab, setActiveTab] = useState<'professors' | 'courses'>('professors');
-  const debouncedSearch = useDebounce(search, 300);
 
-  const {
-    data: department,
-    isLoading,
-    error
-  } = useGetDepartmentByCode({
-    code,
-    search: debouncedSearch
-  });
-
-  console.log(department);
+  const { data: department, isLoading, error } = useGetDepartmentByCode({ code });
 
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -50,6 +41,19 @@ export default function DepartmentPage() {
   if (isLoading || !department) {
     return <DepartmentSkeleton />;
   }
+
+  // Filter professors and courses based on search term
+  const filteredProfessors =
+    department?.professors.filter((professor) => {
+      const searchLower = debouncedSearch.toLowerCase();
+      return professor.name.toLowerCase().includes(searchLower) || professor.email.toLowerCase().includes(searchLower);
+    }) ?? [];
+
+  const filteredCourses =
+    department?.courses.filter((course) => {
+      const searchLower = debouncedSearch.toLowerCase();
+      return course.name.toLowerCase().includes(searchLower) || course.code.toLowerCase().includes(searchLower);
+    }) ?? [];
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -134,8 +138,8 @@ export default function DepartmentPage() {
         }}
         className='mb-8'>
         <TabsList className='grid w-full grid-cols-2'>
-          <TabsTrigger value='professors'>Professors ({department.professors.length})</TabsTrigger>
-          <TabsTrigger value='courses'>Courses ({department.courses.length})</TabsTrigger>
+          <TabsTrigger value='professors'>Professors ({filteredProfessors.length})</TabsTrigger>
+          <TabsTrigger value='courses'>Courses ({filteredCourses.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value='professors'>
@@ -146,13 +150,15 @@ export default function DepartmentPage() {
             <Card>
               <CardContent className='pt-6'>
                 <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-                  {department.professors.map((professor) => (
+                  {filteredProfessors.map((professor) => (
                     <div key={professor.id} className='min-w-[300px] snap-start sm:min-w-[320px]'>
                       <ProfessorCard professor={professor} variant='compact' />
                     </div>
                   ))}
-                  {department.professors.length === 0 && (
-                    <p className='text-muted-foreground text-center'>No professors found</p>
+                  {filteredProfessors.length === 0 && (
+                    <p className='text-muted-foreground text-center'>
+                      {search ? 'No professors found matching your search' : 'No professors found'}
+                    </p>
                   )}
                 </div>
               </CardContent>
@@ -168,13 +174,15 @@ export default function DepartmentPage() {
             <Card>
               <CardContent className='pt-6'>
                 <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                  {department.courses.map((course) => (
+                  {filteredCourses.map((course) => (
                     <div key={course.code} className='min-w-[300px] snap-start sm:min-w-[320px]'>
                       <CourseCard course={course} variant='compact' />
                     </div>
                   ))}
-                  {department.courses.length === 0 && (
-                    <p className='text-muted-foreground col-span-full text-center'>No courses found</p>
+                  {filteredCourses.length === 0 && (
+                    <p className='text-muted-foreground col-span-full text-center'>
+                      {search ? 'No courses found matching your search' : 'No courses found'}
+                    </p>
                   )}
                 </div>
               </CardContent>

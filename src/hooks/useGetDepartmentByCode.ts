@@ -3,10 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 
 interface UseDepartmentParams {
   code: string;
-  search?: string;
 }
 
-export function useGetDepartmentByCode({ code, search }: UseDepartmentParams) {
+export function useGetDepartmentByCode({ code }: UseDepartmentParams) {
   const { data, ...rest } = useQuery<
     Department & {
       professors: Professor[];
