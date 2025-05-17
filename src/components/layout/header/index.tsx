@@ -6,8 +6,8 @@ import Link from 'next/link';
 
 import { useTheme } from 'next-themes';
 
+import { useDebounce } from '@/hooks/use-debounce';
 import { useNavigation } from '@/hooks/useNavigation';
-import { SearchResults } from '@/lib/types/navigation';
 import { cn } from '@/lib/utils';
 
 import { MobileMenu } from './MobileMenu';
@@ -16,28 +16,20 @@ import { SearchBar } from './SearchBar';
 import { SearchDialog } from './SearchDialog';
 import { GraduationCap } from 'lucide-react';
 
-// Mock search results
-const mockSearchResults: SearchResults = {
-  professors: [
-    { id: 'prof-1', name: 'Dr. Sarah Johnson', department: 'Computer Science' },
-    { id: 'prof-2', name: 'Prof. Michael Williams', department: 'Engineering' },
-    { id: 'prof-3', name: 'Dr. Emily Chen', department: 'Physics' }
-  ],
-  branches: [
-    { id: 'cs', name: 'Computer Science', professors: 48 },
-    { id: 'eng', name: 'Engineering', professors: 62 },
-    { id: 'bus', name: 'Business', professors: 45 }
-  ],
-  popular: ['Machine Learning', 'Data Structures', 'Web Development', 'Artificial Intelligence']
-};
-
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('All Branches');
+  const [searchTerm, setSearchTerm] = useState('');
   const { mobileNavItems, desktopNavItems, moreLinks } = useNavigation();
+
+  const handleSearchOpen = (open: boolean) => {
+    if (open) {
+      setSearchTerm(''); // Clear search term when opening dialog
+    }
+    setSearchOpen(open);
+  };
 
   // Monitor scroll position for header styling
   useEffect(() => {
@@ -79,7 +71,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <SearchBar onSearchClick={() => setSearchOpen(true)} selectedBranch={selectedBranch} />
+          <SearchBar onSearchClick={() => handleSearchOpen(true)} />
           <Navigation
             navItems={desktopNavItems}
             theme={theme || 'light'}
@@ -90,16 +82,16 @@ export default function Header() {
             moreLinks={moreLinks}
             theme={theme || 'light'}
             onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            onSearchClick={() => setSearchOpen(true)}
+            onSearchClick={() => handleSearchOpen(true)}
           />
         </div>
       </header>
 
       <SearchDialog
         open={searchOpen}
-        onOpenChange={setSearchOpen}
-        searchResults={mockSearchResults}
-        onBranchSelect={setSelectedBranch}
+        onOpenChange={handleSearchOpen}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
       />
     </>
   );

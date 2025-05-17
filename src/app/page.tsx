@@ -6,13 +6,9 @@ import LovedChallengingSection from '@/components/sections/loved-challenging-sec
 import RecentlyReviewedSection from '@/components/sections/recently-reviewed-section';
 
 export default function Home() {
-  const handleSearch = (query: string, branch: string | null) => {
-    console.log('Searching for:', query, 'in branch:', branch);
-  };
-
   return (
     <div className='flex flex-col gap-8 pt-4 pb-8 md:pt-8'>
-      <HeroSection onSearch={handleSearch} />
+      <HeroSection />
       <RecentlyReviewedSection />
       <LovedChallengingSection />
       <DepartmentRankings />
