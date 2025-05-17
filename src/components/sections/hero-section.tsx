@@ -105,7 +105,7 @@ export default function HeroSection() {
       </motion.div>
 
       {/* Floating review cards */}
-      <div className='absolute top-1/2 right-20 hidden lg:block'>
+      <div className='absolute top-1/2 right-12 hidden lg:block'>
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -124,13 +124,13 @@ export default function HeroSection() {
                 />
               ))}
             </div>
-            <p className='mt-2 text-sm text-white/90'>"Amazing teaching style!"</p>
+            <p className='mt-2 text-sm dark:text-white/90'>"Amazing teaching style!"</p>
           </motion.div>
         </motion.div>
       </div>
 
       {/* Additional floating review card */}
-      <div className='absolute bottom-1/4 left-20 hidden lg:block'>
+      <div className='absolute bottom-1/4 left-16 hidden lg:block'>
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -149,7 +149,7 @@ export default function HeroSection() {
                 />
               ))}
             </div>
-            <p className='mt-2 text-sm text-white/90'>"Best professor ever!"</p>
+            <p className='mt-2 text-sm dark:text-white/90'>"Best professor ever!"</p>
           </motion.div>
         </motion.div>
       </div>
