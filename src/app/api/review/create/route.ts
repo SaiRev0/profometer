@@ -35,12 +35,19 @@ export async function POST(req: Request) {
     // Start a transaction to create review and update statistics
     const result = await db.$transaction(async (tx) => {
       try {
+        // Get the appropriate user ID based on anonymous flag
+        const userId = anonymous ? process.env.ANONYMOUS_USER_ID : (session.user as { id: string }).id;
+
+        if (!userId) {
+          throw new Error('Anonymous user ID not configured in environment variables');
+        }
+
         // Create the review
         const review = await tx.review.create({
           data: {
             professorId,
             courseCode: courseId,
-            userId: (session.user as { id: string }).id,
+            userId,
             semester,
             anonymous,
             ratings,

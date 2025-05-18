@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -25,7 +25,6 @@ export interface ReviewCardType extends Review {
   userVote?: 'up' | 'down' | null;
   userName?: string;
   date?: string;
-  courseCode?: string;
 }
 
 interface ReviewCardProps {
@@ -79,20 +78,12 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
       <CardContent className='p-4'>
         <div className='flex items-start justify-between'>
           <div className='flex items-center gap-3'>
-            {review.anonymous ? (
-              <Avatar>
-                <AvatarFallback className='bg-secondary text-secondary-foreground'>A</AvatarFallback>
-              </Avatar>
-            ) : (
-              <Avatar>
-                <AvatarFallback className='bg-primary text-primary-foreground'>
-                  {review.userName?.[0] || 'U'}
-                </AvatarFallback>
-              </Avatar>
-            )}
-
+            <Avatar>
+              <AvatarImage src={review.user.image} alt={review.user.name} />
+              <AvatarFallback className='bg-secondary text-secondary-foreground'>A</AvatarFallback>
+            </Avatar>
             <div>
-              <p className='font-medium'>{review.anonymous ? 'Anonymous Student' : review.userName}</p>
+              <p className='font-medium'>{review.user.name}</p>
               <div className='text-muted-foreground flex items-center text-sm'>
                 <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
                 {review.courseCode && (

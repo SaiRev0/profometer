@@ -66,7 +66,7 @@ export interface Review {
   id: string;
   userId: string;
   professorId: string;
-  courseId: string;
+  courseCode: string;
   semester: string;
   anonymous: boolean;
   ratings: {
@@ -87,13 +87,8 @@ export interface Review {
   downvotes: number;
   createdAt: Date;
   updatedAt: Date;
-  user?: {
-    name: string | null;
-    image: string | null;
-  };
-  course?: {
-    code: string;
-  };
+  user: User;
+  course: Course;
 }
 export interface User {
   id: string;

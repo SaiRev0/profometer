@@ -13,7 +13,14 @@ const SideBar = ({ professor }: { professor: Professor }) => {
         <CardContent className='p-4'>
           {professor.photoUrl && (
             <div className='relative mb-4 h-48 w-full overflow-hidden rounded-lg'>
-              <Image src={professor.photoUrl} alt={professor.name} fill className='object-cover' />
+              <Image
+                src={professor.photoUrl}
+                alt={professor.name}
+                fill
+                priority
+                sizes='(max-width: 768px) 100vw, 33vw'
+                className='object-cover'
+              />
             </div>
           )}
 
@@ -70,7 +77,7 @@ const SideBar = ({ professor }: { professor: Professor }) => {
               <ClipboardList className='text-muted-foreground mt-1 h-4 w-4' />
               <div>
                 <p className='text-sm font-medium'>Student Reviews</p>
-                <p className='text-muted-foreground text-sm'>{professor.numReviews} reviews</p>
+                <p className='text-muted-foreground text-sm'>{professor.statistics.totalReviews} reviews</p>
               </div>
             </div>
           </div>

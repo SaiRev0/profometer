@@ -27,7 +27,7 @@ export default function ReviewList({ initialReviews, selectedCourse }: ReviewLis
   };
 
   const filteredReviews = initialReviews
-    .filter((review) => selectedCourse === 'all' || review.courseId === selectedCourse)
+    .filter((review) => selectedCourse === 'all' || review.courseCode === selectedCourse)
     .sort((a, b) => {
       if (sortOption === 'recent') {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();

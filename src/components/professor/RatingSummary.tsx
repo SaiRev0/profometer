@@ -1,10 +1,14 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Professor } from '@/lib/types';
+
+import { useSession } from 'next-auth/react';
 
 interface ProfessorStatsProps {
   professor: Professor;
@@ -12,6 +16,17 @@ interface ProfessorStatsProps {
 }
 
 export default function RatingSummary({ professor, setModalState }: ProfessorStatsProps) {
+  const { status } = useSession();
+  const router = useRouter();
+
+  const handleButtonClick = () => {
+    if (status === 'authenticated') {
+      setModalState(true);
+    } else {
+      router.push('/signin');
+    }
+  };
+
   return (
     <Card className='mb-6'>
       <CardHeader className='pb-2'>
@@ -90,8 +105,8 @@ export default function RatingSummary({ professor, setModalState }: ProfessorSta
       </CardContent>
 
       <CardFooter>
-        <Button onClick={() => setModalState(true)} className='w-full'>
-          Rate Professor {professor.name.split(' ')[1]}
+        <Button onClick={handleButtonClick} className='w-full'>
+          {status === 'authenticated' ? `Rate Professor ${professor.name.split(' ')[1]}` : 'Sign in to Write a Review'}
         </Button>
       </CardFooter>
     </Card>

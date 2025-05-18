@@ -48,7 +48,7 @@ export default function ProfessorDetails({ professor, initialReviews }: Professo
         <div className='md:w-2/3'>
           {/* Rating Summary */}
           <RatingSummary professor={professor} setModalState={setReviewFormOpen} />
-          {/* Courses Section */}
+          {/* Courses Section In Review List */}
           <CoursesSection professor={professor} selectedCourse={selectedCourse} onCourseSelect={setSelectedCourse} />
           {/* Reviews Section */}
           <ReviewList initialReviews={initialReviews} selectedCourse={selectedCourse} />
