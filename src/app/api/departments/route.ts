@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const departments = await db.department.findMany({
       take: limit,
       orderBy: {
-        name: 'asc'
+        avgRating: 'desc'
       },
       include: {
         _count: {

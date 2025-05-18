@@ -1,22 +1,22 @@
 Course Code,Course Name,Credits
-MA-101,Engineering Mathematics - I,11
-MA-102,Engineering Mathematics - II,11
-MA-103,Algebra,11
-MA-104,Information Technology and Computing Workshop,6
-MA-202,Probability and Statistics,11
-CSO-201,Discrete Mathematics,9
-CSO-202,Computer System Organization,11
-MA-201,Numerical Techniques,11
-MA-203,Mathematical Methods,11
-CSO-203,Algorithms#,11
-MA-311,Linear Algebra,9
-MA-312,Differential Equations,9
-CSM-321,Mathematical Modeling and Simulation,11
-CSM-322,Information and Coding Theory,11
-MA-313,Real and Complex Analysis,9
-MA-323,Fluid Dynamics,9
-CSO-324,Operation Research,9
-MA-341,Stochastic Process,11
-MA-314,Number Theory,11
-CSM-323,Discrete Optimization and Network,9
-MA-411,Topology and Functional Analysis,9
+MA101,Engineering Mathematics-I,11
+MA102,Engineering Mathematics-II,11
+MA103,Algebra,11
+MA104,Information Technology and Computing Workshop,6
+MA202,Probability and Statistics,11
+CSO201,Discrete Mathematics,9
+CSO202,Computer System Organization,11
+MA201,Numerical Techniques,11
+MA203,Mathematical Methods,11
+CSO203,Algorithms,11
+MA311,Linear Algebra,9
+MA312,Differential Equations,9
+CSM321,Mathematical Modeling and Simulation,11
+CSM322,Information and Coding Theory,11
+MA313,Real and Complex Analysis,9
+MA323,Fluid Dynamics,9
+CSO324,Operation Research,9
+MA341,Stochastic Process,11
+MA314,Number Theory,11
+CSM323,Discrete Optimization and Network,9
+MA411,Topology and Functional Analysis,9

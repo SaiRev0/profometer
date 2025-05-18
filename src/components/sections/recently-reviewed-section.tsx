@@ -20,7 +20,7 @@ export default function RecentlyReviewedSection() {
       <div className='scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4'>
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className='min-w-[300px] grow snap-start sm:min-w-[320px]'>
+              <div key={index} className='min-w-[250px] grow snap-start sm:min-w-[280px]'>
                 <ProfessorCard professor={professors?.professors[0]} isLoading={true} variant='detailed' />
               </div>
             ))

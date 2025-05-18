@@ -1,54 +1,54 @@
 Course Code,Course Name,Credits
-EO-101,Fundamentals of Electrical Engineering,13
-EC-203,Electromagnetic Fields and Transmission Lines,9
-EC-102,Electronic Circuit Workshop,6
-EO-201,Network Analysis & Synthesis,13
-EC-201,Solid State Electronic Devices,9
-EC-202,Signals and Systems,9
-EC-271,Solid State Electronic Devices Lab,2
-ME-101,Fundamentals of Mechanical Engineering,11
-EO-202,Analogue Circuits and Systems,9
-EO-203,Digital Circuits and Systems,9
-EC-211,Analogue Communication Systems,9
-EO-272,Analogue Circuits and Systems Lab,2
-EC-273,Digital Circuits & Systems Lab,2
-EC-274,Analogue Communication Systems Lab,2
-EC-341,Antennas and Propagation,9
-EC-331,Microelectronics,9
-EC-311,Digital Communication,9
-EC-321,Microprocessor Engineering,9
-EC-371,Antennas and Propagation Lab,2
-EC-372,Digital Communication Lab,2
-EC-373,Microprocessor Engineering Lab,2
-EC-313,Digital Signal Processing,9
-EC-342,Microwave Engineering,9
-EC-322,Electronics Measurement and Instrumentation,9
-EC-314,Optical Communication Networks,9
-EC-323,Embedded System Design,9
-EC-332,Optoelectronic Devices,9
-EC-343,RF/Microwave Circuit Design,9
-EC-411,Optical Communication,9
-EC-431,Basic VLSI Design,9
-EC-374,Microwave Engineering Lab,2
-EC-412,Wireless Communication,9
-EC-421,Advanced Digital Design,9
-EC-422,Artificial Intelligence,9
-EC-423,Internet of Things,9
-EC-432,VLSI Technology,9
-EC-441,Microwave Communication Systems,9
-EC-442,Microwave Integrated Circuits,9
-EC-443,RF/Microwave Measurements,9
-EC-449,Applications of Microwave,9
-EC-445,Milli-meter Wave Devices and Systems,9
-EC-413,Information Theory,9
-EC-414,Modern Coding Theory,9
-EC-415,Stochastic Processes,9
-EC-424,Digital Image Processing,9
-EC-425,Electronics System Design,9
-EC-426,Logical Design of Digital Systems,9
-EC-427,"Switching Theory, Finite Machines and Automata",9
-EC-433,Advanced Field Effect Devices,9
-EC-434,Introduction to Nanoelectronics,9
-EC-446,Microwave Tubes,9
-EC-447,Radar Engineering,9
-EC-448,Microwave Solid State Devices,9
+EO101,Fundamentals of Electrical Engineering,13
+EC203,Electromagnetic Fields and Transmission Lines,9
+EC102,Electronic Circuit Workshop,6
+EO201,Network Analysis & Synthesis,13
+EC201,Solid State Electronic Devices,9
+EC202,Signals and Systems,9
+EC271,Solid State Electronic Devices Lab,2
+ME101,Fundamentals of Mechanical Engineering,11
+EO202,Analogue Circuits and Systems,9
+EO203,Digital Circuits and Systems,9
+EC211,Analogue Communication Systems,9
+EO272,Analogue Circuits and Systems Lab,2
+EC273,Digital Circuits & Systems Lab,2
+EC274,Analogue Communication Systems Lab,2
+EC341,Antennas and Propagation,9
+EC331,Microelectronics,9
+EC311,Digital Communication,9
+EC321,Microprocessor Engineering,9
+EC371,Antennas and Propagation Lab,2
+EC372,Digital Communication Lab,2
+EC373,Microprocessor Engineering Lab,2
+EC313,Digital Signal Processing,9
+EC342,Microwave Engineering,9
+EC322,Electronics Measurement and Instrumentation,9
+EC314,Optical Communication Networks,9
+EC323,Embedded System Design,9
+EC332,Optoelectronic Devices,9
+EC343,RF/Microwave Circuit Design,9
+EC411,Optical Communication,9
+EC431,Basic VLSI Design,9
+EC374,Microwave Engineering Lab,2
+EC412,Wireless Communication,9
+EC421,Advanced Digital Design,9
+EC422,Artificial Intelligence,9
+EC423,Internet of Things,9
+EC432,VLSI Technology,9
+EC441,Microwave Communication Systems,9
+EC442,Microwave Integrated Circuits,9
+EC443,RF/Microwave Measurements,9
+EC449,Applications of Microwave,9
+EC445,Milli-meter Wave Devices and Systems,9
+EC413,Information Theory,9
+EC414,Modern Coding Theory,9
+EC415,Stochastic Processes,9
+EC424,Digital Image Processing,9
+EC425,Electronics System Design,9
+EC426,Logical Design of Digital Systems,9
+EC427,"Switching Theory, Finite Machines and Automata",9
+EC433,Advanced Field Effect Devices,9
+EC434,Introduction to Nanoelectronics,9
+EC446,Microwave Tubes,9
+EC447,Radar Engineering,9
+EC448,Microwave Solid State Devices,9

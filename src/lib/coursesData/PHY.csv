@@ -1,48 +1,48 @@
 Course Code,Course Name,Credits
-PHY-101,"Physics-I Classical, Quantum & Relativistic Mechanics",13
-PHY-102,Physics-II; Introduction To Engineering Electromagnetics,13
-PHY-103,Modern Physics,9
-EP-101,Practices of Engineering Physics,6
-PHY-201,Quantum Physics,11
-EO-237,Fibre Optics,9
-PHY-211,Solar and Space Plasma Physics,9
-PHY-221,Condensed Matter Physics,11
-EP-201,"Instrumentation, Measurement and Analysis",6
-EP-291,Exploratory Project,5
-PHY-202,Computational Physics,8
-PHY-301,Atomic and Molecular Physics,9
-PHY-302,Relativistic Electrodynamics,9
-PHY-306,Classical Mechanics,9
-EP-341,Biophysics,9
-EP-351,Renewable Energy Sources,9
-EP-361,Remote Sensing,9
-PHY-303,Statistical Physics,9
-PHY-332,Fourier Optics,6
-PHY-305,Advanced Quantum Mechanics,9
-PHY-311,Introduction to Astronomy & Astrophysics,9
-PHY-321,Physics of Materials,9
-EP-331,Advanced Optical fiber & Components,9
-EP-342,Biophysical Techniques,9
-EP-362,Microwave Remote Sensing,9
-PHY-307,Advanced Mathematical Methods,9
-PHY-401,Nuclear and Particle Physics,11
-PHY-402,Quantum Electronics,6
-PHY-403,Introduction to Quantum Field Theory,9
-PHY-411,Magnetohydrodynamics,9
-EP-421,Advanced Materials & Characterization techniques,9
-EP-431,Integrated Optics,9
-EP-451,Non-Conventional Energy Sources,9
-PHY-404,Phase Transition & Critical Phenomena,9
-PHY-412,Physics of the Sun and its Atmosphere,9
-PHY-421,Advanced Condensed Matter Physics,9
-EP-432,Photonics & Optoelectronics,9
-EP-441,Advanced Biophysics,9
-EP-452,Fuel Cell,9
-EP-461,Antenna & Radar Engineering,9
-PHY-405,Advance Quantum Field Theory,9
-PHY-501,Simulation Methods in Statistical Physics,9
-EP-511,Atmospheric Physics & Environmental Sciences,9
-EP-512,Space Weather,9
-PHY-521,Low Dimensional Physics,9
-PHY-531,PBG & Meta - Materials,9
-EP-561,Satellite Image Processing,9
+PHY101,"Physics-I Classical, Quantum & Relativistic Mechanics",13
+PHY102,Physics-II; Introduction To Engineering Electromagnetics,13
+PHY103,Modern Physics,9
+EP101,Practices of Engineering Physics,6
+PHY201,Quantum Physics,11
+EO237,Fibre Optics,9
+PHY211,Solar and Space Plasma Physics,9
+PHY221,Condensed Matter Physics,11
+EP201,"Instrumentation, Measurement and Analysis",6
+EP291,Exploratory Project,5
+PHY202,Computational Physics,8
+PHY301,Atomic and Molecular Physics,9
+PHY302,Relativistic Electrodynamics,9
+PHY306,Classical Mechanics,9
+EP341,Biophysics,9
+EP351,Renewable Energy Sources,9
+EP361,Remote Sensing,9
+PHY303,Statistical Physics,9
+PHY332,Fourier Optics,6
+PHY305,Advanced Quantum Mechanics,9
+PHY311,Introduction to Astronomy & Astrophysics,9
+PHY321,Physics of Materials,9
+EP331,Advanced Optical fiber & Components,9
+EP342,Biophysical Techniques,9
+EP362,Microwave Remote Sensing,9
+PHY307,Advanced Mathematical Methods,9
+PHY401,Nuclear and Particle Physics,11
+PHY402,Quantum Electronics,6
+PHY403,Introduction to Quantum Field Theory,9
+PHY411,Magnetohydrodynamics,9
+EP421,Advanced Materials & Characterization techniques,9
+EP431,Integrated Optics,9
+EP451,Non-Conventional Energy Sources,9
+PHY404,Phase Transition & Critical Phenomena,9
+PHY412,Physics of the Sun and its Atmosphere,9
+PHY421,Advanced Condensed Matter Physics,9
+EP432,Photonics & Optoelectronics,9
+EP441,Advanced Biophysics,9
+EP452,Fuel Cell,9
+EP461,Antenna & Radar Engineering,9
+PHY405,Advance Quantum Field Theory,9
+PHY501,Simulation Methods in Statistical Physics,9
+EP511,Atmospheric Physics & Environmental Sciences,9
+EP512,Space Weather,9
+PHY521,Low Dimensional Physics,9
+PHY531,PBG & Meta - Materials,9
+EP561,Satellite Image Processing,9
