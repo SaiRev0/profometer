@@ -14,49 +14,54 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
-import { Professor, ProfessorPercentages } from '@/lib/types';
+import { Course, Professor } from '@/lib/types';
 
-import { Plus, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
-interface ReviewFormProps {
-  professor: Professor;
+interface CourseReviewFormProps {
+  course: Course & {
+    professors: Professor[];
+    departmentProfessors: Professor[];
+  };
   modalState: boolean;
   setModalState: (state: boolean) => void;
-  setAddCourseDialogOpen: (state: boolean) => void;
 }
 
-export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
+export default function CourseReviewForm({ course, modalState, setModalState }: CourseReviewFormProps) {
   const { status } = useSession();
   const router = useRouter();
   const { createReview, isLoading } = useCreateReview();
-  const [reviewCourse, setReviewCourse] = useState('');
+  const [reviewProfessor, setReviewProfessor] = useState('');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
   const [semesterYear, setSemesterYear] = useState('');
   const [reviewSemester, setReviewSemester] = useState('');
   const [reviewRatings, setReviewRatings] = useState({
-    teaching: 0,
-    helpfulness: 0,
-    fairness: 0,
-    clarity: 0,
-    communication: 0
+    difficulty: 0,
+    workload: 0,
+    content: 0,
+    numerical: 0
   });
-  const [reviewComment, setReviewComment] = useState('');
-  const [reviewStatistics, setReviewStatistics] = useState<ProfessorPercentages>({
+  const [reviewStatistics, setReviewStatistics] = useState<{
+    wouldRecommend: number;
+    quizes: number;
+    assignments: number;
+    attendanceRating: number;
+  }>({
     wouldRecommend: -1,
     quizes: -1,
     assignments: -1,
     attendanceRating: 50
   });
+  const [reviewComment, setReviewComment] = useState('');
   const [reviewGrade, setReviewGrade] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [courseSearch, setCourseSearch] = useState('');
+  const [isAnonymous, setIsAnonymous] = useState(true);
+  const [professorSearch, setProfessorSearch] = useState('');
 
   // Add helper function to get current year
   const getCurrentYear = () => new Date().getFullYear();
 
-  // Remove useEffect and update the handlers
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
     setReviewSemester(`${value}-${semesterYear}`);
@@ -68,11 +73,9 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     setReviewSemester(`${semesterType}-${year}`);
   };
 
-  // Add this function to filter courses
-  const filteredCourses = professor.departmentCourses?.filter((course) => {
-    const searchTerm = courseSearch.toLowerCase();
-    return course.code.toLowerCase().includes(searchTerm) || course.name.toLowerCase().includes(searchTerm);
-  });
+  const filteredProfessors = course.departmentProfessors?.filter((professor) =>
+    professor.name.toLowerCase().includes(professorSearch.toLowerCase())
+  );
 
   // Submit review function
   const handleSubmitReview = async () => {
@@ -103,9 +106,9 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
       return;
     }
 
-    // Check if course is selected
-    if (!reviewCourse) {
-      toast.error('Please select the course you took with this professor.');
+    // Check if professor is selected
+    if (!reviewProfessor) {
+      toast.error('Please select the professor who taught this course.');
       return;
     }
 
@@ -115,7 +118,6 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
       return;
     }
 
-    // Calculate overall rating as average of all ratings
     const overallRating = Number(
       (
         Object.values(reviewRatings).reduce((sum, rating) => sum + rating, 0) / Object.keys(reviewRatings).length
@@ -124,34 +126,34 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
 
     try {
       await createReview({
-        professorId: professor.id,
-        courseId: reviewCourse,
+        courseId: course.code,
+        professorId: reviewProfessor,
         semester: reviewSemester,
         anonymous: isAnonymous,
         ratings: {
           ...reviewRatings,
+          // Map course-specific ratings to the expected format
           overall: overallRating
         },
         comment: reviewComment,
         statistics: {
           wouldRecommend: reviewStatistics.wouldRecommend,
-          attendanceRating: reviewStatistics.attendanceRating,
           quizes: reviewStatistics.quizes,
-          assignments: reviewStatistics.assignments
+          assignments: reviewStatistics.assignments,
+          attendanceRating: reviewStatistics.attendanceRating
         },
         grade: reviewGrade || undefined,
-        type: 'professor'
+        type: 'course'
       });
 
       toast.success('Review Submitted!');
 
       // Reset form
       setReviewRatings({
-        teaching: 0,
-        helpfulness: 0,
-        fairness: 0,
-        clarity: 0,
-        communication: 0
+        difficulty: 0,
+        workload: 0,
+        content: 0,
+        numerical: 0
       });
       setReviewStatistics({
         wouldRecommend: -1,
@@ -160,7 +162,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
         attendanceRating: 50
       });
       setReviewComment('');
-      setReviewCourse('');
+      setReviewProfessor('');
       setReviewSemester('');
       setReviewGrade('');
       setIsAnonymous(true);
@@ -182,17 +184,17 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
         <DialogHeader>
           {status === 'authenticated' ? (
             <>
-              <DialogTitle>Rate Professor {professor.name}</DialogTitle>
+              <DialogTitle>Rate Course {course.code}</DialogTitle>
               <DialogDescription>
-                Share your experience with this professor to help other students. All reviews are moderated for
-                appropriate content.
+                Share your experience with this course to help other students. All reviews are moderated for appropriate
+                content.
               </DialogDescription>
             </>
           ) : (
             <>
               <DialogTitle>Sign in to Write a Review</DialogTitle>
               <DialogDescription>
-                You need to sign in with your IIT BHU Google account to write a review for this professor.
+                You need to sign in with your IIT BHU Google account to write a review for this course.
               </DialogDescription>
             </>
           )}
@@ -202,38 +204,37 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
           <div className='grid gap-6 py-4'>
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
               <div>
-                <Label htmlFor='course'>Course Taken</Label>
-                <Select value={reviewCourse} onValueChange={setReviewCourse}>
-                  <SelectTrigger id='course'>
-                    <SelectValue placeholder='Select a course' className='flex-1 truncate' />
+                <Label htmlFor='professor'>Professor</Label>
+                <Select value={reviewProfessor} onValueChange={setReviewProfessor}>
+                  <SelectTrigger id='professor'>
+                    <SelectValue placeholder='Select professor' />
                   </SelectTrigger>
+                  {/* <SelectContent>
+                    {departmentProfessors?.map((professor) => (
+                      <SelectItem key={professor.id} value={professor.id}>
+                        {professor.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent> */}
                   <SelectContent showScrollButtons={false}>
                     <div className='bg-background sticky top-0 z-10 border-b p-2'>
                       <div className='relative'>
                         <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
                         <Input
-                          placeholder='Search courses...'
-                          value={courseSearch}
-                          onChange={(e) => setCourseSearch(e.target.value)}
+                          placeholder='Search professors...'
+                          value={professorSearch}
+                          onChange={(e) => setProfessorSearch(e.target.value)}
                           className='pl-8'
                         />
                       </div>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        className='mt-2 flex w-full items-center justify-center gap-2'
-                        onClick={() => setAddCourseDialogOpen(true)}>
-                        <Plus className='h-4 w-4' />
-                        Add New Course
-                      </Button>
                     </div>
                     <div className='max-h-[300px] overflow-y-auto pt-1 pb-1'>
-                      {filteredCourses?.length === 0 ? (
-                        <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
+                      {filteredProfessors?.length === 0 ? (
+                        <div className='text-muted-foreground p-2 text-center text-sm'>No professors found</div>
                       ) : (
-                        filteredCourses?.map((course) => (
-                          <SelectItem key={course.code} value={course.code} className='py-2'>
-                            {course.code} - {course.name}
+                        filteredProfessors?.map((professor) => (
+                          <SelectItem key={professor.id} value={professor.id} className='py-2'>
+                            {professor.name}
                           </SelectItem>
                         ))
                       )}
@@ -266,7 +267,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
             </div>
 
             <div className='space-y-4'>
-              <h3 className='font-medium'>Ratings</h3>
+              <h3 className='font-medium'>Course Ratings</h3>
 
               <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
                 {Object.entries(reviewRatings).map(([key, value]) => (
@@ -297,7 +298,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
               <Textarea
                 id='review'
                 rows={5}
-                placeholder='Share your experience with this professor...'
+                placeholder='Share your experience with this course...'
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
               />

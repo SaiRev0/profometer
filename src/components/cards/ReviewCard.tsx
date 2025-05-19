@@ -14,21 +14,18 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import RatingStars from '@/components/ui/rating-stars';
-import { Review } from '@/lib/types';
+import { CourseReview, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { DeleteDialog } from '../dialogs/DeleteDialog';
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 
-export interface ReviewCardType extends Review {
-  userVote?: 'up' | 'down' | null;
-  userName?: string;
-  date?: string;
-}
-
 interface ReviewCardProps {
-  review: ReviewCardType;
+  review: (ProfessorReview | CourseReview) & {
+    userVote?: 'up' | 'down' | null;
+    userName?: string;
+  };
   isLoading?: boolean;
   variant?: 'default' | 'own';
 }
@@ -135,26 +132,32 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
         </div>
 
         <div className='mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3'>
-          <div>
-            <p className='text-muted-foreground mb-1 text-xs'>Teaching</p>
-            <RatingStars value={review.ratings.teaching} size='sm' />
-          </div>
-          <div>
-            <p className='text-muted-foreground mb-1 text-xs'>Helpfulness</p>
-            <RatingStars value={review.ratings.helpfulness} size='sm' />
-          </div>
-          <div>
-            <p className='text-muted-foreground mb-1 text-xs'>Fairness</p>
-            <RatingStars value={review.ratings.fairness} size='sm' />
-          </div>
-          <div>
-            <p className='text-muted-foreground mb-1 text-xs'>Clarity</p>
-            <RatingStars value={review.ratings.clarity} size='sm' />
-          </div>
-          <div>
-            <p className='text-muted-foreground mb-1 text-xs'>Communication</p>
-            <RatingStars value={review.ratings.communication} size='sm' />
-          </div>
+          {Object.entries(review.ratings).map(([key, value]) => (
+            <div key={key}>
+              <p className='text-muted-foreground mb-1 text-xs'>{key}</p>
+              <RatingStars value={value} size='sm' />
+            </div>
+          ))}
+          {/* <div>
+                <p className='text-muted-foreground mb-1 text-xs'>Teaching</p>
+                <RatingStars value={review.ratings.teaching} size='sm' />
+              </div>
+              <div>
+                <p className='text-muted-foreground mb-1 text-xs'>Helpfulness</p>
+                <RatingStars value={review.ratings.helpfulness} size='sm' />
+              </div>
+              <div>
+                <p className='text-muted-foreground mb-1 text-xs'>Fairness</p>
+                <RatingStars value={review.ratings.fairness} size='sm' />
+              </div>
+              <div>
+                <p className='text-muted-foreground mb-1 text-xs'>Clarity</p>
+                <RatingStars value={review.ratings.clarity} size='sm' />
+              </div>
+              <div>
+                <p className='text-muted-foreground mb-1 text-xs'>Communication</p>
+                <RatingStars value={review.ratings.communication} size='sm' />
+              </div> */}
           {review.grade && (
             <div>
               <p className='text-muted-foreground mb-1 text-xs'>Final Grade</p>
@@ -168,24 +171,24 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
         </div>
 
         <div className='mt-4 flex flex-wrap gap-3'>
-          {review.wouldRecommend !== undefined && (
-            <Badge variant={review.wouldRecommend ? 'default' : 'destructive'} className='text-xs'>
-              {review.wouldRecommend ? 'Would recommend' : 'Would not recommend'}
+          {review.statistics.wouldRecommend !== undefined && (
+            <Badge variant={review.statistics.wouldRecommend ? 'default' : 'destructive'} className='text-xs'>
+              {review.statistics.wouldRecommend ? 'Would recommend' : 'Would not recommend'}
             </Badge>
           )}
-          {review.quizes !== undefined && (
+          {review.statistics.quizes !== undefined && (
             <Badge variant='secondary' className='text-xs'>
-              Quizes {review.quizes ? 'Yes' : 'No'}
+              Quizes {review.statistics.quizes ? 'Yes' : 'No'}
             </Badge>
           )}
-          {review.assignments !== undefined && (
+          {review.statistics.assignments !== undefined && (
             <Badge variant='secondary' className='text-xs'>
-              Assignments {review.assignments ? 'Yes' : 'No'}
+              Assignments {review.statistics.assignments ? 'Yes' : 'No'}
             </Badge>
           )}
-          {review.attendance !== undefined && (
+          {review.statistics.attendance !== undefined && (
             <Badge variant='secondary' className='text-xs'>
-              Attendance {review.attendance}
+              Attendance {review.statistics.attendance}
             </Badge>
           )}
         </div>

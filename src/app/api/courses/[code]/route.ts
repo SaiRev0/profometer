@@ -31,9 +31,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       include: { department: true }
     });
 
+    const departmentProfessors = await db.professor.findMany({
+      where: { departmentCode: course.departmentCode },
+      include: { department: true }
+    });
+
     return NextResponse.json({
       ...course,
-      professors
+      professors,
+      departmentProfessors
     });
   } catch (error) {
     console.error('Error fetching course:', error);

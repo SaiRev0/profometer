@@ -2,7 +2,8 @@
 
 import { notFound } from 'next/navigation';
 
-import CourseDetails, { CoursePageSkeleton } from '@/components/course';
+import CourseDetails from '@/components/course';
+import CoursePageSkeleton from '@/components/course/CourseDetailsSkeleton';
 import { useGetCourse } from '@/hooks/useGetCourse';
 
 export default function CourseClientWrapper({ code }: { code: string }) {

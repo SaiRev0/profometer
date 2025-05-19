@@ -17,9 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
               }
             }
           },
-          orderBy: {
-            createdAt: 'desc'
-          }
+          orderBy: { createdAt: 'desc' }
         },
         department: true
       }

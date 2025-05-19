@@ -6,10 +6,10 @@ import ReviewCard from '@/components/cards/ReviewCard';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Review } from '@/lib/types';
+import { ProfessorReview } from '@/lib/types';
 
 interface ReviewListProps {
-  initialReviews: Review[];
+  initialReviews: ProfessorReview[];
   selectedCourse: string;
 }
 

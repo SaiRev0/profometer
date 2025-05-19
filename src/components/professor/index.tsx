@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Professor, Review } from '@/lib/types';
+import { Professor, ProfessorReview } from '@/lib/types';
 
 import { Button } from '../ui/button';
 import CourseForm from './CourseForm';
@@ -18,7 +18,7 @@ import { ChevronLeft } from 'lucide-react';
 
 interface ProfessorDetailsProps {
   professor: Professor;
-  initialReviews: Review[];
+  initialReviews: ProfessorReview[];
 }
 
 export default function ProfessorDetails({ professor, initialReviews }: ProfessorDetailsProps) {

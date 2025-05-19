@@ -1,3 +1,31 @@
+export interface CourseRating {
+  overall: number;
+  difficulty: number;
+  workload: number;
+  content: number;
+  numerical: number;
+}
+export interface CoursePercentages {
+  wouldRecommend: number;
+  attendanceRating: number;
+  quizes: number;
+  assignments: number;
+  averageGrade: string;
+}
+export interface ProfessorRating {
+  overall: number;
+  teaching: number;
+  helpfulness: number;
+  fairness: number;
+  clarity: number;
+  communication: number;
+}
+export interface ProfessorPercentages {
+  wouldRecommend: number;
+  attendanceRating: number;
+  quizes: number;
+  assignments: number;
+}
 export interface Department {
   name: string;
   code: string;
@@ -17,19 +45,12 @@ export interface Course {
   department?: Department;
   professors?: Professor[];
   statistics: {
-    ratings: {
-      overall: number;
-    };
-    percentages: {
-      wouldRecommend: number;
-      averageGrade: string;
-    };
+    ratings: CourseRating;
+    percentages: CoursePercentages;
     totalReviews: number;
   };
-  reviews: Review[];
+  reviews: CourseReview[];
   verified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 export interface Professor {
   id: string;
@@ -41,47 +62,23 @@ export interface Professor {
   website: string;
   numReviews: number;
   numCourses: number;
-  reviews: Review[];
+  reviews: ProfessorReview[];
   statistics: {
-    ratings: {
-      overall: number;
-      teaching: number;
-      helpfulness: number;
-      fairness: number;
-      clarity: number;
-      communication: number;
-    };
-    percentages: {
-      wouldRecommend: number;
-      attendanceRating: number;
-      quizes: number;
-      assignments: number;
-    };
+    ratings: ProfessorRating;
+    percentages: ProfessorPercentages;
     totalReviews: number;
   };
   courses?: Course[];
   departmentCourses?: Course[];
 }
-export interface Review {
+interface Review {
   id: string;
   userId: string;
   professorId: string;
   courseCode: string;
   semester: string;
   anonymous: boolean;
-  ratings: {
-    overall: number;
-    teaching: number;
-    helpfulness: number;
-    fairness: number;
-    clarity: number;
-    communication: number;
-  };
   comment: string;
-  wouldRecommend: boolean;
-  quizes: boolean;
-  assignments: boolean;
-  attendance: string;
   grade?: string;
   upvotes: number;
   downvotes: number;
@@ -90,6 +87,16 @@ export interface Review {
   user: User;
   course: Course;
 }
+export interface CourseReview extends Review {
+  type: 'course';
+  ratings: CourseRating;
+  statistics: CoursePercentages;
+}
+export interface ProfessorReview extends Review {
+  type: 'professor';
+  ratings: ProfessorRating;
+  statistics: ProfessorPercentages;
+}
 export interface User {
   id: string;
   name: string;
@@ -97,7 +104,7 @@ export interface User {
   image: string;
   departmentCode: string;
   department: Department;
-  reviews: Review[];
+  reviews: (ProfessorReview | CourseReview)[];
   statistics: {
     helpfulVotes: number;
     totalReviews: number;

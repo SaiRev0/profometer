@@ -9,6 +9,11 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
+enum ReviewType {
+    professor
+    course
+}
+
 model Account {
     id                String  @id @default(cuid())
     userId            String
@@ -74,55 +79,53 @@ model Department {
 }
 
 model Professor {
-    id           String     @id @default(cuid())
-    name         String
+    id             String     @id @default(cuid())
+    name           String
     departmentCode String
-    department   Department @relation(fields: [departmentCode], references: [code])
-    designation  String
-    photoUrl     String?
-    email        String?
-    website      String?
-    reviews      Review[]
-    statistics   Json       @default("{\"ratings\":{\"overall\":0,\"teaching\":0,\"helpfulness\":0,\"fairness\":0,\"clarity\":0,\"communication\":0},\"percentages\":{\"wouldRecommend\":0,\"attendanceRating\":0,\"quizes\":0,\"assignments\":0},\"totalReviews\":0}")
-    createdAt    DateTime   @default(now())
-    updatedAt    DateTime   @updatedAt
+    department     Department @relation(fields: [departmentCode], references: [code])
+    designation    String
+    photoUrl       String?
+    email          String?
+    website        String?
+    reviews        Review[]
+    statistics     Json       @default("{\"ratings\":{\"overall\":0,\"teaching\":0,\"helpfulness\":0,\"fairness\":0,\"clarity\":0,\"communication\":0},\"percentages\":{\"wouldRecommend\":0,\"attendanceRating\":0,\"quizes\":0,\"assignments\":0},\"totalReviews\":0}")
+    createdAt      DateTime   @default(now())
+    updatedAt      DateTime   @updatedAt
 }
 
 model Course {
-    code         String     @id
-    name         String
-    description  String
-    credits      Int
+    code           String     @id
+    name           String
+    description    String
+    credits        Int
     departmentCode String
-    department   Department @relation(fields: [departmentCode], references: [code])
-    reviews      Review[]
-    statistics   Json       @default("{\"ratings\":{\"overall\":0},\"percentages\":{\"wouldRecommend\":0, \"averageGrade\": \"NA\"},\"totalReviews\":0}")
-    verified     Boolean    @default(false)
-    createdAt    DateTime   @default(now())
-    updatedAt    DateTime   @updatedAt
+    department     Department @relation(fields: [departmentCode], references: [code])
+    reviews        Review[]
+    statistics     Json       @default("{\"ratings\":{\"overall\":0, \"difficulty\":0, \"workload\":0, \"content\":0, \"numerical\":0},\"percentages\":{\"wouldRecommend\":0, \"attendanceRating\":0, \"quizes\":0, \"assignments\":0, \"averageGrade\": \"NA\"},\"totalReviews\":0}")
+    verified       Boolean    @default(false)
+    createdAt      DateTime   @default(now())
+    updatedAt      DateTime   @updatedAt
 }
 
 model Review {
-    id             String    @id @default(cuid())
-    professorId    String
-    professor      Professor @relation(fields: [professorId], references: [id])
-    courseCode     String
-    course         Course    @relation(fields: [courseCode], references: [code])
-    userId         String?
-    user           User?     @relation(fields: [userId], references: [id])
-    semester       String
-    anonymous      Boolean   @default(false)
-    ratings        Json // Stores all ratings as a JSON object
-    comment        String    @db.Text
-    wouldRecommend Boolean
-    attendance     String // 'percentage'
-    quizes         Boolean
-    assignments    Boolean
-    grade          String?
-    upvotes        Int       @default(0)
-    downvotes      Int       @default(0)
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
+    id          String     @id @default(cuid())
+    professorId String
+    professor   Professor  @relation(fields: [professorId], references: [id])
+    courseCode  String
+    course      Course     @relation(fields: [courseCode], references: [code])
+    userId      String?
+    user        User?      @relation(fields: [userId], references: [id])
+    semester    String
+    anonymous   Boolean    @default(false)
+    ratings     Json // Stores all ratings as a JSON object
+    comment     String     @db.Text
+    statistics  Json // Stores all statistics as a JSON object
+    grade       String?
+    type        ReviewType // 'course' or 'professor'
+    upvotes     Int        @default(0)
+    downvotes   Int        @default(0)
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
 
     @@index([userId])
 }
