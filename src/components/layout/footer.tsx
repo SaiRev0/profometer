@@ -29,12 +29,12 @@ const navItems: {
 
 export default function Footer() {
   return (
-    <footer className='bg-background border-border/50 relative mt-auto overflow-hidden border-t-2'>
+    <footer className='bg-background/95 border-border/50 dark:bg-background relative mt-auto overflow-hidden border-t-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-none'>
       {/* Animated wave pattern decoration */}
       <motion.div
-        className='pointer-events-none absolute inset-0 opacity-[0.03]'
+        className='pointer-events-none absolute inset-0 opacity-[0.08] dark:opacity-[0.03]'
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.03 }}
+        animate={{ opacity: 0.08 }}
         transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}>
         <svg className='absolute bottom-0 h-32 w-full' viewBox='0 0 1440 320' preserveAspectRatio='none'>
           <motion.path
@@ -48,9 +48,9 @@ export default function Footer() {
       </motion.div>
 
       {/* Animated gradient orbs */}
-      <div className='pointer-events-none absolute inset-0 opacity-[0.07]'>
+      <div className='pointer-events-none absolute inset-0 opacity-[0.15] dark:opacity-[0.07]'>
         <motion.div
-          className='from-primary absolute -top-24 -left-24 h-64 w-64 rounded-full bg-gradient-to-br to-purple-500 blur-3xl'
+          className='from-primary/40 dark:from-primary absolute -top-24 -left-24 h-64 w-64 rounded-full bg-gradient-to-br to-purple-400/40 blur-3xl dark:to-purple-500'
           animate={{
             scale: [1, 1.1, 1],
             x: [0, 10, 0],
@@ -63,7 +63,7 @@ export default function Footer() {
           }}
         />
         <motion.div
-          className='to-primary absolute -right-32 -bottom-32 h-72 w-72 rounded-full bg-gradient-to-tr from-blue-500 blur-3xl'
+          className='to-primary/40 dark:to-primary absolute -right-32 -bottom-32 h-72 w-72 rounded-full bg-gradient-to-tr from-blue-400/40 blur-3xl dark:from-blue-500'
           animate={{
             scale: [1, 1.2, 1],
             x: [0, -15, 0],
@@ -92,13 +92,13 @@ export default function Footer() {
               whileHover={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 300 }}>
               <motion.div
-                className='from-primary/20 to-primary/10 group-hover:bg-primary/20 rounded-2xl bg-gradient-to-br p-3 transition-all duration-300'
+                className='from-primary/30 to-primary/20 dark:from-primary/20 dark:to-primary/10 group-hover:bg-primary/30 dark:group-hover:bg-primary/20 rounded-2xl bg-gradient-to-br p-3 shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 dark:shadow-none'
                 whileHover={{ rotate: 5 }}>
                 <School className='text-primary h-8 w-8' />
               </motion.div>
               <div>
                 <motion.span
-                  className='from-primary via-primary/80 to-primary/60 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent'
+                  className='from-primary via-primary/90 to-primary/70 dark:from-primary dark:via-primary/80 dark:to-primary/60 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent'
                   animate={{
                     backgroundPosition: ['0%', '100%']
                   }}
@@ -132,10 +132,10 @@ export default function Footer() {
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
               {/* Quick Links */}
               <motion.div
-                className='from-muted/50 to-muted/30 border-border/50 rounded-2xl border bg-gradient-to-br p-6 backdrop-blur-sm'
+                className='from-muted/80 to-muted/60 dark:from-muted/50 dark:to-muted/30 border-border/50 rounded-2xl border bg-gradient-to-br p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.08),0_2px_4px_-1px_rgba(0,0,0,0.04)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_8px_12px_-1px_rgba(0,0,0,0.1),0_4px_6px_-1px_rgba(0,0,0,0.06)] dark:shadow-none dark:hover:shadow-none'
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 300 }}>
-                <h3 className='from-primary to-primary/70 mb-4 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent'>
+                <h3 className='from-primary to-primary/80 dark:from-primary dark:to-primary/70 mb-4 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent'>
                   Quick Links
                 </h3>
                 <ul className='space-y-3'>
@@ -150,7 +150,7 @@ export default function Footer() {
                         href={link.href}
                         className='text-muted-foreground hover:text-primary group flex items-center gap-2 text-sm transition-colors'>
                         <motion.div
-                          className='bg-primary/10 group-hover:bg-primary/20 rounded-md p-1.5 transition-colors'
+                          className='bg-primary/20 dark:bg-primary/10 group-hover:bg-primary/30 dark:group-hover:bg-primary/20 rounded-md p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-colors dark:shadow-none'
                           whileHover={{ scale: 1.1, rotate: 5 }}>
                           <link.icon className='h-4 w-4' />
                         </motion.div>
@@ -165,20 +165,20 @@ export default function Footer() {
 
               {/* Contact Section */}
               <motion.div
-                className='from-primary/5 to-primary/10 border-primary/10 rounded-2xl border bg-gradient-to-br p-6 backdrop-blur-sm'
+                className='from-primary/10 to-primary/5 dark:from-primary/5 dark:to-primary/10 border-primary/20 dark:border-primary/10 rounded-2xl border bg-gradient-to-br p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.08),0_2px_4px_-1px_rgba(0,0,0,0.04)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_8px_12px_-1px_rgba(0,0,0,0.1),0_4px_6px_-1px_rgba(0,0,0,0.06)] dark:shadow-none dark:hover:shadow-none'
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 300 }}>
-                <h3 className='from-primary to-primary/70 mb-4 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent'>
+                <h3 className='from-primary to-primary/80 dark:from-primary dark:to-primary/70 mb-4 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent'>
                   Get in Touch
                 </h3>
                 <div className='space-y-4'>
                   <motion.a
                     href='mailto:contact@ratethatprof.com'
-                    className='group flex items-center gap-3 rounded-xl bg-white/5 p-3 transition-all duration-300 hover:bg-white/10'
+                    className='group flex items-center gap-3 rounded-xl bg-white/80 p-3 shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/90 hover:shadow-[0_4px_6px_rgba(0,0,0,0.07)] dark:bg-white/5 dark:shadow-none dark:hover:bg-white/10 dark:hover:shadow-none'
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}>
                     <motion.div
-                      className='bg-primary/10 group-hover:bg-primary/20 rounded-lg p-2 transition-colors'
+                      className='bg-primary/20 dark:bg-primary/10 group-hover:bg-primary/30 dark:group-hover:bg-primary/20 rounded-lg p-2 shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-colors dark:shadow-none'
                       whileHover={{ rotate: 15, scale: 1.1 }}>
                       <Mail className='text-primary h-5 w-5' />
                     </motion.div>
@@ -210,7 +210,7 @@ export default function Footer() {
 
         {/* Bottom section */}
         <motion.div
-          className='border-border/50 border-t pt-4 pb-4 sm:pb-0'
+          className='border-border/100 border-t-2 pt-4 pb-4 sm:pb-0'
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
