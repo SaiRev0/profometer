@@ -126,33 +126,36 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
     <Card className={cn('overflow-hidden', isCompact ? 'h-40' : 'h-full')}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex gap-3'>
-          <div className='bg-muted h-12 w-12 rounded-full' />
+          <div className='bg-muted h-12 w-12 rounded-full dark:bg-gray-700' />
           <div className='flex-1'>
             <div className='flex items-start justify-between'>
               <div>
-                <div className='bg-muted mb-2 h-5 w-32 rounded' />
-                <div className='bg-muted h-4 w-24 rounded' />
+                <div className='bg-muted mb-2 h-5 w-32 rounded dark:bg-gray-700' />
+                <div className='bg-muted h-4 w-24 rounded dark:bg-gray-700' />
               </div>
-              <div className='bg-muted h-6 w-10 rounded' />
+              <div className='bg-muted h-6 w-10 rounded dark:bg-gray-700' />
             </div>
 
             <div className='mt-2 mb-2 flex items-center gap-1'>
               {[...Array(5)].map((_, i) => (
-                <div key={i} className={cn('bg-muted rounded-full', isCompact ? 'h-3 w-3' : 'h-4 w-4')} />
+                <div
+                  key={i}
+                  className={cn('bg-muted rounded-full dark:bg-gray-700', isCompact ? 'h-3 w-3' : 'h-4 w-4')}
+                />
               ))}
-              <div className='bg-muted ml-2 h-3 w-8 rounded' />
+              <div className='bg-muted ml-2 h-3 w-8 rounded dark:bg-gray-700' />
             </div>
 
             {!isCompact && (
               <>
                 <div className='my-2 flex gap-1'>
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className='bg-muted h-5 w-16 rounded' />
+                    <div key={i} className='bg-muted h-5 w-16 rounded dark:bg-gray-700' />
                   ))}
                 </div>
                 <div className='mt-2 space-y-1'>
-                  <div className='bg-muted h-3 w-full rounded' />
-                  <div className='bg-muted h-3 w-5/6 rounded' />
+                  <div className='bg-muted h-3 w-full rounded dark:bg-gray-700' />
+                  <div className='bg-muted h-3 w-5/6 rounded dark:bg-gray-700' />
                 </div>
               </>
             )}
@@ -161,8 +164,8 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
       </CardContent>
 
       <CardFooter className='flex justify-between px-4 pt-0 pb-4'>
-        <div className='bg-muted h-8 w-20 rounded' />
-        <div className='bg-muted h-8 w-20 rounded' />
+        <div className='bg-muted h-8 w-20 rounded dark:bg-gray-700' />
+        <div className='bg-muted h-8 w-20 rounded dark:bg-gray-700' />
       </CardFooter>
     </Card>
   );
