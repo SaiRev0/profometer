@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { DeleteDialog } from '../dialogs/DeleteDialog';
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
@@ -42,37 +43,45 @@ export default function ReviewCard({
   const [userVote, setUserVote] = useState<'up' | 'down' | null>(review.userVote || null);
   const [upvoteCount, setUpvoteCount] = useState(review.upvotes);
   const [downvoteCount, setDownvoteCount] = useState(review.downvotes);
+  const [isVoting, setIsVoting] = useState(false);
 
   if (isLoading) {
     return <ReviewCardSkeleton />;
   }
 
-  const handleVote = (vote: 'up' | 'down') => {
-    // Toggle the vote if already selected
-    if (userVote === vote) {
-      setUserVote(null);
-      if (vote === 'up') {
-        setUpvoteCount((prevCount) => prevCount - 1);
-      } else {
-        setDownvoteCount((prevCount) => prevCount - 1);
+  const handleVote = async (vote: 'up' | 'down') => {
+    if (isVoting) return;
+
+    try {
+      setIsVoting(true);
+      const response = await fetch('/api/review/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          reviewId: review.id,
+          voteType: vote
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to process vote');
       }
-    } else {
-      // If changing vote, update both counts
-      if (userVote === 'up' && vote === 'down') {
-        setUpvoteCount((prevCount) => prevCount - 1);
-        setDownvoteCount((prevCount) => prevCount + 1);
-      } else if (userVote === 'down' && vote === 'up') {
-        setDownvoteCount((prevCount) => prevCount - 1);
-        setUpvoteCount((prevCount) => prevCount + 1);
-      } else {
-        // New vote
-        if (vote === 'up') {
-          setUpvoteCount((prevCount) => prevCount + 1);
-        } else {
-          setDownvoteCount((prevCount) => prevCount + 1);
-        }
-      }
-      setUserVote(vote);
+
+      const data = await response.json();
+      setUserVote(data.userVote);
+      setUpvoteCount(data.review.upvotes);
+      setDownvoteCount(data.review.downvotes);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to process vote');
+      // Revert optimistic updates
+      setUserVote(review.userVote || null);
+      setUpvoteCount(review.upvotes);
+      setDownvoteCount(review.downvotes);
+    } finally {
+      setIsVoting(false);
     }
   };
 
