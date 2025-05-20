@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       };
       where.reviews = {
         some: {
-          type: 'professor'
+          type: 'course'
         }
       };
     } else if (variant === 'challenging') {
@@ -43,19 +43,19 @@ export async function GET(request: NextRequest) {
       };
       where.reviews = {
         some: {
-          type: 'professor'
+          type: 'course'
         }
       };
     } else if (variant === 'recently-reviewed') {
       where.reviews = {
         some: {
-          type: 'professor'
+          type: 'course'
         }
       };
     }
 
-    const [professors, total] = await Promise.all([
-      db.professor.findMany({
+    const [courses, total] = await Promise.all([
+      db.course.findMany({
         where,
         skip,
         take: limit,
@@ -79,22 +79,22 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Sort professors by overall rating if it's a featured variant
-    const sortedProfessors = ['loved', 'challenging'].includes(variant || '')
-      ? professors.sort((a, b) => {
+    const sortedCourses = ['loved', 'challenging'].includes(variant || '')
+      ? courses.sort((a, b) => {
           const aStats = a.statistics as { ratings: { overall: number } };
           const bStats = b.statistics as { ratings: { overall: number } };
           return bStats.ratings.overall - aStats.ratings.overall;
         })
-      : professors;
+      : courses;
 
     return NextResponse.json({
-      professors: sortedProfessors,
+      courses: sortedCourses,
       total,
       page,
       totalPages: Math.ceil(total / limit)
     });
   } catch (error) {
-    console.error('Error fetching professors:', error);
-    return NextResponse.json({ error: 'Failed to fetch professors' }, { status: 500 });
+    console.error('Error fetching courses:', error);
+    return NextResponse.json({ error: 'Failed to fetch courses' }, { status: 500 });
   }
 }

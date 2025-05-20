@@ -31,11 +31,17 @@ export default function LovedChallengingSection() {
           </CardHeader>
           <CardContent className='space-y-4'>
             {isLoadingLoved
-              ? Array.from({ length: 3 }).map((_, index) => (
-                  <ProfessorCard key={index} professor={lovedData?.professors[0]} isLoading={true} variant='detailed' />
+              ? Array.from({ length: 2 }).map((_, index) => (
+                  <ProfessorCard
+                    key={index}
+                    professor={lovedData?.professors[0]}
+                    isLoading={true}
+                    variant='detailed'
+                    showStars={false}
+                  />
                 ))
               : lovedData?.professors.map((professor) => (
-                  <ProfessorCard key={professor.id} professor={professor} variant='detailed' />
+                  <ProfessorCard key={professor.id} professor={professor} variant='detailed' showStars={false} />
                 ))}
           </CardContent>
         </Card>
@@ -51,16 +57,17 @@ export default function LovedChallengingSection() {
           </CardHeader>
           <CardContent className='space-y-4'>
             {isLoadingChallenging
-              ? Array.from({ length: 3 }).map((_, index) => (
+              ? Array.from({ length: 2 }).map((_, index) => (
                   <ProfessorCard
                     key={index}
                     professor={challengingData?.professors[0]}
                     isLoading={true}
                     variant='detailed'
+                    showStars={false}
                   />
                 ))
               : challengingData?.professors.map((professor) => (
-                  <ProfessorCard key={professor.id} professor={professor} variant='detailed' />
+                  <ProfessorCard key={professor.id} professor={professor} variant='detailed' showStars={false} />
                 ))}
           </CardContent>
         </Card>

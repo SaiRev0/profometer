@@ -110,6 +110,44 @@ export async function POST(req: Request) {
           }
         });
 
+        // Update professor's totalCourses and course's totalProfessors in a single query each
+        await Promise.all([
+          tx.professor.update({
+            where: { id: professorId },
+            data: {
+              totalCourses: {
+                set: await tx.review
+                  .groupBy({
+                    by: ['courseCode'],
+                    where: {
+                      professorId,
+                      type: 'professor'
+                    },
+                    _count: true
+                  })
+                  .then((result) => result.length)
+              }
+            }
+          }),
+          tx.course.update({
+            where: { code: courseCode },
+            data: {
+              totalProfessors: {
+                set: await tx.review
+                  .groupBy({
+                    by: ['professorId'],
+                    where: {
+                      courseCode,
+                      type: 'course'
+                    },
+                    _count: true
+                  })
+                  .then((result) => result.length)
+              }
+            }
+          })
+        ]);
+
         if (type === 'professor') {
           const profTotalReviews = currentProfStats.totalReviews;
           const newProfTotalReviews = profTotalReviews + 1;

@@ -51,6 +51,7 @@ export interface Course {
   };
   reviews: CourseReview[];
   verified: boolean;
+  totalProfessors: number;
 }
 export interface Professor {
   id: string;
@@ -70,6 +71,7 @@ export interface Professor {
   };
   courses?: Course[];
   departmentCourses?: Course[];
+  totalCourses: number;
 }
 interface Review {
   id: string;

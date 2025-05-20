@@ -24,7 +24,7 @@ export function DepartmentRankings() {
   };
 
   return (
-    <section className='py-16'>
+    <section className='pt-16'>
       <div className='container mx-auto px-4'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -33,7 +33,7 @@ export function DepartmentRankings() {
           className='mb-12 text-center'>
           <h2 className='mb-4 text-3xl font-bold md:text-4xl'>Department Rankings</h2>
           <p className='text-muted-foreground mx-auto max-w-2xl'>
-            See how different departments at IIT BHU compare based on student ratings.
+            See how different departments at IIT BHU compare based on student ratings
           </p>
         </motion.div>
 

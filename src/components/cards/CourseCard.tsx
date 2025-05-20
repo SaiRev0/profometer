@@ -9,7 +9,7 @@ import { Course } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 
 interface CourseCardProps {
   course: Course;
@@ -27,8 +27,8 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
   const cardContent = (
     <Card
       className={cn(
-        'border-border/70 overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
-        isCompact ? 'h-30' : 'h-full'
+        'border-border/70 w-full overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
+        isCompact ? 'h-25' : 'h-full'
       )}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex items-start gap-3'>
@@ -39,7 +39,7 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
             <div className='flex items-start justify-between'>
               <div>
                 <h3 className={cn('line-clamp-1 font-bold', isCompact ? 'text-base' : 'text-lg')}>{course.code}</h3>
-                <p className='text-muted-foreground line-clamp-1 text-sm'>{course.name}</p>
+                <p className='text-muted-foreground mb-1 line-clamp-1 text-sm'>{course.name}</p>
               </div>
 
               <Badge
@@ -53,11 +53,28 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
                 {course.statistics.ratings.overall.toFixed(1)}
               </Badge>
             </div>
+            <div className='text-muted-foreground flex items-center gap-4 text-sm'>
+              <span className='flex items-center gap-1'>
+                <Star className='h-3 w-3' />
+                {course.statistics.totalReviews} reviews
+              </span>
+              <span className='flex items-center gap-1'>
+                <Users className='h-3 w-3' />
+                {course.totalProfessors} professors
+              </span>
+            </div>
+
+            {!isCompact && course.reviews[0] && (
+              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-2 border-l-2 pl-2 text-sm'>
+                "{course.reviews[0].comment}"
+              </blockquote>
+            )}
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className={cn('flex items-center justify-between px-4 pt-0 pb-4', isCompact && 'pt-0')}>
+      <CardFooter
+        className={cn('mt-[-1rem] flex flex-row-reverse items-center px-4 pt-0 pb-2', isCompact && 'mt-[-1.5rem]')}>
         <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
             View

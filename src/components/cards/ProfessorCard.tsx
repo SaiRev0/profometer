@@ -11,15 +11,21 @@ import { Professor } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 
 interface ProfessorCardProps {
   professor: Professor;
   variant?: 'compact' | 'detailed';
   isLoading?: boolean;
+  showStars?: boolean;
 }
 
-export default function ProfessorCard({ professor, variant = 'detailed', isLoading = false }: ProfessorCardProps) {
+export default function ProfessorCard({
+  professor,
+  variant = 'detailed',
+  isLoading = false,
+  showStars = true
+}: ProfessorCardProps) {
   if (isLoading) {
     return <ProfessorCardSkeleton variant={variant} />;
   }
@@ -34,7 +40,7 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
   const cardContent = (
     <Card
       className={cn(
-        'border-border/70 overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
+        'border-border/70 w-full overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
         isCompact ? 'h-25' : 'h-full'
       )}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
@@ -67,11 +73,23 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
                 {professor.statistics.ratings.overall}
               </Badge>
             </div>
-
-            <div className='mt-1 mb-2 flex items-center'>
-              <RatingStars value={professor.statistics.ratings.overall} size={isCompact ? 'sm' : 'md'} />
-              <span className='text-muted-foreground ml-2 text-xs'>({professor.statistics.totalReviews})</span>
+            <div className='text-muted-foreground flex items-center gap-4 text-sm'>
+              <span className='flex items-center gap-1'>
+                <Star className='h-3 w-3' />
+                {professor.statistics.totalReviews} reviews
+              </span>
+              <span className='flex items-center gap-1'>
+                <BookOpen className='h-3 w-3' />
+                {professor.totalCourses} courses
+              </span>
             </div>
+
+            {showStars && (
+              <div className='mt-1 mb-2 flex items-center'>
+                <RatingStars value={professor.statistics.ratings.overall} size={isCompact ? 'sm' : 'md'} />
+                <span className='text-muted-foreground ml-2 text-xs'>({professor.statistics.totalReviews})</span>
+              </div>
+            )}
 
             {!isCompact && professor.reviews[0] && (
               <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-2 border-l-2 pl-2 text-sm'>
@@ -105,11 +123,7 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
   const isCompact = variant === 'compact';
 
   return (
-    <Card
-      className={cn(
-        'border-border/70 overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
-        isCompact ? 'h-30' : 'h-full'
-      )}>
+    <Card className={cn('overflow-hidden', isCompact ? 'h-40' : 'h-full')}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex gap-3'>
           <div className='bg-muted h-12 w-12 rounded-full' />
