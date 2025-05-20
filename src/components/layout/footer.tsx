@@ -2,116 +2,257 @@
 
 import Link from 'next/link';
 
-import { Github, Mail, School, Twitter } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ClipboardCheck, Info, Mail, School, ShieldUser } from 'lucide-react';
+
+const navItems: {
+  href: string;
+  icon: React.ElementType;
+  text: string;
+}[] = [
+  {
+    href: '/privacy',
+    icon: ShieldUser,
+    text: 'Privacy Policy'
+  },
+  {
+    href: '/about',
+    icon: Info,
+    text: 'About Us'
+  },
+  {
+    href: '/terms',
+    icon: ClipboardCheck,
+    text: 'Terms of Service'
+  }
+];
 
 export default function Footer() {
   return (
-    <footer className='bg-background mt-auto border-t'>
-      <div className='container mx-auto px-4 py-8'>
-        <div className='grid-cols- grid gap-8 sm:grid-cols-4'>
-          <div className='space-y-3'>
-            <div className='flex items-center gap-2'>
-              <School className='text-primary h-6 w-6' />
-              <span className='text-lg font-bold'>RateThatProf</span>
-            </div>
-            <p className='text-muted-foreground text-sm'>
+    <footer className='bg-background border-border/50 relative mt-auto overflow-hidden border-t-2'>
+      {/* Animated wave pattern decoration */}
+      <motion.div
+        className='pointer-events-none absolute inset-0 opacity-[0.03]'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.03 }}
+        transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}>
+        <svg className='absolute bottom-0 h-32 w-full' viewBox='0 0 1440 320' preserveAspectRatio='none'>
+          <motion.path
+            fill='currentColor'
+            d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, ease: 'easeInOut' }}
+          />
+        </svg>
+      </motion.div>
+
+      {/* Animated gradient orbs */}
+      <div className='pointer-events-none absolute inset-0 opacity-[0.07]'>
+        <motion.div
+          className='from-primary absolute -top-24 -left-24 h-64 w-64 rounded-full bg-gradient-to-br to-purple-500 blur-3xl'
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, 10, 0],
+            y: [0, -10, 0]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+        />
+        <motion.div
+          className='to-primary absolute -right-32 -bottom-32 h-72 w-72 rounded-full bg-gradient-to-tr from-blue-500 blur-3xl'
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, -15, 0],
+            y: [0, 15, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+        />
+      </div>
+
+      <div className='relative container mx-auto px-4 pt-8 pb-16'>
+        {/* Main content grid */}
+        <div className='mb-6 grid grid-cols-1 gap-12 lg:grid-cols-12'>
+          {/* Brand section */}
+          <motion.div
+            className='space-y-6 lg:col-span-5'
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}>
+            <motion.div
+              className='group flex items-center gap-3'
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 300 }}>
+              <motion.div
+                className='from-primary/20 to-primary/10 group-hover:bg-primary/20 rounded-2xl bg-gradient-to-br p-3 transition-all duration-300'
+                whileHover={{ rotate: 5 }}>
+                <School className='text-primary h-8 w-8' />
+              </motion.div>
+              <div>
+                <motion.span
+                  className='from-primary via-primary/80 to-primary/60 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent'
+                  animate={{
+                    backgroundPosition: ['0%', '100%']
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    repeatType: 'reverse'
+                  }}>
+                  RateThatProf
+                </motion.span>
+                <p className='text-muted-foreground mt-1 text-sm'>Your Academic Guide</p>
+              </div>
+            </motion.div>
+            <motion.p
+              className='text-muted-foreground max-w-md text-sm leading-relaxed'
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}>
               Find and rate professors to help other students make informed decisions about their education.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div>
-            <h3 className='mb-3 font-semibold'>Quick Links</h3>
-            <ul className='space-y-2'>
-              <li>
-                <Link href='/popular' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-                  Popular Professors
-                </Link>
-              </li>
-              <li>
-                <Link href='/branches' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-                  Browse Branches
-                </Link>
-              </li>
-              <li>
-                <Link href='/about' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-                  About Us
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Quick Links and Contact section */}
+          <motion.div
+            className='lg:col-span-7'
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+              {/* Quick Links */}
+              <motion.div
+                className='from-muted/50 to-muted/30 border-border/50 rounded-2xl border bg-gradient-to-br p-6 backdrop-blur-sm'
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300 }}>
+                <h3 className='from-primary to-primary/70 mb-4 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent'>
+                  Quick Links
+                </h3>
+                <ul className='space-y-3'>
+                  {navItems.map((link, index) => (
+                    <motion.li
+                      key={link.href}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}>
+                      <Link
+                        href={link.href}
+                        className='text-muted-foreground hover:text-primary group flex items-center gap-2 text-sm transition-colors'>
+                        <motion.div
+                          className='bg-primary/10 group-hover:bg-primary/20 rounded-md p-1.5 transition-colors'
+                          whileHover={{ scale: 1.1, rotate: 5 }}>
+                          <link.icon className='h-4 w-4' />
+                        </motion.div>
+                        <motion.span whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                          {link.text}
+                        </motion.span>
+                      </Link>
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
 
-          <div>
-            <h3 className='mb-3 font-semibold'>Legal</h3>
-            <ul className='space-y-2'>
-              <li>
-                <Link href='/privacy' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href='/terms' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href='/guidelines' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-                  Community Guidelines
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className='mb-3 font-semibold'>Connect</h3>
-            <ul className='space-y-2'>
-              <li>
-                <a
-                  href='mailto:contact@ratethatprof.com'
-                  className='text-muted-foreground hover:text-primary flex items-center gap-2 text-sm transition-colors'>
-                  <Mail className='h-4 w-4' />
-                  Contact Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href='https://github.com/ratethatprof'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='text-muted-foreground hover:text-primary flex items-center gap-2 text-sm transition-colors'>
-                  <Github className='h-4 w-4' />
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href='https://twitter.com/ratethatprof'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='text-muted-foreground hover:text-primary flex items-center gap-2 text-sm transition-colors'>
-                  <Twitter className='h-4 w-4' />
-                  Twitter
-                </a>
-              </li>
-            </ul>
-          </div>
+              {/* Contact Section */}
+              <motion.div
+                className='from-primary/5 to-primary/10 border-primary/10 rounded-2xl border bg-gradient-to-br p-6 backdrop-blur-sm'
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300 }}>
+                <h3 className='from-primary to-primary/70 mb-4 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent'>
+                  Get in Touch
+                </h3>
+                <div className='space-y-4'>
+                  <motion.a
+                    href='mailto:contact@ratethatprof.com'
+                    className='group flex items-center gap-3 rounded-xl bg-white/5 p-3 transition-all duration-300 hover:bg-white/10'
+                    whileHover={{ scale: 1.02, x: 5 }}
+                    whileTap={{ scale: 0.98 }}>
+                    <motion.div
+                      className='bg-primary/10 group-hover:bg-primary/20 rounded-lg p-2 transition-colors'
+                      whileHover={{ rotate: 15, scale: 1.1 }}>
+                      <Mail className='text-primary h-5 w-5' />
+                    </motion.div>
+                    <div>
+                      <motion.p className='text-primary text-sm font-medium' whileHover={{ x: 5 }}>
+                        Email Us
+                      </motion.p>
+                      <motion.p
+                        className='text-muted-foreground group-hover:text-primary text-sm transition-colors'
+                        whileHover={{ x: 5 }}>
+                        contact@ratethatprof.com
+                      </motion.p>
+                    </div>
+                  </motion.a>
+                  <motion.p
+                    className='text-muted-foreground mt-2 text-sm'
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 }}>
+                    Have questions or feedback? We'd love to hear from you. Send us an email and we'll get back to you
+                    as soon as possible.
+                  </motion.p>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
 
-        <div className='mt-4 flex flex-col items-center justify-between gap-4 border-t md:flex-row'>
-          <p className='text-muted-foreground text-sm'>
-            © {new Date().getFullYear()} RateThatProf. All rights reserved.
-          </p>
-          <div className='flex items-center gap-6'>
-            <Link href='/privacy' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-              Privacy
-            </Link>
-            <Link href='/terms' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-              Terms
-            </Link>
-            <Link href='/about' className='text-muted-foreground hover:text-primary text-sm transition-colors'>
-              About
-            </Link>
+        {/* Bottom section */}
+        <motion.div
+          className='border-border/50 border-t pt-4 pb-4 sm:pb-0'
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}>
+          <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
+            <motion.p className='text-muted-foreground text-sm' whileHover={{ scale: 1.02 }}>
+              © {new Date().getFullYear()} RateThatProf. All rights reserved.
+            </motion.p>
+            <div className='flex items-center gap-4'>
+              <motion.p className='text-muted-foreground flex items-center gap-2 text-sm' whileHover={{ scale: 1.02 }}>
+                Made with
+                <motion.span
+                  className='text-red-500'
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 10, -10, 0]
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatType: 'reverse'
+                  }}>
+                  ❤️
+                </motion.span>{' '}
+                by{' '}
+                <Link
+                  href='https://github.com/SaiRev0'
+                  className='hover:text-primary decoration-primary/30 font-medium underline underline-offset-4 transition-colors'
+                  target='_blank'>
+                  SaiRev
+                </Link>
+                <span className='text-muted-foreground/30'>•</span>
+                <Link
+                  href='https://www.linkedin.com/in/sairev'
+                  className='hover:text-primary decoration-primary/30 font-medium underline underline-offset-4 transition-colors'
+                  target='_blank'>
+                  Saiyam Jain
+                </Link>
+              </motion.p>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
