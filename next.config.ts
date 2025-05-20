@@ -31,7 +31,8 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'iitbhu.ac.in'
       }
-    ]
+    ],
+    unoptimized: true
   }
 };
 
