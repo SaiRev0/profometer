@@ -28,9 +28,15 @@ interface ReviewCardProps {
   };
   isLoading?: boolean;
   variant?: 'default' | 'own';
+  usedIn?: 'professor' | 'course';
 }
 
-export default function ReviewCard({ review, isLoading = false, variant = 'default' }: ReviewCardProps) {
+export default function ReviewCard({
+  review,
+  isLoading = false,
+  variant = 'default',
+  usedIn = 'professor'
+}: ReviewCardProps) {
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userVote, setUserVote] = useState<'up' | 'down' | null>(review.userVote || null);
@@ -81,26 +87,28 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
             </Avatar>
             <div>
               <p className='font-medium'>{review.user.name}</p>
-              <div className='text-muted-foreground flex items-center text-sm'>
+              <div className='text-muted-foreground flex flex-col text-sm'>
                 <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
-                {review.professor && (
-                  <>
-                    <span className='mx-1.5'>•</span>
-                    <span>{review.professor.name}</span>
-                  </>
-                )}
-                {review.courseCode && (
-                  <>
-                    <span className='mx-1.5'>•</span>
-                    <span>{review.courseCode}</span>
-                  </>
-                )}
-                {review.semester && (
-                  <>
-                    <span className='mx-1.5'>•</span>
-                    <span>{review.semester}</span>
-                  </>
-                )}
+                <div className='flex flex-row items-center'>
+                  {usedIn !== 'professor' && review.professor && (
+                    <>
+                      {/* <span className='mx-1.5'>•</span> */}
+                      <span>{review.professor.name}</span>
+                    </>
+                  )}
+                  {usedIn !== 'course' && review.courseCode && (
+                    <>
+                      {/* <span className='mx-1.5'>•</span> */}
+                      <span>{review.courseCode}</span>
+                    </>
+                  )}
+                  {review.semester && (
+                    <>
+                      <span className='mx-1.5'>•</span>
+                      <span>{review.semester}</span>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>

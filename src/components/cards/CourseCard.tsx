@@ -30,7 +30,7 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
         'border-border/70 w-full overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
         isCompact ? 'h-25' : 'h-full'
       )}>
-      <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
+      <CardContent className='p-4'>
         <div className='flex items-start gap-3'>
           <div className='bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full'>
             <BookOpen className='h-6 w-6' />
@@ -44,9 +44,9 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
 
               <Badge
                 variant={
-                  course.statistics.ratings.overall >= 4
+                  course.statistics.ratings.overall >= 3.5
                     ? 'default'
-                    : course.statistics.ratings.overall <= 2
+                    : course.statistics.ratings.overall <= 3.4
                       ? 'destructive'
                       : 'secondary'
                 }>
@@ -60,12 +60,12 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
               </span>
               <span className='flex items-center gap-1'>
                 <Users className='h-3 w-3' />
-                {course.totalProfessors} professors
+                {course.totalProfessors} profs
               </span>
             </div>
 
             {!isCompact && course.reviews[0] && (
-              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-2 border-l-2 pl-2 text-sm'>
+              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-1 border-l-2 pl-2 text-sm'>
                 "{course.reviews[0].comment}"
               </blockquote>
             )}
@@ -73,7 +73,7 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
         </div>
       </CardContent>
 
-      <CardFooter
+      {/* <CardFooter
         className={cn('mt-[-1rem] flex flex-row-reverse items-center px-4 pt-0 pb-2', isCompact && 'mt-[-1.5rem]')}>
         <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
@@ -81,7 +81,7 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
             <ChevronRight className='ml-1 h-3.5 w-3.5' />
           </div>
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 

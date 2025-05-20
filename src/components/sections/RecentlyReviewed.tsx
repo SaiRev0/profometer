@@ -34,14 +34,14 @@ export default function RecentlyReviewedSection() {
           {isLoading
             ? renderLoadingCards('professor')
             : data?.professors.map((professor) => (
-                <div key={professor.id} className='min-w-[250px] snap-start sm:min-w-[320px]'>
+                <div key={professor.id} className='min-w-[300px] snap-start sm:min-w-[320px]'>
                   <ProfessorCard professor={professor} variant='detailed' showStars={false} />
                 </div>
               ))}
           {isLoading
             ? renderLoadingCards('course')
             : data?.courses.map((course) => (
-                <div key={course.code} className='min-w-[250px] snap-start sm:min-w-[320px]'>
+                <div key={course.code} className='min-w-[300px] snap-start sm:min-w-[320px]'>
                   <CourseCard course={course} variant='detailed' />
                 </div>
               ))}

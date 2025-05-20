@@ -1,3 +1,4 @@
+import { Professor } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 
 interface ProfessorsParams {
@@ -9,7 +10,7 @@ interface ProfessorsParams {
 }
 
 interface ProfessorsResponse {
-  professors: any[];
+  professors: Professor[];
   total: number;
   page: number;
   totalPages: number;

@@ -8,7 +8,7 @@ import { Course, CourseReview } from '@/lib/types';
 import { Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
-function CourseReviews({ course }: { course: Course }) {
+export default function CourseReviews({ course }: { course: Course }) {
   const { data: session } = useSession();
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [loadingMore, setLoadingMore] = useState(false);
@@ -57,6 +57,7 @@ function CourseReviews({ course }: { course: Course }) {
               key={review.id}
               review={review}
               variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+              usedIn='course'
             />
           ))}
 
@@ -74,5 +75,3 @@ function CourseReviews({ course }: { course: Course }) {
     </div>
   );
 }
-
-export default CourseReviews;

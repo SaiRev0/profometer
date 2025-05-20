@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import BottomNavigation from '@/components/layout/BottomNavigation';
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
-import BottomNavigation from '@/components/layout/header/bottomNavigation';
 import AuthProvider from '@/components/providers/session-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';

@@ -43,7 +43,7 @@ export default function ProfessorCard({
         'border-border/70 w-full overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
         isCompact ? 'h-25' : 'h-full'
       )}>
-      <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
+      <CardContent className='p-4'>
         <div className='flex items-start gap-3'>
           <Avatar className='h-12 w-12'>
             {professor.photoUrl ? (
@@ -59,6 +59,9 @@ export default function ProfessorCard({
                 <h3 className={cn('line-clamp-1 font-bold', isCompact ? 'text-base' : 'text-lg')}>{professor.name}</h3>
                 {!isCompact && (
                   <p className='text-muted-foreground mb-1 line-clamp-1 text-sm'>{professor.department.name}</p>
+                )}
+                {isCompact && (
+                  <p className='text-muted-foreground mb-1 line-clamp-1 text-sm'>{professor.designation}</p>
                 )}
               </div>
 
@@ -84,15 +87,15 @@ export default function ProfessorCard({
               </span>
             </div>
 
-            {showStars && (
+            {/* {showStars && (
               <div className='mt-1 mb-2 flex items-center'>
                 <RatingStars value={professor.statistics.ratings.overall} size={isCompact ? 'sm' : 'md'} />
                 <span className='text-muted-foreground ml-2 text-xs'>({professor.statistics.totalReviews})</span>
               </div>
-            )}
+            )} */}
 
             {!isCompact && professor.reviews[0] && (
-              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-2 border-l-2 pl-2 text-sm'>
+              <blockquote className='text-muted-foreground border-primary/30 mt-2 line-clamp-1 border-l-2 pl-2 text-sm'>
                 "{professor.reviews[0].comment}"
               </blockquote>
             )}
@@ -100,15 +103,15 @@ export default function ProfessorCard({
         </div>
       </CardContent>
 
-      <CardFooter
-        className={cn('mt-[-1rem] flex flex-row-reverse items-center px-4 pt-0 pb-2', isCompact && 'mt-[-1.5rem]')}>
+      {/* <CardFooter
+        className={cn('mt-[-1rem] flex flex-row-reverse items-center px-4 pt-0 pb-2', isCompact && 'sm:mt-[-1.5rem]')}>
         <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
             View
             <ChevronRight className='ml-1 h-3.5 w-3.5' />
           </div>
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 

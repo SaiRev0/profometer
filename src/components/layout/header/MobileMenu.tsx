@@ -10,7 +10,7 @@ import { Menu, Moon, Search, Sun } from 'lucide-react';
 
 export function MobileMenu({ navItems, moreLinks, theme, onThemeToggle, onSearchClick }: NavigationProps) {
   return (
-    <div className='flex items-center gap-2 md:hidden'>
+    <div className='flex items-center gap-2 sm:hidden'>
       <Button variant='ghost' size='icon' className='md:hidden' onClick={onSearchClick}>
         <Search className='h-5 w-5' />
       </Button>

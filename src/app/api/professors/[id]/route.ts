@@ -17,7 +17,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                   where: { professorId: id }
                 }
               }
-            }
+            },
+            professor: true
           },
           orderBy: { createdAt: 'desc' },
           where: { type: 'professor' }

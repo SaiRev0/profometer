@@ -12,7 +12,7 @@ import { Department } from '@/lib/types';
 import { motion } from 'framer-motion';
 
 export function DepartmentRankings() {
-  const { data: departments = [], isLoading } = useGetDepartments({ limit: 8 });
+  const { data: departments = [], isLoading } = useGetDepartments({ limit: 6 });
 
   const getRatingColor = (rating: number) => {
     if (rating >= 4.5) return 'bg-success';
@@ -37,9 +37,9 @@ export function DepartmentRankings() {
           </p>
         </motion.div>
 
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
           {isLoading
-            ? Array.from({ length: 8 }).map((_, index) => (
+            ? Array.from({ length: 6 }).map((_, index) => (
                 <DepartmentCard department={departments[0]} key={index} isLoading={true} />
               ))
             : departments.map((department: Department, index: number) => (

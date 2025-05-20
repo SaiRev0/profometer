@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Award, BookOpen, PenTool, Star, Users } from 'lucide-react';
+import { Award, BookOpen,PenTool, Star, Users } from 'lucide-react';
 
 export default function HeroSection() {
   // Animation variants for floating elements
@@ -72,11 +72,12 @@ export default function HeroSection() {
           variants={staggerContainer}
           initial='initial'
           animate='animate'
-          className='mx-auto grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3'>
+          className='mx-auto grid max-w-3xl grid-cols-2 gap-6 md:grid-cols-4'>
           {[
             { icon: BookOpen, text: 'Browse Courses', delay: 0 },
-            { icon: Users, text: 'Read Reviews', delay: 0.2 },
-            { icon: Award, text: 'Rate Professors', delay: 0.4 }
+            { icon: Users, text: 'Read User Reviews', delay: 0.2 },
+            { icon: Star, text: 'Rate Professors', delay: 0.4 },
+            { icon: Award, text: 'Check Ratings', delay: 0.6 }
           ].map((item, index) => (
             <motion.div
               key={index}

@@ -2,9 +2,9 @@
 
 import { DepartmentRankings } from '@/components/sections/DepartmentRankings';
 import FeaturedCourses from '@/components/sections/FeaturedCourses';
-import HeroSection from '@/components/sections/hero-section';
-import LovedChallengingSection from '@/components/sections/loved-challenging-section';
-import RecentlyReviewedSection from '@/components/sections/recently-reviewed-section';
+import HeroSection from '@/components/sections/Hero';
+import LovedChallengingSection from '@/components/sections/FeaturedProfessors';
+import RecentlyReviewedSection from '@/components/sections/RecentlyReviewed';
 
 export default function Home() {
   return (

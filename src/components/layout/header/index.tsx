@@ -74,13 +74,13 @@ export default function Header() {
           <SearchBar onSearchClick={() => handleSearchOpen(true)} />
           <Navigation
             navItems={desktopNavItems}
-            theme={theme || 'light'}
+            theme={theme || 'dark'}
             onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           />
           <MobileMenu
             navItems={mobileNavItems}
             moreLinks={moreLinks}
-            theme={theme || 'light'}
+            theme={theme || 'dark'}
             onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             onSearchClick={() => handleSearchOpen(true)}
           />

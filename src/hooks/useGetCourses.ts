@@ -1,3 +1,4 @@
+import { Course } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 
 interface CoursesParams {
@@ -9,7 +10,7 @@ interface CoursesParams {
 }
 
 interface CoursesResponse {
-  courses: any[];
+  courses: Course[];
   total: number;
   page: number;
   totalPages: number;

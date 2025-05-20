@@ -69,7 +69,6 @@ model Department {
     code          String      @id
     name          String      @unique
     avgRating     Float
-    numProfessors Int
     numReviews    Int
     professors    Professor[]
     courses       Course[]

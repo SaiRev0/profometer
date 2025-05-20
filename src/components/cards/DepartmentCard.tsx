@@ -83,11 +83,11 @@ export function DepartmentCard({ department, index = 0, isLoading = false }: Dep
           <span className='mx-2'>•</span>
           <div className='flex items-center'>
             <Users className='mr-1 h-3 w-3' />
-            {department.numProfessors} profs
+            {department._count?.professors} profs
           </div>
           <div className='flex items-center'>
             <BookOpen className='mr-1 ml-2 h-3 w-3' />
-            {department.numCourses} courses
+            {department._count?.courses} courses
           </div>
         </div>
 

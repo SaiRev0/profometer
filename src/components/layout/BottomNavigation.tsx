@@ -9,7 +9,7 @@ export default function BottomNavigation() {
   const { mobileNavItems } = useNavigation();
 
   return (
-    <div className='bg-background border-border fixed right-0 bottom-0 left-0 z-40 h-16 border-t md:hidden'>
+    <div className='bg-background border-border fixed right-0 bottom-0 left-0 z-40 h-16 border-t sm:hidden'>
       <div className={`grid h-full grid-cols-3`}>
         {mobileNavItems.map((item) => (
           <div key={item.label} className='flex items-center justify-center'>

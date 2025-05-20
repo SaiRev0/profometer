@@ -8,12 +8,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ProfessorReview } from '@/lib/types';
 
+import { useSession } from 'next-auth/react';
+
 interface ReviewListProps {
   initialReviews: ProfessorReview[];
   selectedCourse: string;
 }
 
 export default function ReviewList({ initialReviews, selectedCourse }: ReviewListProps) {
+  const { data: session } = useSession();
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [visibleReviews, setVisibleReviews] = useState(5);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -61,7 +64,12 @@ export default function ReviewList({ initialReviews, selectedCourse }: ReviewLis
       ) : (
         <div>
           {filteredReviews.slice(0, visibleReviews).map((review) => (
-            <ReviewCard key={review.id} review={review} />
+            <ReviewCard
+              key={review.id}
+              review={review}
+              variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+              usedIn='professor'
+            />
           ))}
 
           {visibleReviews < filteredReviews.length && (

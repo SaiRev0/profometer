@@ -6,28 +6,28 @@ import { parse } from 'csv-parse/sync';
 import fs from 'fs';
 import path from 'path';
 
-async function updateDepartmentCounts() {
-  // Get all departments with their professor counts
-  const departments = await db.department.findMany({
-    include: {
-      _count: {
-        select: {
-          professors: true
-        }
-      }
-    }
-  });
+// async function updateDepartmentCounts() {
+//   // Get all departments with their professor counts
+//   const departments = await db.department.findMany({
+//     include: {
+//       _count: {
+//         select: {
+//           professors: true
+//         }
+//       }
+//     }
+//   });
 
-  // Update each department's numProfessors field
-  for (const dept of departments) {
-    await db.department.update({
-      where: { code: dept.code },
-      data: {
-        numProfessors: dept._count.professors
-      }
-    });
-  }
-}
+//   // Update each department's numProfessors field
+//   for (const dept of departments) {
+//     await db.department.update({
+//       where: { code: dept.code },
+//       data: {
+//         numProfessors: dept._count.professors
+//       }
+//     });
+//   }
+// }
 
 export async function POST(request: NextRequest) {
   try {
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update department counts after seeding professors
-    await updateDepartmentCounts();
+    // await updateDepartmentCounts();
     console.log(`Successfully seeded ${successCount} professors`);
 
     return NextResponse.json({

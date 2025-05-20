@@ -30,11 +30,13 @@ export interface Department {
   name: string;
   code: string;
   avgRating: number;
-  numProfessors: number;
   numReviews: number;
-  numCourses: number;
   professors?: Professor[];
   courses?: Course[];
+  _count?: {
+    professors: number;
+    courses: number;
+  };
 }
 export interface Course {
   code: string;
