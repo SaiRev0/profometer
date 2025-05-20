@@ -43,8 +43,6 @@ export async function GET() {
       statistics
     };
 
-    console.log(profileData);
-
     return NextResponse.json(profileData);
   } catch (error) {
     console.error('Profile API Error:', error);

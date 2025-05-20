@@ -5,12 +5,13 @@ import { departments } from '@/lib/mock-data';
 
 async function seedDepartments() {
   try {
-    // First, check if departments already exist
-    const existingDepartments = await db.department.findMany();
-    if (existingDepartments.length > 0) {
-      console.log('Departments already exist in the database. Skipping seed.');
-      return;
-    }
+    await db.department.deleteMany();
+    await db.professor.deleteMany();
+    await db.course.deleteMany();
+    await db.review.deleteMany();
+    await db.reviewVote.deleteMany();
+    await db.user.deleteMany();
+    await db.account.deleteMany();
 
     // Create departments
     const createdDepartments = await db.department.createMany({

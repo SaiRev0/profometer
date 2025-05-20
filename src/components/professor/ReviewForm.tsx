@@ -15,6 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
 import { Professor, ProfessorPercentages } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 import { Plus, Search } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -30,11 +31,13 @@ interface ReviewFormProps {
 export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
   const { status } = useSession();
   const router = useRouter();
-  const { createReview, isLoading } = useCreateReview();
+  // Add helper function to get current year
+  const getCurrentYear = () => new Date().getFullYear();
+  const { createReview, isLoading, error } = useCreateReview();
   const [reviewCourse, setReviewCourse] = useState('');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
-  const [semesterYear, setSemesterYear] = useState('');
-  const [reviewSemester, setReviewSemester] = useState('');
+  const [semesterYear, setSemesterYear] = useState<number>(getCurrentYear());
+  const [reviewSemester, setReviewSemester] = useState<string>(`Odd-${getCurrentYear()}`);
   const [reviewRatings, setReviewRatings] = useState({
     teaching: 0,
     helpfulness: 0,
@@ -50,22 +53,18 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     attendanceRating: 50
   });
   const [reviewGrade, setReviewGrade] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(true);
   const [courseSearch, setCourseSearch] = useState('');
-
-  // Add helper function to get current year
-  const getCurrentYear = () => new Date().getFullYear();
 
   // Remove useEffect and update the handlers
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
-    setReviewSemester(`${value}-${semesterYear}`);
+    setReviewSemester(`${semesterType}-${semesterYear}`);
   };
 
   const handleSemesterYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const year = e.target.value;
-    setSemesterYear(year);
-    setReviewSemester(`${semesterType}-${year}`);
+    setSemesterYear(parseInt(e.target.value));
+    setReviewSemester(`${semesterType}-${semesterYear}`);
   };
 
   // Add this function to filter courses
@@ -77,7 +76,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
   // Submit review function
   const handleSubmitReview = async () => {
     // Validate year
-    const year = parseInt(semesterYear);
+    const year = semesterYear;
     const currentYear = getCurrentYear();
 
     if (isNaN(year) || year < 2012 || year > currentYear) {
@@ -110,7 +109,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     }
 
     // Validate statistics
-    if (Object.values(reviewStatistics).some((stat) => stat === undefined)) {
+    if (Object.values(reviewStatistics).some((stat) => stat === -1)) {
       toast.error('Please provide statistics for all categories.');
       return;
     }
@@ -125,7 +124,7 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     try {
       await createReview({
         professorId: professor.id,
-        courseId: reviewCourse,
+        courseCode: reviewCourse,
         semester: reviewSemester,
         anonymous: isAnonymous,
         ratings: {
@@ -161,13 +160,15 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
       });
       setReviewComment('');
       setReviewCourse('');
-      setReviewSemester('');
+      setReviewSemester(`Odd-${getCurrentYear()}`);
       setReviewGrade('');
       setIsAnonymous(true);
       setModalState(false);
     } catch (error) {
       console.error('Error submitting review:', error);
-      toast.error('Failed to submit review. Please try again.');
+      toast.error('Failed to submit review. Please try again.', {
+        description: 'Error: ' + error
+      });
     }
   };
 
@@ -422,6 +423,9 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
               <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
               <Label htmlFor='anonymous'>Submit review anonymously</Label>
             </div>
+            <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
+              Can not be traced back to you.
+            </p>
 
             <div className='mt-2 flex justify-end gap-2'>
               <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>

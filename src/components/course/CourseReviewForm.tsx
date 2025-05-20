@@ -15,6 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
 import { Course, Professor } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 import { Search } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -32,11 +33,14 @@ interface CourseReviewFormProps {
 export default function CourseReviewForm({ course, modalState, setModalState }: CourseReviewFormProps) {
   const { status } = useSession();
   const router = useRouter();
+
+  // Add helper function to get current year
+  const getCurrentYear = () => new Date().getFullYear();
   const { createReview, isLoading } = useCreateReview();
   const [reviewProfessor, setReviewProfessor] = useState('');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
-  const [semesterYear, setSemesterYear] = useState('');
-  const [reviewSemester, setReviewSemester] = useState('');
+  const [semesterYear, setSemesterYear] = useState<number>(getCurrentYear());
+  const [reviewSemester, setReviewSemester] = useState<string>(`Odd-${getCurrentYear()}`);
   const [reviewRatings, setReviewRatings] = useState({
     difficulty: 0,
     workload: 0,
@@ -59,18 +63,14 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [professorSearch, setProfessorSearch] = useState('');
 
-  // Add helper function to get current year
-  const getCurrentYear = () => new Date().getFullYear();
-
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
-    setReviewSemester(`${value}-${semesterYear}`);
+    setReviewSemester(`${semesterType}-${semesterYear}`);
   };
 
   const handleSemesterYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const year = e.target.value;
-    setSemesterYear(year);
-    setReviewSemester(`${semesterType}-${year}`);
+    setSemesterYear(parseInt(e.target.value));
+    setReviewSemester(`${semesterType}-${semesterYear}`);
   };
 
   const filteredProfessors = course.departmentProfessors?.filter((professor) =>
@@ -80,10 +80,9 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
   // Submit review function
   const handleSubmitReview = async () => {
     // Validate year
-    const year = parseInt(semesterYear);
     const currentYear = getCurrentYear();
 
-    if (isNaN(year) || year < 2012 || year > currentYear) {
+    if (isNaN(semesterYear) || semesterYear < 2012 || semesterYear > currentYear) {
       toast.error(`Year must be between 2012 and ${currentYear}`);
       return;
     }
@@ -126,13 +125,15 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
 
     try {
       await createReview({
-        courseId: course.code,
+        courseCode: course.code,
         professorId: reviewProfessor,
         semester: reviewSemester,
         anonymous: isAnonymous,
         ratings: {
-          ...reviewRatings,
-          // Map course-specific ratings to the expected format
+          difficulty: reviewRatings.difficulty,
+          workload: reviewRatings.workload,
+          content: reviewRatings.content,
+          numerical: reviewRatings.numerical,
           overall: overallRating
         },
         comment: reviewComment,
@@ -161,9 +162,10 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
         assignments: -1,
         attendanceRating: 50
       });
+      setProfessorSearch('');
       setReviewComment('');
       setReviewProfessor('');
-      setReviewSemester('');
+      setReviewSemester(`Odd-${getCurrentYear()}`);
       setReviewGrade('');
       setIsAnonymous(true);
       setModalState(false);
@@ -423,6 +425,9 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
               <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
               <Label htmlFor='anonymous'>Submit review anonymously</Label>
             </div>
+            <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
+              Can not be traced back to you.
+            </p>
 
             <div className='mt-2 flex justify-end gap-2'>
               <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>

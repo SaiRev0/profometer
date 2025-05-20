@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Course, CourseReview } from '@/lib/types';
 
 import { Star } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 function CourseReviews({ course }: { course: Course }) {
+  const { data: session } = useSession();
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [loadingMore, setLoadingMore] = useState(false);
   const [visibleReviews, setVisibleReviews] = useState(5);
@@ -51,7 +53,11 @@ function CourseReviews({ course }: { course: Course }) {
       {sortedReviews.length > 0 ? (
         <div className='space-y-4'>
           {sortedReviews.slice(0, visibleReviews).map((review: CourseReview) => (
-            <ReviewCard key={review.id} review={review} />
+            <ReviewCard
+              key={review.id}
+              review={review}
+              variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+            />
           ))}
 
           {visibleReviews < sortedReviews.length && (

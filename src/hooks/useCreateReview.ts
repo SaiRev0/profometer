@@ -1,38 +1,20 @@
 'use client';
 
-import {
-  CoursePercentages,
-  CourseRating,
-  CourseReview,
-  ProfessorPercentages,
-  ProfessorRating,
-  ProfessorReview
-} from '@/lib/types';
+import { CourseReview, ProfessorReview } from '@/lib/types';
+import { CreateReviewApiData } from '@/lib/types/apiTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { PROFESSOR_QUERY_KEY } from './useGetProfessorById';
 
-interface CreateReviewData {
-  professorId: string;
-  courseId: string;
-  semester: string;
-  anonymous: boolean;
-  ratings: ProfessorRating | CourseRating;
-  comment: string;
-  statistics: ProfessorPercentages | CoursePercentages;
-  grade?: string;
-  type: 'professor' | 'course';
-}
-
 export function useCreateReview() {
   const queryClient = useQueryClient();
 
-  const { mutateAsync: createReview, isPending } = useMutation<
-    { review: ProfessorReview | CourseReview },
-    Error,
-    CreateReviewData
-  >({
-    mutationFn: async (data: CreateReviewData) => {
+  const {
+    mutateAsync: createReview,
+    isPending,
+    error
+  } = useMutation<{ review: ProfessorReview | CourseReview }, Error, CreateReviewApiData>({
+    mutationFn: async (data: CreateReviewApiData) => {
       const response = await fetch('/api/review/create', {
         method: 'POST',
         headers: {
@@ -57,6 +39,7 @@ export function useCreateReview() {
 
   return {
     createReview,
-    isLoading: isPending
+    isLoading: isPending,
+    error
   };
 }

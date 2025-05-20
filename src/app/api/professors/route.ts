@@ -27,14 +27,20 @@ export async function GET(request: NextRequest) {
     if (variant === 'loved') {
       where.statistics = {
         path: ['ratings', 'overall'],
-        gte: 4.1,
+        gte: 3.5,
         lt: 5.1
+      };
+      where.reviews = {
+        some: {} // Ensure professor has at least one review
       };
     } else if (variant === 'challenging') {
       where.statistics = {
         path: ['ratings', 'overall'],
         gte: 0.0,
-        lt: 3.1
+        lt: 3.4
+      };
+      where.reviews = {
+        some: {} // Ensure professor has at least one review
       };
     } else if (variant === 'recently-reviewed') {
       where.reviews = {

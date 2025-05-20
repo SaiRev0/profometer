@@ -83,6 +83,12 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
               <p className='font-medium'>{review.user.name}</p>
               <div className='text-muted-foreground flex items-center text-sm'>
                 <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
+                {review.professor && (
+                  <>
+                    <span className='mx-1.5'>•</span>
+                    <span>{review.professor.name}</span>
+                  </>
+                )}
                 {review.courseCode && (
                   <>
                     <span className='mx-1.5'>•</span>
@@ -134,30 +140,10 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
         <div className='mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3'>
           {Object.entries(review.ratings).map(([key, value]) => (
             <div key={key}>
-              <p className='text-muted-foreground mb-1 text-xs'>{key}</p>
+              <p className='text-muted-foreground mb-1 text-sm'>{key}</p>
               <RatingStars value={value} size='sm' />
             </div>
           ))}
-          {/* <div>
-                <p className='text-muted-foreground mb-1 text-xs'>Teaching</p>
-                <RatingStars value={review.ratings.teaching} size='sm' />
-              </div>
-              <div>
-                <p className='text-muted-foreground mb-1 text-xs'>Helpfulness</p>
-                <RatingStars value={review.ratings.helpfulness} size='sm' />
-              </div>
-              <div>
-                <p className='text-muted-foreground mb-1 text-xs'>Fairness</p>
-                <RatingStars value={review.ratings.fairness} size='sm' />
-              </div>
-              <div>
-                <p className='text-muted-foreground mb-1 text-xs'>Clarity</p>
-                <RatingStars value={review.ratings.clarity} size='sm' />
-              </div>
-              <div>
-                <p className='text-muted-foreground mb-1 text-xs'>Communication</p>
-                <RatingStars value={review.ratings.communication} size='sm' />
-              </div> */}
           {review.grade && (
             <div>
               <p className='text-muted-foreground mb-1 text-xs'>Final Grade</p>
@@ -186,9 +172,9 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
               Assignments {review.statistics.assignments ? 'Yes' : 'No'}
             </Badge>
           )}
-          {review.statistics.attendance !== undefined && (
+          {review.statistics.attendanceRating !== undefined && (
             <Badge variant='secondary' className='text-xs'>
-              Attendance {review.statistics.attendance}
+              Attendance {review.statistics.attendanceRating}
             </Badge>
           )}
         </div>
@@ -202,7 +188,8 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
               size='sm'
               className='h-8'
               onClick={() => handleVote('up')}>
-              <ThumbsUp className={cn('mr-1.5 h-4 w-4', userVote === 'up' && 'fill-current')} />
+              <ThumbsUp className={cn('mr-1.5 h-4 w-4', userVote === 'up' && 'text-primary fill-current')} />
+              <p className='hidden text-sm sm:block'>Helpful</p>
               {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
             </Button>
 
@@ -211,13 +198,15 @@ export default function ReviewCard({ review, isLoading = false, variant = 'defau
               size='sm'
               className='h-8'
               onClick={() => handleVote('down')}>
-              <ThumbsDown className={cn('mr-1.5 h-4 w-4', userVote === 'down' && 'fill-current')} />
+              <ThumbsDown className={cn('mr-1.5 h-4 w-4', userVote === 'down' && 'fill-current text-red-500')} />
+              <p className='hidden text-sm sm:block'>Not helpful</p>
               {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}
             </Button>
           </div>
 
           <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
-            <Flag className='mr-1.5 h-4 w-4 text-red-500' />
+            <Flag className='mr-1.5 h-4 w-4 fill-current text-red-500' />
+            <p className='hidden text-sm sm:block'>Report</p>
           </Button>
         </CardFooter>
       )}

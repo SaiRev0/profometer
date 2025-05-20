@@ -11,7 +11,7 @@ import { Professor } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { motion } from 'framer-motion';
-import { Bookmark, ChevronRight, ThumbsDown, ThumbsUp, User, UserCheck } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface ProfessorCardProps {
   professor: Professor;
@@ -35,7 +35,7 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
     <Card
       className={cn(
         'border-border/70 overflow-hidden transition-all duration-200 hover:shadow-md dark:bg-gray-800',
-        isCompact ? 'h-30' : 'h-full'
+        isCompact ? 'h-25' : 'h-full'
       )}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex items-start gap-3'>
@@ -58,9 +58,9 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
 
               <Badge
                 variant={
-                  professor.statistics.ratings.overall >= 4
+                  professor.statistics.ratings.overall >= 3.5
                     ? 'default'
-                    : professor.statistics.ratings.overall <= 2
+                    : professor.statistics.ratings.overall <= 3.4
                       ? 'destructive'
                       : 'secondary'
                 }>
@@ -82,7 +82,8 @@ export default function ProfessorCard({ professor, variant = 'detailed', isLoadi
         </div>
       </CardContent>
 
-      <CardFooter className={cn('flex flex-row-reverse items-center px-4 pt-0 pb-4', isCompact && 'pt-0')}>
+      <CardFooter
+        className={cn('mt-[-1rem] flex flex-row-reverse items-center px-4 pt-0 pb-2', isCompact && 'mt-[-1.5rem]')}>
         <Button size='sm' variant='ghost' className='h-8 px-2 text-xs' asChild>
           <div>
             View

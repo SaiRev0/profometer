@@ -75,6 +75,7 @@ interface Review {
   id: string;
   userId: string;
   professorId: string;
+  professor?: Professor;
   courseCode: string;
   semester: string;
   anonymous: boolean;

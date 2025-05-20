@@ -7,8 +7,8 @@ import { Github, Mail, School, Twitter } from 'lucide-react';
 export default function Footer() {
   return (
     <footer className='bg-background mt-auto border-t'>
-      <div className='container mx-auto px-4 py-8 md:py-12'>
-        <div className='grid grid-cols-1 gap-8 md:grid-cols-4'>
+      <div className='container mx-auto px-4 py-8'>
+        <div className='grid-cols- grid gap-8 sm:grid-cols-4'>
           <div className='space-y-3'>
             <div className='flex items-center gap-2'>
               <School className='text-primary h-6 w-6' />
@@ -96,7 +96,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className='mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row'>
+        <div className='mt-4 flex flex-col items-center justify-between gap-4 border-t md:flex-row'>
           <p className='text-muted-foreground text-sm'>
             © {new Date().getFullYear()} RateThatProf. All rights reserved.
           </p>

@@ -51,11 +51,11 @@ export function DepartmentCard({ department, index = 0, isLoading = false }: Dep
   }
 
   const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) return 'bg-success';
-    if (rating >= 4.0) return 'bg-primary';
-    if (rating >= 3.5) return 'bg-amber-500';
-    if (rating >= 3.0) return 'bg-orange-500';
-    return 'bg-error';
+    if (rating >= 4.0) return 'bg-success';
+    if (rating >= 3.5) return 'bg-primary';
+    if (rating >= 3.0) return 'bg-amber-500';
+    if (rating >= 2.5) return 'bg-orange-500';
+    if (rating >= 0) return 'bg-red-500';
   };
 
   return (
@@ -99,7 +99,7 @@ export function DepartmentCard({ department, index = 0, isLoading = false }: Dep
           <div className='h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-gray-700'>
             <div
               className={cn('h-full rounded-full', getRatingColor(department.avgRating))}
-              style={{ width: `${(department.avgRating / 5) * 100}%` }}
+              style={{ width: `${(department.avgRating * 100) / 5}%` }}
             />
           </div>
         </div>

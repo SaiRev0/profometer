@@ -50,19 +50,19 @@ model VerificationToken {
 }
 
 model User {
-    id            String       @id @default(cuid())
-    name          String?
-    email         String?      @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id             String       @id @default(cuid())
+    name           String?
+    email          String?      @unique
+    emailVerified  DateTime?
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
     departmentCode String?
     department     Department?  @relation(fields: [departmentCode], references: [code])
-    reviews       Review[]
-    reviewVotes   ReviewVote[]
-    createdAt     DateTime     @default(now())
-    updatedAt     DateTime     @updatedAt
+    reviews        Review[]
+    reviewVotes    ReviewVote[]
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
 }
 
 model Department {
