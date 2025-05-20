@@ -31,7 +31,9 @@ export async function GET(request: NextRequest) {
         lt: 5.1
       };
       where.reviews = {
-        some: {} // Ensure professor has at least one review
+        some: {
+          type: 'professor'
+        }
       };
     } else if (variant === 'challenging') {
       where.statistics = {
@@ -40,11 +42,15 @@ export async function GET(request: NextRequest) {
         lt: 3.4
       };
       where.reviews = {
-        some: {} // Ensure professor has at least one review
+        some: {
+          type: 'professor'
+        }
       };
     } else if (variant === 'recently-reviewed') {
       where.reviews = {
-        some: {} // Ensure professor has at least one review
+        some: {
+          type: 'professor'
+        }
       };
     }
 
