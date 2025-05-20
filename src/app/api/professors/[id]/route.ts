@@ -13,7 +13,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             user: true,
             course: {
               include: {
-                reviews: true
+                reviews: {
+                  where: { professorId: id }
+                }
               }
             }
           },

@@ -10,7 +10,7 @@ export default function RecentlyReviewedSection() {
   console.log(data);
 
   const renderLoadingCards = (type: 'professor' | 'course') =>
-    Array.from({ length: 4 }).map((_, index) => (
+    Array.from({ length: 2 }).map((_, index) => (
       <div key={index} className='min-w-[250px] grow snap-start sm:min-w-[280px]'>
         {type === 'professor' ? (
           <ProfessorCard professor={data?.professors[0] as Professor} isLoading={true} variant='detailed' />
