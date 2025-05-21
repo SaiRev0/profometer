@@ -19,7 +19,6 @@ async function seedDepartments() {
         name: dept.name,
         code: dept.code,
         avgRating: dept.avgRating,
-        numProfessors: dept.numProfessors,
         numReviews: dept.numReviews
       }))
     });
