@@ -16,5 +16,14 @@ export async function middleware(request: NextRequest) {
 
 // Configure which routes the middleware should run on
 export const config = {
-  matcher: ['/api/courses/create', '/api/review/create', '/api/profile', '/profile']
+  matcher: [
+    '/api/courses/create',
+    '/api/profile',
+    '/profile',
+    '/api/review/create',
+    '/api/review/delete',
+    '/api/review/edit',
+    '/api/review/report',
+    '/api/review/vote'
+  ]
 };
