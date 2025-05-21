@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,6 +23,7 @@ import { cn } from '@/lib/utils';
 
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
@@ -37,6 +40,8 @@ export default function ReviewCard({
   variant = 'default',
   usedIn = 'professor'
 }: ReviewCardProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -59,6 +64,11 @@ export default function ReviewCard({
 
   const handleVote = async (reviewId: string, voteType: 'up' | 'down') => {
     if (isVoting) return;
+
+    if (!session?.user) {
+      router.push('/signin?error=Unauthorized');
+      return;
+    }
 
     const result = await voteReview({
       reviewId,

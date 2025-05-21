@@ -11,7 +11,7 @@ const CloseModal: FC = () => {
   const router = useRouter();
 
   return (
-    <Button variant='subtle' className='h-6 w-6 rounded-md p-0' onClick={() => router.back()}>
+    <Button variant='ghost' className='h-6 w-6 rounded-md p-0 hover:cursor-pointer' onClick={() => router.back()}>
       <IoClose aria-label='close modal' className='h-4 w-4' />
     </Button>
   );

@@ -9,9 +9,9 @@ import { GraduationCap } from 'lucide-react';
 
 const page: FC = () => {
   return (
-    <div className='fixed inset-0 z-[1000] bg-zinc-900/20'>
+    <div className='bg-background/80 fixed inset-0 z-[1000]'>
       <div className='container mx-auto flex h-full max-w-lg items-center'>
-        <div className='relative h-fit w-full rounded-lg bg-white px-2 py-20'>
+        <div className='bg-card text-card-foreground relative h-fit w-full rounded-lg px-2 py-20 shadow-lg'>
           <div className='absolute top-4 right-4'>
             <CloseModal />
           </div>
@@ -20,13 +20,13 @@ const page: FC = () => {
             <div className='flex flex-col space-y-2 text-center'>
               <GraduationCap className='text-primary mx-auto my-[-0.5rem] h-14 w-14' />
               <h1 className='text-2xl font-semibold tracking-tight'>Welcome to RateThatProf</h1>
-              <p className='mx-auto max-w-xs text-sm'>
+              <p className='text-muted-foreground mx-auto max-w-xs text-sm'>
                 By proceeding, you agree to our <br />
-                <Link href='/' className='underline'>
+                <Link href='/' className='text-primary hover:text-primary/80 underline'>
                   User Agreement
                 </Link>{' '}
                 and{' '}
-                <Link href='/' className='underline'>
+                <Link href='/' className='text-primary hover:text-primary/80 underline'>
                   Privacy Policy
                 </Link>
                 .
