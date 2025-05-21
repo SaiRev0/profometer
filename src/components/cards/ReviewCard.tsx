@@ -38,36 +38,22 @@ export default function ReviewCard({
 }: ReviewCardProps) {
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userVote, setUserVote] = useState<'up' | 'down' | null>(review.userVote || null);
-  const [upvoteCount, setUpvoteCount] = useState(review.upvotes);
-  const [downvoteCount, setDownvoteCount] = useState(review.downvotes);
 
-  const { voteReview, isLoading: isVoting } = useReviewVote();
+  const {
+    handleVote,
+    userVote,
+    upvoteCount,
+    downvoteCount,
+    isLoading: isVoting
+  } = useReviewVote({
+    initialUserVote: review.userVote || null,
+    initialUpvotes: review.upvotes,
+    initialDownvotes: review.downvotes
+  });
 
   if (isLoading) {
     return <ReviewCardSkeleton />;
   }
-
-  const handleVote = async (vote: 'up' | 'down') => {
-    if (isVoting) return;
-
-    try {
-      const result = await voteReview({
-        reviewId: review.id,
-        voteType: vote
-      });
-
-      setUserVote(result.userVote);
-      setUpvoteCount(result.review.upvotes);
-      setDownvoteCount(result.review.downvotes);
-    } catch (error) {
-      // Error is already handled by the hook with toast
-      // Revert optimistic updates
-      setUserVote(review.userVote || null);
-      setUpvoteCount(review.upvotes);
-      setDownvoteCount(review.downvotes);
-    }
-  };
 
   return (
     <Card className='mb-4'>
@@ -188,7 +174,7 @@ export default function ReviewCard({
               variant={userVote === 'up' ? 'secondary' : 'ghost'}
               size='sm'
               className='h-8'
-              onClick={() => handleVote('up')}>
+              onClick={() => handleVote(review.id, 'up')}>
               <ThumbsUp className={cn('mr-1.5 h-4 w-4', userVote === 'up' && 'text-primary fill-current')} />
               <p className='hidden text-sm sm:block'>Helpful</p>
               {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
@@ -198,7 +184,7 @@ export default function ReviewCard({
               variant={userVote === 'down' ? 'secondary' : 'ghost'}
               size='sm'
               className='h-8'
-              onClick={() => handleVote('down')}>
+              onClick={() => handleVote(review.id, 'down')}>
               <ThumbsDown className={cn('mr-1.5 h-4 w-4', userVote === 'down' && 'fill-current text-red-500')} />
               <p className='hidden text-sm sm:block'>Not helpful</p>
               {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}

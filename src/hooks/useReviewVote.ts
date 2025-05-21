@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -17,8 +19,17 @@ interface VoteData {
   voteType: 'up' | 'down';
 }
 
-export function useReviewVote() {
+interface UseReviewVoteProps {
+  initialUserVote: 'up' | 'down' | null;
+  initialUpvotes: number;
+  initialDownvotes: number;
+}
+
+export function useReviewVote({ initialUserVote, initialUpvotes, initialDownvotes }: UseReviewVoteProps) {
   const queryClient = useQueryClient();
+  const [userVote, setUserVote] = useState<'up' | 'down' | null>(initialUserVote);
+  const [upvoteCount, setUpvoteCount] = useState(initialUpvotes);
+  const [downvoteCount, setDownvoteCount] = useState(initialDownvotes);
 
   const {
     mutateAsync: voteReview,
@@ -43,11 +54,35 @@ export function useReviewVote() {
     },
     onError: (error) => {
       toast.error(error.message);
+      // Revert optimistic updates
+      setUserVote(initialUserVote);
+      setUpvoteCount(initialUpvotes);
+      setDownvoteCount(initialDownvotes);
     }
   });
 
+  const handleVote = async (reviewId: string, voteType: 'up' | 'down') => {
+    if (isPending) return;
+
+    try {
+      const result = await voteReview({
+        reviewId,
+        voteType
+      });
+
+      setUserVote(result.userVote);
+      setUpvoteCount(result.review.upvotes);
+      setDownvoteCount(result.review.downvotes);
+    } catch (error) {
+      // Error is already handled by the mutation
+    }
+  };
+
   return {
-    voteReview,
+    handleVote,
+    userVote,
+    upvoteCount,
+    downvoteCount,
     isLoading: isPending,
     error
   };
