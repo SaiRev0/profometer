@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 
+import { getServerSession } from 'next-auth';
+
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
+  const session = await getServerSession(authOptions);
   try {
     const { code } = await params;
     // Find the course by code, including reviews and professors who have reviews for this course
@@ -12,7 +16,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         reviews: {
           include: {
             professor: true,
-            user: true
+            user: true,
+            // Only get the vote for the current user
+            ...(session?.user?.id && {
+              votes: {
+                where: { userId: session.user.id },
+                select: { voteType: true },
+                take: 1
+              }
+            })
           },
           orderBy: { createdAt: 'desc' }
         },

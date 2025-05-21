@@ -20,7 +20,12 @@ export async function GET() {
         reviews: {
           include: {
             course: true,
-            professor: true
+            professor: true,
+            // Only get the vote for the current user
+            votes: {
+              select: { voteType: true },
+              take: 1
+            }
           }
         },
         department: true
@@ -34,7 +39,7 @@ export async function GET() {
     // Calculate stats
     const statistics = {
       totalReviews: user.reviews.length,
-      helpfulVotes: user.reviews.reduce((acc, review) => acc + review.upvotes, 0)
+      helpfulVotes: user.reviews.reduce((acc: number, review: { upvotes: number }) => acc + review.upvotes, 0)
     };
 
     // Format the response

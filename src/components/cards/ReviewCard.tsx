@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -17,13 +18,13 @@ import RatingStars from '@/components/ui/rating-stars';
 import { useReviewVote } from '@/hooks/useReviewVote';
 import { CourseReview, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
+
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 
 interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
-    userVote?: 'up' | 'down' | null;
-    userName?: string;
+    votes?: { voteType: 'up' | 'down' }[];
   };
   isLoading?: boolean;
   variant?: 'default' | 'own';
@@ -39,21 +40,35 @@ export default function ReviewCard({
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const {
-    handleVote,
-    userVote,
-    upvoteCount,
-    downvoteCount,
-    isLoading: isVoting
-  } = useReviewVote({
-    initialUserVote: review.userVote || null,
-    initialUpvotes: review.upvotes,
-    initialDownvotes: review.downvotes
-  });
+  const userVote = (review.votes?.[0]?.voteType || null) as 'up' | 'down' | null;
+  const [currentUserVote, setCurrentUserVote] = useState<'up' | 'down' | null>(userVote);
+  const [upvoteCount, setUpvoteCount] = useState(review.upvotes);
+  const [downvoteCount, setDownvoteCount] = useState(review.downvotes);
+
+  const { voteReview, isLoading: isVoting, error } = useReviewVote();
 
   if (isLoading) {
     return <ReviewCardSkeleton />;
   }
+
+  if (error) {
+    setCurrentUserVote(userVote);
+    setUpvoteCount(review.upvotes);
+    setDownvoteCount(review.downvotes);
+  }
+
+  const handleVote = async (reviewId: string, voteType: 'up' | 'down') => {
+    if (isVoting) return;
+
+    const result = await voteReview({
+      reviewId,
+      voteType
+    });
+
+    setCurrentUserVote(result.userVote);
+    setUpvoteCount(result.review.upvotes);
+    setDownvoteCount(result.review.downvotes);
+  };
 
   return (
     <Card className='mb-4'>
@@ -171,21 +186,21 @@ export default function ReviewCard({
         <CardFooter className='flex justify-between px-4 pt-0 pb-3'>
           <div className='flex items-center gap-2'>
             <Button
-              variant={userVote === 'up' ? 'secondary' : 'ghost'}
+              variant={currentUserVote === 'up' ? 'secondary' : 'ghost'}
               size='sm'
               className='h-8'
               onClick={() => handleVote(review.id, 'up')}>
-              <ThumbsUp className={cn('mr-1.5 h-4 w-4', userVote === 'up' && 'text-primary fill-current')} />
+              <ThumbsUp className={cn('mr-1.5 h-4 w-4', currentUserVote === 'up' && 'text-primary fill-current')} />
               <p className='hidden text-sm sm:block'>Helpful</p>
               {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
             </Button>
 
             <Button
-              variant={userVote === 'down' ? 'secondary' : 'ghost'}
+              variant={currentUserVote === 'down' ? 'secondary' : 'ghost'}
               size='sm'
               className='h-8'
               onClick={() => handleVote(review.id, 'down')}>
-              <ThumbsDown className={cn('mr-1.5 h-4 w-4', userVote === 'down' && 'fill-current text-red-500')} />
+              <ThumbsDown className={cn('mr-1.5 h-4 w-4', currentUserVote === 'down' && 'fill-current text-red-500')} />
               <p className='hidden text-sm sm:block'>Not helpful</p>
               {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}
             </Button>

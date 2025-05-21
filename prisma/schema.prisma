@@ -127,6 +127,7 @@ model Review {
     upvotes     Int            @default(0)
     downvotes   Int            @default(0)
     reports     ReviewReport[]
+    votes       ReviewVote[]
     createdAt   DateTime       @default(now())
     updatedAt   DateTime       @updatedAt
 
@@ -136,6 +137,7 @@ model Review {
 model ReviewVote {
     id        String   @id @default(cuid())
     reviewId  String
+    review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
     userId    String
     voteType  String // 'up' or 'down'
     createdAt DateTime @default(now())

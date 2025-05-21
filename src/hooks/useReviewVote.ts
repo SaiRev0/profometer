@@ -1,16 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-
+import { CourseReview, ProfessorReview } from '@/lib/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { toast } from 'sonner';
 
 interface VoteResponse {
-  review: {
-    id: string;
-    upvotes: number;
-    downvotes: number;
-  };
+  review: CourseReview | ProfessorReview;
   userVote: 'up' | 'down' | null;
 }
 
@@ -19,18 +15,8 @@ interface VoteData {
   voteType: 'up' | 'down';
 }
 
-interface UseReviewVoteProps {
-  initialUserVote: 'up' | 'down' | null;
-  initialUpvotes: number;
-  initialDownvotes: number;
-}
-
-export function useReviewVote({ initialUserVote, initialUpvotes, initialDownvotes }: UseReviewVoteProps) {
+export function useReviewVote() {
   const queryClient = useQueryClient();
-  const [userVote, setUserVote] = useState<'up' | 'down' | null>(initialUserVote);
-  const [upvoteCount, setUpvoteCount] = useState(initialUpvotes);
-  const [downvoteCount, setDownvoteCount] = useState(initialDownvotes);
-
   const {
     mutateAsync: voteReview,
     isPending,
@@ -52,37 +38,32 @@ export function useReviewVote({ initialUserVote, initialUpvotes, initialDownvote
 
       return response.json();
     },
+    onSuccess: () => {
+      // Invalidate recent reviews
+      queryClient.invalidateQueries({ queryKey: ['recent-reviews'] });
+
+      // Invalidate course data
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      queryClient.invalidateQueries({ queryKey: ['course'] });
+
+      // Invalidate professor data
+      queryClient.invalidateQueries({ queryKey: ['professors'] });
+      queryClient.invalidateQueries({ queryKey: ['professor'] });
+
+      // Invalidate department data (both list and individual)
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+      queryClient.invalidateQueries({ queryKey: ['department'] });
+
+      // Invalidate profile data since it shows user's reviews
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    },
     onError: (error) => {
       toast.error(error.message);
-      // Revert optimistic updates
-      setUserVote(initialUserVote);
-      setUpvoteCount(initialUpvotes);
-      setDownvoteCount(initialDownvotes);
     }
   });
 
-  const handleVote = async (reviewId: string, voteType: 'up' | 'down') => {
-    if (isPending) return;
-
-    try {
-      const result = await voteReview({
-        reviewId,
-        voteType
-      });
-
-      setUserVote(result.userVote);
-      setUpvoteCount(result.review.upvotes);
-      setDownvoteCount(result.review.downvotes);
-    } catch (error) {
-      // Error is already handled by the mutation
-    }
-  };
-
   return {
-    handleVote,
-    userVote,
-    upvoteCount,
-    downvoteCount,
+    voteReview,
     isLoading: isPending,
     error
   };

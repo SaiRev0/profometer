@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 
+import { getServerSession } from 'next-auth';
+
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await getServerSession(authOptions);
   const { id } = await params;
   try {
     const professor = await db.professor.findUnique({
@@ -18,7 +22,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 }
               }
             },
-            professor: true
+            professor: true,
+            ...(session?.user?.id && {
+              votes: {
+                where: { userId: session.user.id },
+                select: { voteType: true },
+                take: 1
+              }
+            })
           },
           orderBy: { createdAt: 'desc' },
           where: { type: 'professor' }
