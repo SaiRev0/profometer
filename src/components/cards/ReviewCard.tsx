@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -14,13 +13,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import RatingStars from '@/components/ui/rating-stars';
+import { useReviewVote } from '@/hooks/useReviewVote';
 import { CourseReview, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
-
 import { DeleteDialog } from '../dialogs/DeleteDialog';
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
 
 interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
@@ -43,7 +41,8 @@ export default function ReviewCard({
   const [userVote, setUserVote] = useState<'up' | 'down' | null>(review.userVote || null);
   const [upvoteCount, setUpvoteCount] = useState(review.upvotes);
   const [downvoteCount, setDownvoteCount] = useState(review.downvotes);
-  const [isVoting, setIsVoting] = useState(false);
+
+  const { voteReview, isLoading: isVoting } = useReviewVote();
 
   if (isLoading) {
     return <ReviewCardSkeleton />;
@@ -53,35 +52,20 @@ export default function ReviewCard({
     if (isVoting) return;
 
     try {
-      setIsVoting(true);
-      const response = await fetch('/api/review/vote', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          reviewId: review.id,
-          voteType: vote
-        })
+      const result = await voteReview({
+        reviewId: review.id,
+        voteType: vote
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to process vote');
-      }
-
-      const data = await response.json();
-      setUserVote(data.userVote);
-      setUpvoteCount(data.review.upvotes);
-      setDownvoteCount(data.review.downvotes);
+      setUserVote(result.userVote);
+      setUpvoteCount(result.review.upvotes);
+      setDownvoteCount(result.review.downvotes);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to process vote');
+      // Error is already handled by the hook with toast
       // Revert optimistic updates
       setUserVote(review.userVote || null);
       setUpvoteCount(review.upvotes);
       setDownvoteCount(review.downvotes);
-    } finally {
-      setIsVoting(false);
     }
   };
 
