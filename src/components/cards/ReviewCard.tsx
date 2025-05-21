@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { toast } from 'sonner';
 
 interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
@@ -70,14 +71,48 @@ export default function ReviewCard({
       return;
     }
 
-    const result = await voteReview({
-      reviewId,
-      voteType
-    });
+    // Store previous state for potential rollback
+    const previousVote = currentUserVote;
+    const previousUpvotes = upvoteCount;
+    const previousDownvotes = downvoteCount;
 
-    setCurrentUserVote(result.userVote);
-    setUpvoteCount(result.review.upvotes);
-    setDownvoteCount(result.review.downvotes);
+    // Optimistically update UI
+    setCurrentUserVote(voteType);
+
+    // Update vote counts optimistically
+    if (voteType === 'up') {
+      if (previousVote === 'down') {
+        setDownvoteCount((prev) => prev - 1);
+      }
+      if (previousVote !== 'up') {
+        setUpvoteCount((prev) => prev + 1);
+      }
+    } else {
+      if (previousVote === 'up') {
+        setUpvoteCount((prev) => prev - 1);
+      }
+      if (previousVote !== 'down') {
+        setDownvoteCount((prev) => prev + 1);
+      }
+    }
+
+    try {
+      const result = await voteReview({
+        reviewId,
+        voteType
+      });
+
+      // Update with actual server response
+      setCurrentUserVote(result.userVote);
+      setUpvoteCount(result.review.upvotes);
+      setDownvoteCount(result.review.downvotes);
+    } catch (error) {
+      // Revert optimistic updates on error
+      setCurrentUserVote(previousVote);
+      setUpvoteCount(previousUpvotes);
+      setDownvoteCount(previousDownvotes);
+      toast.error('Failed to submit vote. Please try again.');
+    }
   };
 
   return (
