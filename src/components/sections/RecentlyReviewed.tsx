@@ -7,7 +7,6 @@ import { Star } from 'lucide-react';
 
 export default function RecentlyReviewedSection() {
   const { data, isLoading } = useGetRecentReviews({ limit: 2 });
-  console.log(data);
 
   const renderLoadingCards = (type: 'professor' | 'course') =>
     Array.from({ length: 2 }).map((_, index) => (

@@ -14,6 +14,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
+import { useReportReview } from '@/hooks/useReportReview';
 
 import { Flag } from 'lucide-react';
 import { toast } from 'sonner';
@@ -22,6 +23,8 @@ interface ReportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   reviewId: string;
+  professorId?: string;
+  courseCode?: string;
 }
 
 const REPORT_REASONS = [
@@ -32,10 +35,10 @@ const REPORT_REASONS = [
   { id: 'other', label: 'Other reason' }
 ];
 
-export function ReportDialog({ open, onOpenChange, reviewId }: ReportDialogProps) {
+export function ReportDialog({ open, onOpenChange, reviewId, professorId, courseCode }: ReportDialogProps) {
   const [reason, setReason] = useState<string>('');
   const [details, setDetails] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { reportReview, isLoading } = useReportReview();
 
   const handleSubmit = async () => {
     if (!reason) {
@@ -45,27 +48,16 @@ export function ReportDialog({ open, onOpenChange, reviewId }: ReportDialogProps
       return;
     }
 
-    setIsSubmitting(true);
+    await reportReview({
+      reviewId,
+      reason,
+      details
+    });
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Report submitted:', {
-        reviewId,
-        reason,
-        details
-      });
-
-      setIsSubmitting(false);
-      onOpenChange(false);
-
-      toast.success('Report submitted', {
-        description: 'Thank you for helping keep RateThatProf accurate and appropriate.'
-      });
-
-      // Reset form
-      setReason('');
-      setDetails('');
-    }, 800);
+    onOpenChange(false);
+    // Reset form
+    setReason('');
+    setDetails('');
   };
 
   return (
@@ -105,11 +97,11 @@ export function ReportDialog({ open, onOpenChange, reviewId }: ReportDialogProps
         </div>
 
         <DialogFooter>
-          <Button variant='outline' onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button variant='outline' onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={!reason || isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit Report'}
+          <Button onClick={handleSubmit} disabled={!reason || isLoading}>
+            {isLoading ? 'Submitting...' : 'Submit Report'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -5,7 +5,6 @@ export const departments = [
     name: 'Architecture, Planning and Design',
     code: 'APD',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -13,7 +12,6 @@ export const departments = [
     name: 'Ceramic Engineering',
     code: 'CER',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -21,7 +19,6 @@ export const departments = [
     name: 'Chemical Engineering and Technology',
     code: 'CHE',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -29,7 +26,6 @@ export const departments = [
     name: 'Civil Engineering',
     code: 'CIV',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -37,7 +33,6 @@ export const departments = [
     name: 'Computer Science and Engineering',
     code: 'CSE',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -45,7 +40,6 @@ export const departments = [
     name: 'Electrical Engineering',
     code: 'EEE',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -53,7 +47,6 @@ export const departments = [
     name: 'Electronics Engineering',
     code: 'ECE',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -61,7 +54,6 @@ export const departments = [
     name: 'Mechanical Engineering',
     code: 'MEC',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -69,7 +61,6 @@ export const departments = [
     name: 'Metallurgical Engineering',
     code: 'MET',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -77,7 +68,6 @@ export const departments = [
     name: 'Mining Engineering',
     code: 'MIN',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -85,7 +75,6 @@ export const departments = [
     name: 'Pharmaceutical Engineering and Technology',
     code: 'PHE',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -93,7 +82,6 @@ export const departments = [
     name: 'Chemistry',
     code: 'CHY',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -101,7 +89,6 @@ export const departments = [
     name: 'Mathematical Sciences',
     code: 'MAT',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -109,7 +96,6 @@ export const departments = [
     name: 'Physics',
     code: 'PHY',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -117,7 +103,6 @@ export const departments = [
     name: 'Biochemical Engineering',
     code: 'BCE',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -125,7 +110,6 @@ export const departments = [
     name: 'Biomedical Engineering',
     code: 'BME',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -133,7 +117,6 @@ export const departments = [
     name: 'Materials Science and Technology',
     code: 'MST',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   },
   {
@@ -141,7 +124,6 @@ export const departments = [
     name: 'Humanistic Studies',
     code: 'HS',
     avgRating: 0,
-    numProfessors: 0,
     numReviews: 0
   }
 ];

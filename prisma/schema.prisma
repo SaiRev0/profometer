@@ -50,31 +50,32 @@ model VerificationToken {
 }
 
 model User {
-    id             String       @id @default(cuid())
+    id             String         @id @default(cuid())
     name           String?
-    email          String?      @unique
+    email          String         @unique
     emailVerified  DateTime?
     image          String?
     accounts       Account[]
     sessions       Session[]
     departmentCode String?
-    department     Department?  @relation(fields: [departmentCode], references: [code])
+    department     Department?    @relation(fields: [departmentCode], references: [code])
     reviews        Review[]
     reviewVotes    ReviewVote[]
-    createdAt      DateTime     @default(now())
-    updatedAt      DateTime     @updatedAt
+    reviewReports  ReviewReport[]
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
 }
 
 model Department {
-    code          String      @id
-    name          String      @unique
-    avgRating     Float
-    numReviews    Int
-    professors    Professor[]
-    courses       Course[]
-    users         User[]
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
+    code       String      @id
+    name       String      @unique
+    avgRating  Float
+    numReviews Int
+    professors Professor[]
+    courses    Course[]
+    users      User[]
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
 }
 
 model Professor {
@@ -109,24 +110,25 @@ model Course {
 }
 
 model Review {
-    id          String     @id @default(cuid())
+    id          String         @id @default(cuid())
     professorId String
-    professor   Professor  @relation(fields: [professorId], references: [id])
+    professor   Professor      @relation(fields: [professorId], references: [id])
     courseCode  String
-    course      Course     @relation(fields: [courseCode], references: [code])
+    course      Course         @relation(fields: [courseCode], references: [code])
     userId      String?
-    user        User?      @relation(fields: [userId], references: [id])
+    user        User?          @relation(fields: [userId], references: [id])
     semester    String
-    anonymous   Boolean    @default(false)
+    anonymous   Boolean        @default(false)
     ratings     Json // Stores all ratings as a JSON object
-    comment     String     @db.Text
+    comment     String         @db.Text
     statistics  Json // Stores all statistics as a JSON object
     grade       String?
     type        ReviewType // 'course' or 'professor'
-    upvotes     Int        @default(0)
-    downvotes   Int        @default(0)
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
+    upvotes     Int            @default(0)
+    downvotes   Int            @default(0)
+    reports     ReviewReport[]
+    createdAt   DateTime       @default(now())
+    updatedAt   DateTime       @updatedAt
 
     @@index([userId])
 }
@@ -141,4 +143,19 @@ model ReviewVote {
     User      User     @relation(fields: [userId], references: [id])
 
     @@unique([reviewId, userId])
+}
+
+model ReviewReport {
+    id         String   @id @default(cuid())
+    reviewId   String
+    review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+    reason     String
+    details    String?  @db.Text
+    reportedBy String
+    reporter   User     @relation(fields: [reportedBy], references: [id])
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([reviewId])
+    @@index([reportedBy])
 }

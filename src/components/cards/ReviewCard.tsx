@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +17,6 @@ import RatingStars from '@/components/ui/rating-stars';
 import { useReviewVote } from '@/hooks/useReviewVote';
 import { CourseReview, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { DeleteDialog } from '../dialogs/DeleteDialog';
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 

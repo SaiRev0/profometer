@@ -1,34 +1,75 @@
-# Next.js 15 Starter (shadcn) [[LIVE DEMO](https://nextjs-15-starter-shadcn.vercel.app/)]
+# RateThatProf - Professor Rating Platform
 
-![MIT License](https://img.shields.io/badge/license-MIT-blue) [![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)](https://typescriptlang.org) ![ESLint](https://img.shields.io/badge/code%20style-eslint-brightgreen) ![GitHub stars](https://img.shields.io/github/stars/siddharthamaity/nextjs-15-starter-shadcn?style=social) ![GitHub forks](https://img.shields.io/github/forks/siddharthamaity/nextjs-15-starter-shadcn?style=social) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/siddharthamaity)
+![MIT License](https://img.shields.io/badge/license-MIT-blue) [![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)](https://typescriptlang.org) ![ESLint](https://img.shields.io/badge/code%20style-eslint-brightgreen) ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![React](https://img.shields.io/badge/React-19-blue)
 
-*This is the Tailwind version for Next.js 15 Starter, you may be interested in other templates too -*
-- [**Next.js 15 Starter Core**](https://github.com/SiddharthaMaity/nextjs-15-starter-core)
-- [**Next.js 15 Starter with Tailwind CSS**](https://github.com/SiddharthaMaity/nextjs-15-starter-tailwind)
+## 📚 About RateThatProf
 
-Welcome to the **Next.js 15 Starter** repository! This starter template is built with Next.js 15, React 19, TypeScript 5, Tailwind CSS 3, Shadcn UI and comes packed with several powerful tools and configurations to accelerate your project setup and streamline development workflows using VS Code.
+RateThatProf is a specialized platform designed to help students make informed decisions about their education through transparent professor reviews and ratings. The platform serves as a community-driven resource where students can share their experiences and insights about professors and courses.
 
-![Next.js 15 Starter Shadcn](public/images/screenshot1.png)
+### 🎯 Core Features
 
-![Next.js 15 Starter Shadcn](public/images/screenshot2.png)
+- **Professor Reviews & Ratings**
+  - Comprehensive rating system for professors
+  - Detailed reviews covering teaching style, course difficulty, and overall experience
+  - Department-specific rankings and statistics
+  - Recently reviewed professors section
+  - Featured professors (both loved and challenging)
 
-## 🚀 What's Included
+- **Course Information**
+  - Course-specific reviews and ratings
+  - Department-wise course listings
+  - Course difficulty and workload insights
+  - Integration with professor reviews
 
-- **Next.js 15**
-- **React 19**
-- **TypeScript 5**
-- **ESLint 9**
-- **Prettier 3**
-- **Tailwind CSS 4**
-- **Shadcn UI**
-- **App Directory**
-- **System, Light & Dark Mode**
-- **Next.js Bundle Analyzer**
-- **Dockerfile** with Node.js 22.14.0 (Alpine)
-- **Dockerfile.bun** with Bun 1.2.8 (Alpine)
+- **Department Rankings**
+  - Department-wise performance metrics
+  - Average ratings by department
+  - Number of professors and courses per department
+  - Department-specific statistics
 
-### 🛠️ ESLint Plugins
+- **User Features**
+  - Secure authentication using IITBHU Google ID
+  - Personalized profile management
+  - Review management system
+  - Ability to write and edit reviews
+  - Track review history and helpfulness
 
+### 💫 Core Values
+
+1. **Transparency**
+   - Open and honest communication about educational experiences
+   - Clear rating and review system
+
+2. **Fairness**
+   - Balanced and constructive feedback
+   - Moderation system to ensure review quality
+
+3. **Privacy**
+   - Anonymous review options
+   - User data protection
+   - Secure authentication
+
+4. **Community**
+   - Supportive environment for students and educators
+   - Community-driven content
+   - Collaborative improvement of educational experiences
+
+## 🚀 Technical Stack
+
+- **Frontend Framework**: Next.js 15
+- **UI Library**: React 19
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4
+- **UI Components**: Shadcn UI
+- **Code Quality**:
+  - ESLint 9
+  - Prettier 3
+  - TypeScript 5
+- **Containerization**: Docker with Node.js 22.14.0 (Alpine) or Bun 1.2.8 (Alpine)
+
+### 🛠️ Development Tools
+
+#### ESLint Plugins
 - [**@eslint/js**](https://www.npmjs.com/package/@eslint/js)
 - [**typescript-eslint**](https://github.com/typescript-eslint/typescript-eslint)
 - [**eslint-plugin-react**](https://github.com/jsx-eslint/eslint-plugin-react)
@@ -38,14 +79,11 @@ Welcome to the **Next.js 15 Starter** repository! This starter template is built
 - [**eslint-plugin-import**](https://github.com/import-js/eslint-plugin-import)
 - [**eslint-plugin-promise**](https://github.com/eslint-community/eslint-plugin-promise)
 
-### ✨ Prettier Plugins
-
+#### Prettier Plugins
 - [**@trivago/prettier-plugin-sort-imports**](https://github.com/trivago/prettier-plugin-sort-imports)
 - [**prettier-plugin-tailwindcss**](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)
 
-### 💻 VS Code Extensions (Recommended)
-
-To enhance development experience, install the following VS Code extensions:
+### 💻 Recommended VS Code Extensions
 
 - [**Auto Close Tag**](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag)
 - [**Better Comments**](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)
@@ -64,7 +102,6 @@ To enhance development experience, install the following VS Code extensions:
 - [**Visual Studio Code Commitizen Support**](https://marketplace.visualstudio.com/items?itemName=KnisterPeter.vscode-commitizen)
 - [**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
 
-
 ## 🏁 Getting Started
 
 ### Prerequisites
@@ -77,45 +114,28 @@ To enhance development experience, install the following VS Code extensions:
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/siddharthamaity/nextjs-15-starter-shadcn.git
-    cd nextjs-15-starter-shadcn
-    ```
-    To get the code without example change branch to without-example
-    ```bash
-    git checkout without-example
+    git clone https://github.com/yourusername/rateThatProf.git
+    cd rateThatProf
     ```
 
 2. **Install Dependencies**:
     ```bash
     npm install
-    # or with Yarn
-    yarn install
-    # or with pnpm
-    pnpm install
-    # or with Bun
-    bun install
     ```
 
 3. **Run Development Server**:
     ```bash
     npm run dev
-    # or with Yarn
-    yarn dev
-    # or with pnpm
-    pnpm dev
-    # or with Bun
-    bun dev
     ```
 
 4. **Build for Production**:
     ```bash
     npm run build
-    # or with Yarn
-    yarn build
-    # or with pnpm
-    pnpm build
-    # or with Bun
-    bun run build
+    ```
+
+5. **Prisma Migration**:
+    ```bash
+    npx prisma migrate dev --name NAME_HERE
     ```
 
 ### 🐳 Docker Setup
@@ -123,35 +143,17 @@ To enhance development experience, install the following VS Code extensions:
 To use Docker, make sure Docker is installed on your machine. Then, build and run the Docker container:
 
 ```bash
-docker build . -t nextjs-starter-shadcn
+docker build . -t ratethatprof
 # or if using Bun
-docker build . -t nextjs-starter-shadcn -f Dockerfile.bun
+docker build . -t ratethatprof -f Dockerfile.bun
 
-docker run -p 3000:3000 nextjs-starter-shadcn
+docker run -p 3000:3000 ratethatprof
 ```
 
-### ☁ Try it in the Cloud
-
-[![Open in VS Code](https://img.shields.io/badge/Open%20in-VS%20Code-blue?logo=visualstudiocode)](https://vscode.dev/github/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in GitHub Codespaces](https://img.shields.io/badge/Open%20in-GitHub%20Codespaces-blue?logo=github)](https://codespaces.new/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in Repl.it](https://replit.com/badge/github/SiddharthaMaity/nextjs-15-starter-shadcn)](https://replit.com/github/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in Glitch](https://img.shields.io/badge/Open%20in-Glitch-blue?logo=glitch)](https://glitch.com/edit/#!/import/github/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-[![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/SiddharthaMaity/nextjs-15-starter-shadcn)
-
-### License
+## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-<p style="text-align: center;"> With ❤️ from 🇮🇳 </p>
+<p style="text-align: center;"> Made with ❤️ for IITBHU Students </p>
