@@ -13,7 +13,6 @@ import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 interface DepartmentCardProps {
   department: Department;
   index?: number;
-  isLoading?: boolean;
 }
 
 export function DepartmentCardSkeleton() {
@@ -45,11 +44,7 @@ export function DepartmentCardSkeleton() {
   );
 }
 
-export function DepartmentCard({ department, index = 0, isLoading = false }: DepartmentCardProps) {
-  if (isLoading) {
-    return <DepartmentCardSkeleton />;
-  }
-
+export function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
   const getRatingColor = (rating: number) => {
     if (rating >= 4.0) return 'bg-success';
     if (rating >= 3.5) return 'bg-primary';

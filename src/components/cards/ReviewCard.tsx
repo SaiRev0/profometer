@@ -30,17 +30,11 @@ interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
     votes?: { voteType: 'up' | 'down' }[];
   };
-  isLoading?: boolean;
   variant?: 'default' | 'own';
   usedIn?: 'professor' | 'course';
 }
 
-export default function ReviewCard({
-  review,
-  isLoading = false,
-  variant = 'default',
-  usedIn = 'professor'
-}: ReviewCardProps) {
+export default function ReviewCard({ review, variant = 'default', usedIn = 'professor' }: ReviewCardProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
@@ -52,10 +46,6 @@ export default function ReviewCard({
   const [downvoteCount, setDownvoteCount] = useState(review.downvotes);
 
   const { voteReview, isLoading: isVoting, error } = useReviewVote();
-
-  if (isLoading) {
-    return <ReviewCardSkeleton />;
-  }
 
   if (error) {
     setCurrentUserVote(userVote);
@@ -264,7 +254,7 @@ export default function ReviewCard({
   );
 }
 
-function ReviewCardSkeleton() {
+export function ReviewCardSkeleton() {
   return (
     <Card className='mb-4'>
       <CardContent className='p-4'>
@@ -315,5 +305,3 @@ function ReviewCardSkeleton() {
     </Card>
   );
 }
-
-export { ReviewCardSkeleton };

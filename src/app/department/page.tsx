@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 
-import { DepartmentCard } from '@/components/cards/DepartmentCard';
+import { DepartmentCard, DepartmentCardSkeleton } from '@/components/cards/DepartmentCard';
 import { Input } from '@/components/ui/input';
 import { useGetDepartments } from '@/hooks/useGetDepartments';
+import { Department } from '@/lib/types';
 
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { Department } from '@/lib/types';
 
 export default function DepartmentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,7 +53,7 @@ export default function DepartmentsPage() {
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {isLoading
           ? // Show skeleton loaders when loading
-            Array.from({ length: 8 }).map((_, index) => <DepartmentCard  department={filteredDepartments[0]} key={index} isLoading={true} />)
+            Array.from({ length: 8 }).map((_, index) => <DepartmentCardSkeleton key={index} />)
           : // Show departments when loaded
             filteredDepartments.map((department: Department, index: number) => (
               <DepartmentCard key={department.code} department={department} index={index} />

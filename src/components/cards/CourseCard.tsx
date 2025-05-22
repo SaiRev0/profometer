@@ -14,14 +14,9 @@ import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 interface CourseCardProps {
   course: Course;
   variant?: 'compact' | 'detailed';
-  isLoading?: boolean;
 }
 
-export default function CourseCard({ course, variant = 'detailed', isLoading = false }: CourseCardProps) {
-  if (isLoading) {
-    return <CourseCardSkeleton variant={variant} />;
-  }
-
+export default function CourseCard({ course, variant = 'detailed' }: CourseCardProps) {
   const isCompact = variant === 'compact';
 
   const cardContent = (
@@ -92,7 +87,7 @@ export default function CourseCard({ course, variant = 'detailed', isLoading = f
   );
 }
 
-function CourseCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
+export function CourseCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
   const isCompact = variant === 'compact';
 
   return (

@@ -16,20 +16,9 @@ import { BookOpen, ChevronRight, Star, Users } from 'lucide-react';
 interface ProfessorCardProps {
   professor: Professor;
   variant?: 'compact' | 'detailed';
-  isLoading?: boolean;
-  showStars?: boolean;
 }
 
-export default function ProfessorCard({
-  professor,
-  variant = 'detailed',
-  isLoading = false,
-  showStars = true
-}: ProfessorCardProps) {
-  if (isLoading) {
-    return <ProfessorCardSkeleton variant={variant} />;
-  }
-
+export default function ProfessorCard({ professor, variant = 'detailed' }: ProfessorCardProps) {
   const isCompact = variant === 'compact';
   const initials = professor.name
     .split(' ')
@@ -122,7 +111,7 @@ export default function ProfessorCard({
   );
 }
 
-function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
+export function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' | 'detailed' }) {
   const isCompact = variant === 'compact';
 
   return (
