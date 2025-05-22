@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { useTheme } from 'next-themes';
 
-import { useDebounce } from '@/hooks/use-debounce';
+import { useSearch } from '@/contexts/SearchContext';
 import { useNavigation } from '@/hooks/useNavigation';
 import { cn } from '@/lib/utils';
 
@@ -20,16 +20,8 @@ export default function Header() {
   const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { isSearchOpen, searchTerm, setSearchTerm, openSearch, closeSearch } = useSearch();
   const { mobileNavItems, desktopNavItems, moreLinks } = useNavigation();
-
-  const handleSearchOpen = (open: boolean) => {
-    if (open) {
-      setSearchTerm(''); // Clear search term when opening dialog
-    }
-    setSearchOpen(open);
-  };
 
   // Monitor scroll position for header styling
   useEffect(() => {
@@ -71,7 +63,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <SearchBar onSearchClick={() => handleSearchOpen(true)} />
+          <SearchBar onSearchClick={openSearch} />
           <Navigation
             navItems={desktopNavItems}
             theme={theme || 'dark'}
@@ -82,14 +74,14 @@ export default function Header() {
             moreLinks={moreLinks}
             theme={theme || 'dark'}
             onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            onSearchClick={() => handleSearchOpen(true)}
+            onSearchClick={openSearch}
           />
         </div>
       </header>
 
       <SearchDialog
-        open={searchOpen}
-        onOpenChange={handleSearchOpen}
+        open={isSearchOpen}
+        onOpenChange={(open) => (open ? openSearch() : closeSearch())}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
       />

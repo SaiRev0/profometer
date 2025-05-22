@@ -7,6 +7,7 @@ import Header from '@/components/layout/header';
 import AuthProvider from '@/components/providers/session-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { SearchProvider } from '@/contexts/SearchContext';
 
 import './globals.css';
 import { Providers } from './providers';
@@ -30,14 +31,16 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
         <Providers>
           <AuthProvider>
             <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-              <div className='flex min-h-screen flex-col'>
-                <Header />
-                {authModal}
-                <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
-                <Footer />
-                <BottomNavigation />
-              </div>
-              <Toaster richColors position='top-right' closeButton />
+              <SearchProvider>
+                <div className='flex min-h-screen flex-col'>
+                  <Header />
+                  {authModal}
+                  <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
+                  <Footer />
+                  <BottomNavigation />
+                </div>
+                <Toaster richColors position='top-right' closeButton />
+              </SearchProvider>
             </ThemeProvider>
           </AuthProvider>
         </Providers>

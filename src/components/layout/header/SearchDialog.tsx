@@ -52,7 +52,9 @@ export function SearchDialog({ open, onOpenChange, searchTerm, setSearchTerm }: 
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent hideClose className='p-0 sm:max-w-[600px]'>
+      <DialogContent
+        hideClose
+        className='top-0 max-h-[100vh] translate-y-0 p-0 sm:top-[50%] sm:max-h-[80vh] sm:max-w-[600px] sm:-translate-y-[50%]'>
         <div className='border-b p-4'>
           <div className='relative'>
             <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
@@ -74,7 +76,7 @@ export function SearchDialog({ open, onOpenChange, searchTerm, setSearchTerm }: 
             </Button>
           </div>
         </div>
-        <ScrollArea className='max-h-[60vh]'>
+        <ScrollArea className='max-h-[calc(100vh-80px)] sm:max-h-[60vh]'>
           {isLoading && <div className='text-muted-foreground p-4 pt-0 text-center'>Searching...</div>}
           {error && <div className='text-destructive p-4 pt-0 text-center'>Error: {error}</div>}
           {!isLoading && !error && (
