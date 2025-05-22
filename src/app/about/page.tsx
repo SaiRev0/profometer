@@ -59,6 +59,33 @@ const FloatingIcon = ({ icon: Icon, className, delay = 0 }: { icon: any; classNa
 
 // Particle effect component
 const Particles = () => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    // Only run in browser environment
+    if (typeof window !== 'undefined') {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+
+      const handleResize = () => {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      };
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  // Don't render anything during SSR
+  if (dimensions.width === 0 || dimensions.height === 0) {
+    return null;
+  }
+
   return (
     <div className='pointer-events-none absolute inset-0 overflow-hidden'>
       {[...Array(20)].map((_, i) => (
@@ -66,12 +93,12 @@ const Particles = () => {
           key={i}
           className='bg-primary/10 absolute h-1 w-1 rounded-full'
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
             scale: Math.random() * 2
           }}
           animate={{
-            y: [null, Math.random() * window.innerHeight],
+            y: [null, Math.random() * dimensions.height],
             opacity: [0, 1, 0]
           }}
           transition={{
