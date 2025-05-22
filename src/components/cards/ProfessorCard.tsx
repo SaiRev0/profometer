@@ -126,7 +126,7 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
   const isCompact = variant === 'compact';
 
   return (
-    <Card className={cn('overflow-hidden', isCompact ? 'h-40' : 'h-full')}>
+    <Card className={cn('overflow-hidden', isCompact ? 'h-25' : 'h-full')}>
       <CardContent className={cn('p-4', isCompact ? 'pb-2' : 'pb-3')}>
         <div className='flex gap-3'>
           <div className='bg-muted h-12 w-12 rounded-full dark:bg-gray-700' />
@@ -139,7 +139,7 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
               <div className='bg-muted h-6 w-10 rounded dark:bg-gray-700' />
             </div>
 
-            <div className='mt-2 mb-2 flex items-center gap-1'>
+            {/* <div className='mt-2 mb-2 flex items-center gap-1'>
               {[...Array(5)].map((_, i) => (
                 <div
                   key={i}
@@ -147,7 +147,7 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
                 />
               ))}
               <div className='bg-muted ml-2 h-3 w-8 rounded dark:bg-gray-700' />
-            </div>
+            </div> */}
 
             {!isCompact && (
               <>
@@ -166,10 +166,10 @@ function ProfessorCardSkeleton({ variant = 'detailed' }: { variant?: 'compact' |
         </div>
       </CardContent>
 
-      <CardFooter className='flex justify-between px-4 pt-0 pb-4'>
+      {/* <CardFooter className='flex justify-between px-4 pt-0 pb-4'>
         <div className='bg-muted h-8 w-20 rounded dark:bg-gray-700' />
         <div className='bg-muted h-8 w-20 rounded dark:bg-gray-700' />
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
