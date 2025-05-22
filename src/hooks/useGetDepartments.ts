@@ -1,16 +1,5 @@
+import { Department } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
-
-interface Department {
-  id: string;
-  name: string;
-  code: string;
-  avgRating: number;
-  numProfessors: number;
-  numCourses: number;
-  numReviews: number;
-  isDefault?: boolean;
-  isProtected?: boolean;
-}
 
 interface DepartmentsParams {
   limit?: number;
@@ -19,7 +8,7 @@ interface DepartmentsParams {
 export function useGetDepartments(params: DepartmentsParams = {}) {
   const { limit } = params;
 
-  return useQuery<Department[]>({
+  const { data, ...rest } = useQuery<Department[]>({
     queryKey: ['departments', { limit }],
     queryFn: async () => {
       const searchParams = new URLSearchParams();
@@ -32,4 +21,6 @@ export function useGetDepartments(params: DepartmentsParams = {}) {
       return response.json();
     }
   });
+
+  return { departments: data, ...rest };
 }

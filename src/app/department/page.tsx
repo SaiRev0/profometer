@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { DepartmentCard, DepartmentCardSkeleton } from '@/components/cards/DepartmentCard';
+import DepartmentCard, { DepartmentCardSkeleton } from '@/components/cards/DepartmentCard';
 import { Input } from '@/components/ui/input';
 import { useGetDepartments } from '@/hooks/useGetDepartments';
 import { Department } from '@/lib/types';
@@ -12,7 +12,7 @@ import { Search } from 'lucide-react';
 
 export default function DepartmentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: departments = [], isLoading } = useGetDepartments();
+  const { departments = [], isLoading } = useGetDepartments();
 
   const filteredDepartments = departments.filter(
     (dept) =>

@@ -2,8 +2,8 @@
 
 import { DepartmentRankings } from '@/components/sections/DepartmentRankings';
 import FeaturedCourses from '@/components/sections/FeaturedCourses';
-import HeroSection from '@/components/sections/Hero';
 import LovedChallengingSection from '@/components/sections/FeaturedProfessors';
+import HeroSection from '@/components/sections/Hero';
 import RecentlyReviewedSection from '@/components/sections/RecentlyReviewed';
 
 export default function Home() {
