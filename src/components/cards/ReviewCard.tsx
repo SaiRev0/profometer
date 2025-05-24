@@ -4,8 +4,10 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { EditCourseReviewForm } from '@/components/course/EditCourseReviewForm';
 import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
+import { EditReviewForm } from '@/components/professor/EditReviewForm';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -39,6 +41,8 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
   const router = useRouter();
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [addCourseDialogOpen, setAddCourseDialogOpen] = useState(false);
 
   const userVote = (review.votes?.[0]?.voteType || null) as 'up' | 'down' | null;
   const [currentUserVote, setCurrentUserVote] = useState<'up' | 'down' | null>(userVote);
@@ -117,7 +121,14 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
             <div>
               <p className='font-medium'>{review.user.name}</p>
               <div className='text-muted-foreground flex flex-col text-sm'>
-                <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
+                <div className='flex items-center gap-1'>
+                  <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
+                  {!review.anonymous &&
+                    review.updatedAt &&
+                    new Date(review.updatedAt).getTime() > new Date(review.createdAt).getTime() && (
+                      <span className='text-muted-foreground text-xs'>(edited)</span>
+                    )}
+                </div>
                 <div className='flex flex-row items-center'>
                   {usedIn !== 'professor' && review.professor && (
                     <>
@@ -160,7 +171,7 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end'>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
                     <Edit className='text-primary mr-2 h-4 w-4' />
                     Edit review
                   </DropdownMenuItem>
@@ -250,6 +261,12 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
 
       <ReportDialog open={reportDialogOpen} onOpenChange={setReportDialogOpen} reviewId={review.id} />
       <DeleteDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} reviewId={review.id} />
+      {review.type === 'professor' && review.professor && (
+        <EditReviewForm open={editDialogOpen} onOpenChange={setEditDialogOpen} review={review as ProfessorReview} />
+      )}
+      {review.type === 'course' && (
+        <EditCourseReviewForm open={editDialogOpen} onOpenChange={setEditDialogOpen} review={review as CourseReview} />
+      )}
     </Card>
   );
 }

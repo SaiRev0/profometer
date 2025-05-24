@@ -8,8 +8,6 @@ import { convertNumberToGrade, gradeNumberMap } from '@/lib/utils';
 
 import { getServerSession } from 'next-auth';
 
-
-// This is the code for create so change this (Needed to put this so that the website can be deployed)
 export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -17,34 +15,46 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const {
-      professorId,
-      courseCode,
-      semester,
-      anonymous = false,
-      ratings,
-      comment,
-      statistics,
-      grade,
-      type
-    } = (await req.json()) as CreateReviewApiData;
+    const { reviewId, ...reviewData } = (await req.json()) as CreateReviewApiData & { reviewId: string };
 
     // Validate required fields
-    if (!professorId || !courseCode || !semester || !ratings || !comment || !statistics || !type) {
+    if (
+      !reviewId ||
+      !reviewData.professorId ||
+      !reviewData.courseCode ||
+      !reviewData.semester ||
+      !reviewData.ratings ||
+      !reviewData.comment ||
+      !reviewData.statistics ||
+      !reviewData.type
+    ) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Start a transaction to create review and update statistics
+    // Check if review exists and belongs to the user
+    const existingReview = await db.review.findUnique({
+      where: { id: reviewId },
+      include: {
+        professor: true,
+        course: true
+      }
+    });
+
+    if (!existingReview) {
+      return NextResponse.json({ error: 'Review not found' }, { status: 404 });
+    }
+
+    // Check if user is the author of the review
+    if (existingReview.userId !== (session.user as { id: string }).id) {
+      return NextResponse.json({ error: 'Unauthorized to edit this review' }, { status: 403 });
+    }
+
+    // Start a transaction to update review and statistics
     const result = await db.$transaction(async (tx) => {
       try {
-        // Get the appropriate user ID based on anonymous flag
-        const userId = anonymous ? process.env.ANONYMOUS_USER_ID : (session.user as { id: string }).id;
-
-        if (!userId) throw new Error('Anonymous user ID not configured in environment variables');
-
         // Get current professor statistics
         const professor = await tx.professor.findUnique({
-          where: { id: professorId }
+          where: { id: reviewData.professorId }
         });
 
         if (!professor) throw new Error('Professor not found');
@@ -58,7 +68,7 @@ export async function PUT(req: Request) {
 
         // Get current course statistics
         const course = await tx.course.findUnique({
-          where: { code: courseCode }
+          where: { code: reviewData.courseCode }
         });
 
         if (!course) throw new Error('Course not found');
@@ -69,288 +79,237 @@ export async function PUT(req: Request) {
           totalReviews: number;
         };
 
-        // Create the review
-        const review = await tx.review.create({
+        // Parse old review data
+        const oldReviewRatings = existingReview.ratings as unknown as ProfessorRating | CourseRating;
+        const oldReviewStatistics = existingReview.statistics as unknown as ProfessorPercentages | CoursePercentages;
+
+        // Update the review
+        const updatedReview = await tx.review.update({
+          where: { id: reviewId },
           data: {
-            professorId,
-            courseCode,
-            userId,
-            semester,
-            anonymous,
-            ratings: JSON.parse(JSON.stringify(ratings)),
-            comment,
-            statistics: JSON.parse(JSON.stringify(statistics)),
-            grade,
-            type
+            professorId: reviewData.professorId,
+            courseCode: reviewData.courseCode,
+            semester: reviewData.semester,
+            anonymous: reviewData.anonymous,
+            ratings: JSON.parse(JSON.stringify(reviewData.ratings)),
+            comment: reviewData.comment,
+            statistics: JSON.parse(JSON.stringify(reviewData.statistics)),
+            grade: reviewData.grade,
+            type: reviewData.type,
+            updatedAt: new Date()
           }
         });
 
-        // Update professor's totalCourses and course's totalProfessors in a single query each
-        await Promise.all([
-          tx.professor.update({
-            where: { id: professorId },
-            data: {
-              totalCourses: {
-                set: await tx.review
-                  .groupBy({
-                    by: ['courseCode'],
-                    where: {
-                      professorId,
-                      type: 'professor'
-                    },
-                    _count: true
-                  })
-                  .then((result) => result.length)
-              }
-            }
-          }),
-          tx.course.update({
-            where: { code: courseCode },
-            data: {
-              totalProfessors: {
-                set: await tx.review
-                  .groupBy({
-                    by: ['professorId'],
-                    where: {
-                      courseCode,
-                      type: 'course'
-                    },
-                    _count: true
-                  })
-                  .then((result) => result.length)
-              }
-            }
-          })
-        ]);
-
-        if (type === 'professor') {
+        // Update statistics based on review type
+        if (reviewData.type === 'professor') {
           const profTotalReviews = currentProfStats.totalReviews;
-          const newProfTotalReviews = profTotalReviews + 1;
+          const professorRatings = reviewData.ratings as ProfessorRating;
+          const professorStatistics = reviewData.statistics as ProfessorPercentages;
+          const oldProfessorRatings = oldReviewRatings as ProfessorRating;
 
-          // Type narrow ratings and statistics for course case
-          const professorRatings = ratings as ProfessorRating;
-          const professorStatistics = statistics as ProfessorPercentages;
-
-          // Calculate new professor averages
+          // Calculate new professor averages by removing old review and adding new review
           const newProfRatings: ProfessorRating = {
             overall: Number(
               (
-                (currentProfStats.ratings.overall * profTotalReviews + professorRatings.overall) /
-                newProfTotalReviews
+                (currentProfStats.ratings.overall * profTotalReviews -
+                  oldProfessorRatings.overall +
+                  professorRatings.overall) /
+                profTotalReviews
               ).toFixed(1)
             ),
             teaching: Number(
               (
-                (currentProfStats.ratings.teaching * profTotalReviews + professorRatings.teaching) /
-                newProfTotalReviews
+                (currentProfStats.ratings.teaching * profTotalReviews -
+                  oldProfessorRatings.teaching +
+                  professorRatings.teaching) /
+                profTotalReviews
               ).toFixed(1)
             ),
             helpfulness: Number(
               (
-                (currentProfStats.ratings.helpfulness * profTotalReviews + professorRatings.helpfulness) /
-                newProfTotalReviews
+                (currentProfStats.ratings.helpfulness * profTotalReviews -
+                  oldProfessorRatings.helpfulness +
+                  professorRatings.helpfulness) /
+                profTotalReviews
               ).toFixed(1)
             ),
             fairness: Number(
               (
-                (currentProfStats.ratings.fairness * profTotalReviews + professorRatings.fairness) /
-                newProfTotalReviews
+                (currentProfStats.ratings.fairness * profTotalReviews -
+                  oldProfessorRatings.fairness +
+                  professorRatings.fairness) /
+                profTotalReviews
               ).toFixed(1)
             ),
             clarity: Number(
               (
-                (currentProfStats.ratings.clarity * profTotalReviews + professorRatings.clarity) /
-                newProfTotalReviews
+                (currentProfStats.ratings.clarity * profTotalReviews -
+                  oldProfessorRatings.clarity +
+                  professorRatings.clarity) /
+                profTotalReviews
               ).toFixed(1)
             ),
             communication: Number(
               (
-                (currentProfStats.ratings.communication * profTotalReviews + professorRatings.communication) /
-                newProfTotalReviews
-              ).toFixed(1)
-            )
-          };
-
-          // Calculate new professor percentages
-          const newProfPercentages: ProfessorPercentages = {
-            wouldRecommend: Number(
-              (
-                (currentProfStats.percentages.wouldRecommend * profTotalReviews +
-                  professorStatistics.wouldRecommend * 100) /
-                newProfTotalReviews
-              ).toFixed(1)
-            ),
-            attendanceRating: Number(
-              (
-                (currentProfStats.percentages.attendanceRating * profTotalReviews +
-                  professorStatistics.attendanceRating) /
-                newProfTotalReviews
-              ).toFixed(1)
-            ),
-            quizes: Number(
-              (
-                (currentProfStats.percentages.quizes * profTotalReviews + professorStatistics.quizes * 100) /
-                newProfTotalReviews
-              ).toFixed(1)
-            ),
-            assignments: Number(
-              (
-                (currentProfStats.percentages.assignments * profTotalReviews + professorStatistics.assignments * 100) /
-                newProfTotalReviews
+                (currentProfStats.ratings.communication * profTotalReviews -
+                  oldProfessorRatings.communication +
+                  professorRatings.communication) /
+                profTotalReviews
               ).toFixed(1)
             )
           };
 
           // Update professor statistics
           await tx.professor.update({
-            where: { id: professorId },
+            where: { id: reviewData.professorId },
             data: {
               statistics: {
                 ratings: JSON.parse(JSON.stringify(newProfRatings)),
-                percentages: JSON.parse(JSON.stringify(newProfPercentages)),
-                totalReviews: newProfTotalReviews
+                percentages: JSON.parse(JSON.stringify(currentProfStats.percentages)),
+                totalReviews: profTotalReviews
               }
             }
           });
 
-          if (grade) {
-            let averageGradeString = 'NA';
-
-            if (currentCourseStats.percentages.averageGrade === 'NA') {
-              averageGradeString = grade;
-            } else {
-              averageGradeString = convertNumberToGrade(
-                (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews +
-                  gradeNumberMap[grade]) /
-                  (currentCourseStats.totalReviews + 1)
-              );
-            }
-
-            // Calculate new course percentages
-            const newCoursePercentages: CoursePercentages = {
-              wouldRecommend: currentCourseStats.percentages.wouldRecommend,
-              attendanceRating: currentCourseStats.percentages.attendanceRating,
-              quizes: currentCourseStats.percentages.quizes,
-              assignments: currentCourseStats.percentages.assignments,
-              averageGrade: averageGradeString
-            };
-
-            // Update course statistics
-            await tx.course.update({
-              where: { code: courseCode },
-              data: {
-                statistics: {
-                  ratings: JSON.parse(JSON.stringify(currentCourseStats.ratings)),
-                  percentages: JSON.parse(JSON.stringify(newCoursePercentages)),
-                  totalReviews: currentCourseStats.totalReviews + 1
-                }
-              }
-            });
-          }
-
-          // Update department average rating for professor review
+          // Update department average rating
           const department = await tx.department.findUnique({
             where: { code: professor.departmentCode }
           });
 
           if (department) {
             const currentWeightedSum = department.avgRating * department.numReviews;
-            const newWeightedSum = currentWeightedSum + ratings.overall * 8; // Using 8 as weight for professor reviews
-            const newTotalWeight = department.numReviews + 8;
-            const newAvgRating = Number((newWeightedSum / newTotalWeight).toFixed(1));
+            const reviewWeight = course.credits;
+            const newWeightedSum =
+              currentWeightedSum - oldProfessorRatings.overall * reviewWeight + professorRatings.overall * reviewWeight;
+            const newAvgRating = Number((newWeightedSum / (department.numReviews * reviewWeight)).toFixed(1));
 
             await tx.department.update({
               where: { code: professor.departmentCode },
               data: {
-                avgRating: newAvgRating,
-                numReviews: department.numReviews + 1
+                avgRating: newAvgRating
               }
             });
           }
-        } else if (type === 'course') {
+        } else if (reviewData.type === 'course') {
           const courseTotalReviews = currentCourseStats.totalReviews;
-          const newCourseTotalReviews = courseTotalReviews + 1;
-
-          // Type narrow ratings and statistics for course case
-          const courseRatings = ratings as CourseRating;
-          const courseStatistics = statistics as CoursePercentages;
+          const courseRatings = reviewData.ratings as CourseRating;
+          const courseStatistics = reviewData.statistics as CoursePercentages;
+          const oldCourseRatings = oldReviewRatings as CourseRating;
+          const oldCourseStatistics = oldReviewStatistics as CoursePercentages;
 
           // Calculate new course averages
           const newCourseRatings: CourseRating = {
             overall: Number(
               (
-                (currentCourseStats.ratings.overall * courseTotalReviews + courseRatings.overall) /
-                newCourseTotalReviews
+                (currentCourseStats.ratings.overall * courseTotalReviews -
+                  oldCourseRatings.overall +
+                  courseRatings.overall) /
+                courseTotalReviews
               ).toFixed(1)
             ),
             difficulty: Number(
               (
-                (currentCourseStats.ratings.difficulty * courseTotalReviews + courseRatings.difficulty) /
-                newCourseTotalReviews
+                (currentCourseStats.ratings.difficulty * courseTotalReviews -
+                  oldCourseRatings.difficulty +
+                  courseRatings.difficulty) /
+                courseTotalReviews
               ).toFixed(1)
             ),
             workload: Number(
               (
-                (currentCourseStats.ratings.workload * courseTotalReviews + courseRatings.workload) /
-                newCourseTotalReviews
+                (currentCourseStats.ratings.workload * courseTotalReviews -
+                  oldCourseRatings.workload +
+                  courseRatings.workload) /
+                courseTotalReviews
               ).toFixed(1)
             ),
             content: Number(
               (
-                (currentCourseStats.ratings.content * courseTotalReviews + courseRatings.content) /
-                newCourseTotalReviews
+                (currentCourseStats.ratings.content * courseTotalReviews -
+                  oldCourseRatings.content +
+                  courseRatings.content) /
+                courseTotalReviews
               ).toFixed(1)
             ),
             numerical: Number(
               (
-                (currentCourseStats.ratings.numerical * courseTotalReviews + courseRatings.numerical) /
-                newCourseTotalReviews
+                (currentCourseStats.ratings.numerical * courseTotalReviews -
+                  oldCourseRatings.numerical +
+                  courseRatings.numerical) /
+                courseTotalReviews
               ).toFixed(1)
             )
           };
 
-          let averageGradeString = 'NA';
+          let averageGradeString = currentCourseStats.percentages.averageGrade;
 
-          if (grade) {
-            if (currentCourseStats.percentages.averageGrade === 'NA') {
-              averageGradeString = grade;
+          if (reviewData.grade) {
+            if (existingReview.grade) {
+              // If both old and new grades exist, recalculate average
+              const oldGradeValue = gradeNumberMap[existingReview.grade];
+              const newGradeValue = gradeNumberMap[reviewData.grade];
+              const totalGradeValue =
+                (currentCourseStats.percentages.averageGrade === 'NA'
+                  ? 0
+                  : gradeNumberMap[currentCourseStats.percentages.averageGrade]) *
+                  courseTotalReviews -
+                oldGradeValue +
+                newGradeValue;
+              averageGradeString = convertNumberToGrade(totalGradeValue / courseTotalReviews);
             } else {
-              averageGradeString = convertNumberToGrade(
-                (gradeNumberMap[currentCourseStats.percentages.averageGrade] * courseTotalReviews +
-                  gradeNumberMap[grade]) /
-                  newCourseTotalReviews
-              );
+              // If only new grade exists, add it to average
+              const totalGradeValue =
+                (currentCourseStats.percentages.averageGrade === 'NA'
+                  ? 0
+                  : gradeNumberMap[currentCourseStats.percentages.averageGrade]) *
+                  courseTotalReviews +
+                gradeNumberMap[reviewData.grade];
+              averageGradeString = convertNumberToGrade(totalGradeValue / (courseTotalReviews + 1));
             }
-          } else {
-            averageGradeString = currentCourseStats.percentages.averageGrade;
+          } else if (existingReview.grade) {
+            // If old grade exists but new one doesn't, remove old grade from average
+            const oldGradeValue = gradeNumberMap[existingReview.grade];
+            const totalGradeValue =
+              (currentCourseStats.percentages.averageGrade === 'NA'
+                ? 0
+                : gradeNumberMap[currentCourseStats.percentages.averageGrade]) *
+                courseTotalReviews -
+              oldGradeValue;
+            averageGradeString = convertNumberToGrade(totalGradeValue / (courseTotalReviews - 1));
           }
 
           // Calculate new course percentages
           const newCoursePercentages: CoursePercentages = {
             wouldRecommend: Number(
               (
-                (currentCourseStats.percentages.wouldRecommend * courseTotalReviews +
+                (currentCourseStats.percentages.wouldRecommend * courseTotalReviews -
+                  oldCourseStatistics.wouldRecommend * 100 +
                   courseStatistics.wouldRecommend * 100) /
-                newCourseTotalReviews
+                courseTotalReviews
               ).toFixed(1)
             ),
             attendanceRating: Number(
               (
-                (currentCourseStats.percentages.attendanceRating * courseTotalReviews +
+                (currentCourseStats.percentages.attendanceRating * courseTotalReviews -
+                  oldCourseStatistics.attendanceRating +
                   courseStatistics.attendanceRating) /
-                newCourseTotalReviews
+                courseTotalReviews
               ).toFixed(1)
             ),
             quizes: Number(
               (
-                (currentCourseStats.percentages.quizes * courseTotalReviews + courseStatistics.quizes * 100) /
-                newCourseTotalReviews
+                (currentCourseStats.percentages.quizes * courseTotalReviews -
+                  oldCourseStatistics.quizes * 100 +
+                  courseStatistics.quizes * 100) /
+                courseTotalReviews
               ).toFixed(1)
             ),
             assignments: Number(
               (
-                (currentCourseStats.percentages.assignments * courseTotalReviews + courseStatistics.assignments * 100) /
-                newCourseTotalReviews
+                (currentCourseStats.percentages.assignments * courseTotalReviews -
+                  oldCourseStatistics.assignments * 100 +
+                  courseStatistics.assignments * 100) /
+                courseTotalReviews
               ).toFixed(1)
             ),
             averageGrade: averageGradeString
@@ -358,49 +317,47 @@ export async function PUT(req: Request) {
 
           // Update course statistics
           await tx.course.update({
-            where: { code: courseCode },
+            where: { code: reviewData.courseCode },
             data: {
               statistics: {
                 ratings: JSON.parse(JSON.stringify(newCourseRatings)),
                 percentages: JSON.parse(JSON.stringify(newCoursePercentages)),
-                totalReviews: newCourseTotalReviews
+                totalReviews: courseTotalReviews
               }
             }
           });
 
-          // Update department average rating for course review
+          // Update department average rating
           const department = await tx.department.findUnique({
             where: { code: course.departmentCode }
           });
 
           if (department) {
             const currentWeightedSum = department.avgRating * department.numReviews;
-            const newWeightedSum = currentWeightedSum + ratings.overall * course.credits; // Using course credits as weight
-            const newTotalWeight = department.numReviews + course.credits;
-            const newAvgRating = Number((newWeightedSum / newTotalWeight).toFixed(1));
+            const reviewWeight = course.credits;
+            const newWeightedSum =
+              currentWeightedSum - oldCourseRatings.overall * reviewWeight + courseRatings.overall * reviewWeight;
+            const newAvgRating = Number((newWeightedSum / (department.numReviews * reviewWeight)).toFixed(1));
 
             await tx.department.update({
               where: { code: course.departmentCode },
               data: {
-                avgRating: newAvgRating,
-                numReviews: department.numReviews + 1
+                avgRating: newAvgRating
               }
             });
           }
-        } else {
-          throw new Error('Invalid review type');
         }
 
-        return review;
+        return updatedReview;
       } catch (error) {
         console.error('Error in transaction:', error);
-        throw error; // Re-throw to be caught by outer try-catch
+        throw error;
       }
     });
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Error creating review:', error);
+    console.error('Error updating review:', error);
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
