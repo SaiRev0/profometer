@@ -106,6 +106,7 @@ export async function PUT(req: Request) {
           const professorRatings = reviewData.ratings as ProfessorRating;
           const professorStatistics = reviewData.statistics as ProfessorPercentages;
           const oldProfessorRatings = oldReviewRatings as ProfessorRating;
+          const oldProfessorStatistics = oldReviewStatistics as ProfessorPercentages;
 
           // Calculate new professor averages by removing old review and adding new review
           const newProfRatings: ProfessorRating = {
@@ -159,13 +160,49 @@ export async function PUT(req: Request) {
             )
           };
 
+          // Calculate new professor percentages
+          const newProfPercentages: ProfessorPercentages = {
+            wouldRecommend: Number(
+              (
+                (currentProfStats.percentages.wouldRecommend * profTotalReviews -
+                  oldProfessorStatistics.wouldRecommend * 100 +
+                  professorStatistics.wouldRecommend * 100) /
+                profTotalReviews
+              ).toFixed(1)
+            ),
+            attendanceRating: Number(
+              (
+                (currentProfStats.percentages.attendanceRating * profTotalReviews -
+                  oldProfessorStatistics.attendanceRating +
+                  professorStatistics.attendanceRating) /
+                profTotalReviews
+              ).toFixed(1)
+            ),
+            quizes: Number(
+              (
+                (currentProfStats.percentages.quizes * profTotalReviews -
+                  oldProfessorStatistics.quizes * 100 +
+                  professorStatistics.quizes * 100) /
+                profTotalReviews
+              ).toFixed(1)
+            ),
+            assignments: Number(
+              (
+                (currentProfStats.percentages.assignments * profTotalReviews -
+                  oldProfessorStatistics.assignments * 100 +
+                  professorStatistics.assignments * 100) /
+                profTotalReviews
+              ).toFixed(1)
+            )
+          };
+
           // Update professor statistics
           await tx.professor.update({
             where: { id: reviewData.professorId },
             data: {
               statistics: {
                 ratings: JSON.parse(JSON.stringify(newProfRatings)),
-                percentages: JSON.parse(JSON.stringify(currentProfStats.percentages)),
+                percentages: JSON.parse(JSON.stringify(newProfPercentages)),
                 totalReviews: profTotalReviews
               }
             }

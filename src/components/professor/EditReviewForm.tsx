@@ -100,22 +100,20 @@ export function EditReviewForm({ open, onOpenChange, review }: EditReviewFormPro
     const overallRating =
       review.type === 'professor'
         ? Number(
-            (
-              (reviewRatings as any).teaching +
+            ((reviewRatings as any).teaching +
               (reviewRatings as any).helpfulness +
               (reviewRatings as any).fairness +
               (reviewRatings as any).clarity +
-              (reviewRatings as any).communication
-            ).toFixed(1)
-          ) / 5
+              (reviewRatings as any).communication) /
+              5
+          )
         : Number(
-            (
-              (reviewRatings as any).difficulty +
+            ((reviewRatings as any).difficulty +
               (reviewRatings as any).workload +
               (reviewRatings as any).content +
-              (reviewRatings as any).numerical
-            ).toFixed(1)
-          ) / 4;
+              (reviewRatings as any).numerical) /
+              4
+          );
 
     try {
       await editReview({
