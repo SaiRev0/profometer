@@ -14,6 +14,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
+import { useEditReview } from '@/hooks/useEditReview';
 import { Professor, ProfessorPercentages } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -26,40 +27,81 @@ interface ReviewFormProps {
   modalState: boolean;
   setModalState: (state: boolean) => void;
   setAddCourseDialogOpen: (state: boolean) => void;
+  initialData?: {
+    professorId: string;
+    courseCode: string;
+    semester: string;
+    anonymous: boolean;
+    ratings: {
+      teaching: number;
+      helpfulness: number;
+      fairness: number;
+      clarity: number;
+      communication: number;
+      overall?: number;
+    };
+    comment: string;
+    statistics: {
+      wouldRecommend: number;
+      quizes: number;
+      assignments: number;
+      attendanceRating: number;
+    };
+    grade?: string;
+    reviewId?: string;
+  };
 }
 
-export default function ReviewForm({ professor, modalState, setModalState, setAddCourseDialogOpen }: ReviewFormProps) {
+export default function ReviewForm({
+  professor,
+  modalState,
+  setModalState,
+  setAddCourseDialogOpen,
+  initialData
+}: ReviewFormProps) {
   const { status } = useSession();
   const router = useRouter();
+  const { createReview, isLoading: isCreating } = useCreateReview();
+  const { editReview, isLoading: isEditing } = useEditReview();
+  const isLoading = isCreating || isEditing;
+
   // Add helper function to get current year
   const getCurrentYear = () => new Date().getFullYear();
-  const { createReview, isLoading, error } = useCreateReview();
-  const [reviewCourse, setReviewCourse] = useState('');
-  const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
-  const [semesterYear, setSemesterYear] = useState<number>(getCurrentYear());
-  const [reviewSemester, setReviewSemester] = useState<string>(`Odd-${getCurrentYear()}`);
-  const [reviewRatings, setReviewRatings] = useState({
-    teaching: 0,
-    helpfulness: 0,
-    fairness: 0,
-    clarity: 0,
-    communication: 0
-  });
-  const [reviewComment, setReviewComment] = useState('');
-  const [reviewStatistics, setReviewStatistics] = useState<ProfessorPercentages>({
-    wouldRecommend: -1,
-    quizes: -1,
-    assignments: -1,
-    attendanceRating: 50
-  });
-  const [reviewGrade, setReviewGrade] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(true);
+  const { createReview: originalCreateReview, isLoading: originalIsLoading, error } = useCreateReview();
+  const [reviewCourse, setReviewCourse] = useState(initialData?.courseCode || '');
+  const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>(
+    initialData?.semester ? (initialData.semester.split('-')[0] as 'Odd' | 'Even') : 'Odd'
+  );
+  const [semesterYear, setSemesterYear] = useState<number>(
+    initialData?.semester ? parseInt(initialData.semester.split('-')[1]) : getCurrentYear()
+  );
+  const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || `Odd-${getCurrentYear()}`);
+  const [reviewRatings, setReviewRatings] = useState(
+    initialData?.ratings || {
+      teaching: 0,
+      helpfulness: 0,
+      fairness: 0,
+      clarity: 0,
+      communication: 0
+    }
+  );
+  const [reviewComment, setReviewComment] = useState(initialData?.comment || '');
+  const [reviewStatistics, setReviewStatistics] = useState<ProfessorPercentages>(
+    initialData?.statistics || {
+      wouldRecommend: -1,
+      quizes: -1,
+      assignments: -1,
+      attendanceRating: 50
+    }
+  );
+  const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
+  const [isAnonymous, setIsAnonymous] = useState(initialData?.anonymous ?? true);
   const [courseSearch, setCourseSearch] = useState('');
 
   // Remove useEffect and update the handlers
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
-    setReviewSemester(`${semesterType}-${semesterYear}`);
+    setReviewSemester(`${value}-${semesterYear}`);
   };
 
   const handleSemesterYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,57 +159,66 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
     // Calculate overall rating as average of all ratings
     const overallRating = Number(
       (
-        Object.values(reviewRatings).reduce((sum, rating) => sum + rating, 0) / Object.keys(reviewRatings).length
+        (reviewRatings.teaching +
+          reviewRatings.helpfulness +
+          reviewRatings.fairness +
+          reviewRatings.clarity +
+          reviewRatings.communication) /
+        5
       ).toFixed(1)
     );
 
+    const reviewData = {
+      professorId: professor.id,
+      courseCode: reviewCourse,
+      semester: reviewSemester,
+      anonymous: isAnonymous,
+      ratings: {
+        ...reviewRatings,
+        overall: overallRating
+      },
+      comment: reviewComment,
+      statistics: reviewStatistics,
+      grade: reviewGrade || undefined,
+      type: 'professor' as const
+    };
+
     try {
-      await createReview({
-        professorId: professor.id,
-        courseCode: reviewCourse,
-        semester: reviewSemester,
-        anonymous: isAnonymous,
-        ratings: {
-          ...reviewRatings,
-          overall: overallRating
-        },
-        comment: reviewComment,
-        statistics: {
-          wouldRecommend: reviewStatistics.wouldRecommend,
-          attendanceRating: reviewStatistics.attendanceRating,
-          quizes: reviewStatistics.quizes,
-          assignments: reviewStatistics.assignments
-        },
-        grade: reviewGrade || undefined,
-        type: 'professor'
-      });
-
-      toast.success('Review Submitted!');
-
-      // Reset form
-      setReviewRatings({
-        teaching: 0,
-        helpfulness: 0,
-        fairness: 0,
-        clarity: 0,
-        communication: 0
-      });
-      setReviewStatistics({
-        wouldRecommend: -1,
-        quizes: -1,
-        assignments: -1,
-        attendanceRating: 50
-      });
-      setReviewComment('');
-      setReviewCourse('');
-      setReviewSemester(`Odd-${getCurrentYear()}`);
-      setReviewGrade('');
-      setIsAnonymous(true);
-      setModalState(false);
+      if (initialData?.reviewId) {
+        await editReview({
+          reviewId: initialData.reviewId,
+          ...reviewData
+        });
+        toast.success('Review Updated!');
+        setModalState(false);
+      } else {
+        await createReview(reviewData);
+        toast.success('Review Submitted!');
+        // Reset form only for new reviews
+        setReviewRatings({
+          teaching: 0,
+          helpfulness: 0,
+          fairness: 0,
+          clarity: 0,
+          communication: 0
+        });
+        setReviewStatistics({
+          wouldRecommend: -1,
+          quizes: -1,
+          assignments: -1,
+          attendanceRating: 50
+        });
+        setReviewComment('');
+        setReviewCourse('');
+        setReviewSemester(`Odd-${getCurrentYear()}`);
+        setReviewGrade('');
+        setIsAnonymous(true);
+        setModalState(false);
+      }
     } catch (error) {
       console.error('Error submitting review:', error);
       toast.error('Failed to submit review. Please try again.', {
-        description: 'Error: ' + error
+        description: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   };
@@ -183,10 +234,11 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
         <DialogHeader>
           {status === 'authenticated' ? (
             <>
-              <DialogTitle>Rate Professor {professor.name}</DialogTitle>
+              <DialogTitle>{initialData ? 'Edit Review' : `Rate Professor ${professor.name}`}</DialogTitle>
               <DialogDescription>
-                Share your experience with this professor to help other students. All reviews are moderated for
-                appropriate content.
+                {initialData
+                  ? 'Update your review to help other students make informed decisions.'
+                  : 'Share your experience with this professor to help other students. All reviews are moderated for appropriate content.'}
               </DialogDescription>
             </>
           ) : (
@@ -270,26 +322,28 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
               <h3 className='font-medium'>Ratings</h3>
 
               <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-                {Object.entries(reviewRatings).map(([key, value]) => (
-                  <div key={key} className='space-y-1.5'>
-                    <Label htmlFor={key} className='capitalize'>
-                      {key}
-                    </Label>
-                    <div id={key}>
-                      <RatingStars
-                        value={value}
-                        interactive={true}
-                        onChange={(newValue) =>
-                          setReviewRatings({
-                            ...reviewRatings,
-                            [key]: newValue
-                          })
-                        }
-                        showValue={true}
-                      />
+                {Object.entries(reviewRatings)
+                  .filter(([key]) => key !== 'overall')
+                  .map(([key, value]) => (
+                    <div key={key} className='space-y-1.5'>
+                      <Label htmlFor={key} className='capitalize'>
+                        {key}
+                      </Label>
+                      <div id={key}>
+                        <RatingStars
+                          value={value}
+                          interactive={true}
+                          onChange={(newValue) =>
+                            setReviewRatings({
+                              ...reviewRatings,
+                              [key]: newValue
+                            })
+                          }
+                          showValue={true}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
 
@@ -432,7 +486,13 @@ export default function ReviewForm({ professor, modalState, setModalState, setAd
                 Cancel
               </Button>
               <Button onClick={handleSubmitReview} disabled={isLoading}>
-                Submit Review
+                {isLoading
+                  ? initialData
+                    ? 'Updating...'
+                    : 'Submitting...'
+                  : initialData
+                    ? 'Update Review'
+                    : 'Submit Review'}
               </Button>
             </div>
           </div>
