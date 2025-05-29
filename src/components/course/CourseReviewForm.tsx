@@ -14,6 +14,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
+import { useEditReview } from '@/hooks/useEditReview';
 import { Course, Professor } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -28,56 +29,83 @@ interface CourseReviewFormProps {
   };
   modalState: boolean;
   setModalState: (state: boolean) => void;
+  initialData?: {
+    professorId: string;
+    semester: string;
+    anonymous: boolean;
+    ratings: {
+      difficulty: number;
+      workload: number;
+      content: number;
+      numerical: number;
+      overall?: number;
+    };
+    comment: string;
+    statistics: {
+      wouldRecommend: number;
+      quizes: number;
+      assignments: number;
+      attendanceRating: number;
+    };
+    grade?: string;
+    reviewId?: string;
+  };
 }
 
-export default function CourseReviewForm({ course, modalState, setModalState }: CourseReviewFormProps) {
+export default function CourseReviewForm({ course, modalState, setModalState, initialData }: CourseReviewFormProps) {
   const { status } = useSession();
   const router = useRouter();
+  const { createReview, isLoading: isCreating } = useCreateReview();
+  const { editReview, isLoading: isEditing } = useEditReview();
+  const isLoading = isCreating || isEditing;
 
   // Add helper function to get current year
   const getCurrentYear = () => new Date().getFullYear();
-  const { createReview, isLoading } = useCreateReview();
-  const [reviewProfessor, setReviewProfessor] = useState('');
-  const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>('Odd');
-  const [semesterYear, setSemesterYear] = useState<number>(getCurrentYear());
-  const [reviewSemester, setReviewSemester] = useState<string>(`Odd-${getCurrentYear()}`);
-  const [reviewRatings, setReviewRatings] = useState({
-    difficulty: 0,
-    workload: 0,
-    content: 0,
-    numerical: 0
-  });
-  const [reviewStatistics, setReviewStatistics] = useState<{
-    wouldRecommend: number;
-    quizes: number;
-    assignments: number;
-    attendanceRating: number;
-  }>({
-    wouldRecommend: -1,
-    quizes: -1,
-    assignments: -1,
-    attendanceRating: 50
-  });
-  const [reviewComment, setReviewComment] = useState('');
-  const [reviewGrade, setReviewGrade] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(true);
+
+  const [reviewProfessor, setReviewProfessor] = useState(initialData?.professorId || '');
+  const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>(
+    initialData?.semester ? (initialData.semester.split('-')[0] as 'Odd' | 'Even') : 'Odd'
+  );
+  const [semesterYear, setSemesterYear] = useState<number>(
+    initialData?.semester ? parseInt(initialData.semester.split('-')[1]) : getCurrentYear()
+  );
+  const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || `Odd-${getCurrentYear()}`);
+  const [reviewRatings, setReviewRatings] = useState(
+    initialData?.ratings || {
+      difficulty: 0,
+      workload: 0,
+      content: 0,
+      numerical: 0
+    }
+  );
+  const [reviewStatistics, setReviewStatistics] = useState(
+    initialData?.statistics || {
+      wouldRecommend: -1,
+      quizes: -1,
+      assignments: -1,
+      attendanceRating: 50
+    }
+  );
+  const [reviewComment, setReviewComment] = useState(initialData?.comment || '');
+  const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
+  const [isAnonymous, setIsAnonymous] = useState(initialData?.anonymous ?? true);
   const [professorSearch, setProfessorSearch] = useState('');
 
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
-    setReviewSemester(`${semesterType}-${semesterYear}`);
+    setReviewSemester(`${value}-${semesterYear}`);
   };
 
   const handleSemesterYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSemesterYear(parseInt(e.target.value));
-    setReviewSemester(`${semesterType}-${semesterYear}`);
+    const year = parseInt(e.target.value);
+    setSemesterYear(year);
+    setReviewSemester(`${semesterType}-${year}`);
   };
 
   const filteredProfessors = course.departmentProfessors?.filter((professor) =>
     professor.name.toLowerCase().includes(professorSearch.toLowerCase())
   );
 
-  // Submit review function
   const handleSubmitReview = async () => {
     // Validate year
     const currentYear = getCurrentYear();
@@ -112,66 +140,71 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
     }
 
     // Validate statistics
-    if (Object.values(reviewStatistics).some((stat) => stat === undefined)) {
+    if (Object.values(reviewStatistics).some((stat) => stat === -1)) {
       toast.error('Please provide statistics for all categories.');
       return;
     }
 
     const overallRating = Number(
       (
-        Object.values(reviewRatings).reduce((sum, rating) => sum + rating, 0) / Object.keys(reviewRatings).length
+        Object.entries(reviewRatings)
+          .filter(([key]) => key !== 'overall')
+          .reduce((sum, [_, rating]) => sum + rating, 0) / 4
       ).toFixed(1)
     );
 
+    const reviewData = {
+      courseCode: course.code,
+      professorId: reviewProfessor,
+      semester: reviewSemester,
+      anonymous: isAnonymous,
+      ratings: {
+        ...reviewRatings,
+        overall: overallRating
+      },
+      comment: reviewComment,
+      statistics: reviewStatistics,
+      grade: reviewGrade || undefined,
+      type: 'course' as const
+    };
+
     try {
-      await createReview({
-        courseCode: course.code,
-        professorId: reviewProfessor,
-        semester: reviewSemester,
-        anonymous: isAnonymous,
-        ratings: {
-          difficulty: reviewRatings.difficulty,
-          workload: reviewRatings.workload,
-          content: reviewRatings.content,
-          numerical: reviewRatings.numerical,
-          overall: overallRating
-        },
-        comment: reviewComment,
-        statistics: {
-          wouldRecommend: reviewStatistics.wouldRecommend,
-          quizes: reviewStatistics.quizes,
-          assignments: reviewStatistics.assignments,
-          attendanceRating: reviewStatistics.attendanceRating
-        },
-        grade: reviewGrade || undefined,
-        type: 'course'
-      });
-
-      toast.success('Review Submitted!');
-
-      // Reset form
-      setReviewRatings({
-        difficulty: 0,
-        workload: 0,
-        content: 0,
-        numerical: 0
-      });
-      setReviewStatistics({
-        wouldRecommend: -1,
-        quizes: -1,
-        assignments: -1,
-        attendanceRating: 50
-      });
-      setProfessorSearch('');
-      setReviewComment('');
-      setReviewProfessor('');
-      setReviewSemester(`Odd-${getCurrentYear()}`);
-      setReviewGrade('');
-      setIsAnonymous(true);
-      setModalState(false);
+      if (initialData?.reviewId) {
+        await editReview({
+          reviewId: initialData.reviewId,
+          ...reviewData
+        });
+        toast.success('Review Updated!');
+        setModalState(false);
+      } else {
+        await createReview(reviewData);
+        toast.success('Review Submitted!');
+        // Reset form only for new reviews
+        setReviewRatings({
+          difficulty: 0,
+          workload: 0,
+          content: 0,
+          numerical: 0
+        });
+        setReviewStatistics({
+          wouldRecommend: -1,
+          quizes: -1,
+          assignments: -1,
+          attendanceRating: 50
+        });
+        setProfessorSearch('');
+        setReviewComment('');
+        setReviewProfessor('');
+        setReviewSemester(`Odd-${getCurrentYear()}`);
+        setReviewGrade('');
+        setIsAnonymous(true);
+        setModalState(false);
+      }
     } catch (error) {
       console.error('Error submitting review:', error);
-      toast.error('Failed to submit review. Please try again.');
+      toast.error('Failed to submit review. Please try again.', {
+        description: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   };
 
@@ -186,10 +219,11 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
         <DialogHeader>
           {status === 'authenticated' ? (
             <>
-              <DialogTitle>Rate Course {course.code}</DialogTitle>
+              <DialogTitle>{initialData ? 'Edit Review' : `Rate Course ${course.code}`}</DialogTitle>
               <DialogDescription>
-                Share your experience with this course to help other students. All reviews are moderated for appropriate
-                content.
+                {initialData
+                  ? 'Update your review to help other students make informed decisions.'
+                  : 'Share your experience with this course to help other students. All reviews are moderated for appropriate content.'}
               </DialogDescription>
             </>
           ) : (
@@ -211,14 +245,7 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
                   <SelectTrigger id='professor'>
                     <SelectValue placeholder='Select professor' />
                   </SelectTrigger>
-                  {/* <SelectContent>
-                    {departmentProfessors?.map((professor) => (
-                      <SelectItem key={professor.id} value={professor.id}>
-                        {professor.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent> */}
-                  <SelectContent showScrollButtons={false}>
+                  <SelectContent>
                     <div className='bg-background sticky top-0 z-10 border-b p-2'>
                       <div className='relative'>
                         <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
@@ -230,17 +257,11 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
                         />
                       </div>
                     </div>
-                    <div className='max-h-[300px] overflow-y-auto pt-1 pb-1'>
-                      {filteredProfessors?.length === 0 ? (
-                        <div className='text-muted-foreground p-2 text-center text-sm'>No professors found</div>
-                      ) : (
-                        filteredProfessors?.map((professor) => (
-                          <SelectItem key={professor.id} value={professor.id} className='py-2'>
-                            {professor.name}
-                          </SelectItem>
-                        ))
-                      )}
-                    </div>
+                    {filteredProfessors?.map((professor) => (
+                      <SelectItem key={professor.id} value={professor.id}>
+                        {professor.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -263,6 +284,8 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
                     value={semesterYear}
                     onChange={handleSemesterYearChange}
                     className='w-[100px]'
+                    min={2012}
+                    max={getCurrentYear()}
                   />
                 </div>
               </div>
@@ -270,28 +293,29 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
 
             <div className='space-y-4'>
               <h3 className='font-medium'>Course Ratings</h3>
-
               <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-                {Object.entries(reviewRatings).map(([key, value]) => (
-                  <div key={key} className='space-y-1.5'>
-                    <Label htmlFor={key} className='capitalize'>
-                      {key}
-                    </Label>
-                    <div id={key}>
-                      <RatingStars
-                        value={value}
-                        interactive={true}
-                        onChange={(newValue) =>
-                          setReviewRatings({
-                            ...reviewRatings,
-                            [key]: newValue
-                          })
-                        }
-                        showValue={true}
-                      />
+                {Object.entries(reviewRatings)
+                  .filter(([key]) => key !== 'overall')
+                  .map(([key, value]) => (
+                    <div key={key} className='space-y-1.5'>
+                      <Label htmlFor={key} className='capitalize'>
+                        {key}
+                      </Label>
+                      <div id={key}>
+                        <RatingStars
+                          value={value}
+                          interactive={true}
+                          onChange={(newValue) =>
+                            setReviewRatings({
+                              ...reviewRatings,
+                              [key]: newValue
+                            })
+                          }
+                          showValue={true}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
 
@@ -434,7 +458,13 @@ export default function CourseReviewForm({ course, modalState, setModalState }: 
                 Cancel
               </Button>
               <Button onClick={handleSubmitReview} disabled={isLoading}>
-                Submit Review
+                {isLoading
+                  ? initialData
+                    ? 'Updating...'
+                    : 'Submitting...'
+                  : initialData
+                    ? 'Update Review'
+                    : 'Submit Review'}
               </Button>
             </div>
           </div>
