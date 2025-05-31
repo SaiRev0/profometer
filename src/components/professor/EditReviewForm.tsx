@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetProfessorById } from '@/hooks/useGetProfessorById';
-import { CourseReview, ProfessorReview } from '@/lib/types';
+import { ProfessorReview } from '@/lib/types';
 
 import ReviewForm from './ReviewForm';
 import { useSession } from 'next-auth/react';

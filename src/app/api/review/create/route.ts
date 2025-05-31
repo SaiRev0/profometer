@@ -67,22 +67,6 @@ export async function POST(req: Request) {
           totalReviews: number;
         };
 
-        // Create the review
-        const review = await tx.review.create({
-          data: {
-            professorId,
-            courseCode,
-            userId,
-            semester,
-            anonymous,
-            ratings: JSON.parse(JSON.stringify(ratings)),
-            comment,
-            statistics: JSON.parse(JSON.stringify(statistics)),
-            grade,
-            type
-          }
-        });
-
         // Update professor's totalCourses and course's totalProfessors in a single query each
         await Promise.all([
           tx.professor.update({
@@ -240,7 +224,7 @@ export async function POST(req: Request) {
                 statistics: {
                   ratings: JSON.parse(JSON.stringify(currentCourseStats.ratings)),
                   percentages: JSON.parse(JSON.stringify(newCoursePercentages)),
-                  totalReviews: currentCourseStats.totalReviews + 1
+                  totalReviews: currentCourseStats.totalReviews
                 }
               }
             });
@@ -252,16 +236,27 @@ export async function POST(req: Request) {
           });
 
           if (department) {
-            const currentWeightedSum = department.avgRating * department.numReviews;
-            const newWeightedSum = currentWeightedSum + ratings.overall * 8; // Using 8 as weight for professor reviews
-            const newTotalWeight = department.numReviews + 8;
-            const newAvgRating = Number((newWeightedSum / newTotalWeight).toFixed(1));
-
+            const weight = 8; // Using 8 as weight for professor reviews
             await tx.department.update({
               where: { code: professor.departmentCode },
               data: {
-                avgRating: newAvgRating,
-                numReviews: department.numReviews + 1
+                totalWeightedSum: {
+                  increment: ratings.overall * weight
+                },
+                totalWeight: {
+                  increment: weight
+                },
+                numReviews: {
+                  increment: 1
+                },
+                avgRating: {
+                  set: Number(
+                    (
+                      (department.totalWeightedSum + ratings.overall * weight) /
+                      (department.totalWeight + weight)
+                    ).toFixed(1)
+                  )
+                }
               }
             });
           }
@@ -307,7 +302,7 @@ export async function POST(req: Request) {
             )
           };
 
-          let averageGradeString = 'NA';
+          let averageGradeString = currentCourseStats.percentages.averageGrade;
 
           if (grade) {
             if (currentCourseStats.percentages.averageGrade === 'NA') {
@@ -372,22 +367,49 @@ export async function POST(req: Request) {
           });
 
           if (department) {
-            const currentWeightedSum = department.avgRating * department.numReviews;
-            const newWeightedSum = currentWeightedSum + ratings.overall * course.credits; // Using course credits as weight
-            const newTotalWeight = department.numReviews + course.credits;
-            const newAvgRating = Number((newWeightedSum / newTotalWeight).toFixed(1));
-
+            const weight = course.credits; // Using course credits as weight
             await tx.department.update({
               where: { code: course.departmentCode },
               data: {
-                avgRating: newAvgRating,
-                numReviews: department.numReviews + 1
+                totalWeightedSum: {
+                  increment: ratings.overall * weight
+                },
+                totalWeight: {
+                  increment: weight
+                },
+                numReviews: {
+                  increment: 1
+                },
+                avgRating: {
+                  set: Number(
+                    (
+                      (department.totalWeightedSum + ratings.overall * weight) /
+                      (department.totalWeight + weight)
+                    ).toFixed(1)
+                  )
+                }
               }
             });
           }
         } else {
           throw new Error('Invalid review type');
         }
+
+        // Create the review
+        const review = await tx.review.create({
+          data: {
+            professorId,
+            courseCode,
+            userId,
+            semester,
+            anonymous,
+            ratings: JSON.parse(JSON.stringify(ratings)),
+            comment,
+            statistics: JSON.parse(JSON.stringify(statistics)),
+            grade,
+            type
+          }
+        });
 
         return review;
       } catch (error) {

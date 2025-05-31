@@ -67,15 +67,17 @@ model User {
 }
 
 model Department {
-    code       String      @id
-    name       String      @unique
-    avgRating  Float
-    numReviews Int
-    professors Professor[]
-    courses    Course[]
-    users      User[]
-    createdAt  DateTime    @default(now())
-    updatedAt  DateTime    @updatedAt
+    code             String      @id
+    name             String      @unique
+    totalWeightedSum Float       @default(0) // Sum of (rating * weight) for all reviews
+    totalWeight      Float       @default(0) // Sum of weights for all reviews
+    avgRating        Float       @default(0) // This will be calculated as totalWeightedSum/totalWeight
+    numReviews       Int
+    professors       Professor[]
+    courses          Course[]
+    users            User[]
+    createdAt        DateTime    @default(now())
+    updatedAt        DateTime    @updatedAt
 }
 
 model Professor {

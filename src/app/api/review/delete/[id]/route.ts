@@ -172,17 +172,27 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         });
 
         if (department) {
-          const currentWeightedSum = department.avgRating * department.numReviews;
-          const reviewWeight = 8; // Using 8 as weight for professor reviews
-          const newWeightedSum = Math.max(0, currentWeightedSum - reviewRatings.overall * reviewWeight);
-          const newTotalWeight = Math.max(1, department.numReviews - reviewWeight);
-          const newAvgRating = Math.max(0, Number((newWeightedSum / newTotalWeight).toFixed(1)));
-
+          const weight = 8; // Using 8 as weight for professor reviews
           await tx.department.update({
             where: { code: professor.departmentCode },
             data: {
-              avgRating: newAvgRating,
-              numReviews: Math.max(0, department.numReviews - 1)
+              totalWeightedSum: {
+                set: Math.max(0, department.totalWeightedSum - reviewRatings.overall * weight)
+              },
+              totalWeight: {
+                set: Math.max(0, department.totalWeight - weight)
+              },
+              numReviews: {
+                set: Math.max(0, department.numReviews - 1)
+              },
+              avgRating: {
+                set: Number(
+                  (
+                    (department.totalWeightedSum - reviewRatings.overall * weight) /
+                    (department.totalWeight - weight)
+                  ).toFixed(1)
+                )
+              }
             }
           });
         }
@@ -324,17 +334,27 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         });
 
         if (department) {
-          const currentWeightedSum = department.avgRating * department.numReviews;
-          const reviewWeight = course.credits; // Using course credits as weight
-          const newWeightedSum = Math.max(0, currentWeightedSum - reviewRatings.overall * reviewWeight);
-          const newTotalWeight = Math.max(1, department.numReviews - reviewWeight);
-          const newAvgRating = Math.max(0, Number((newWeightedSum / newTotalWeight).toFixed(1)));
-
+          const weight = course.credits; // Using course credits as weight
           await tx.department.update({
             where: { code: course.departmentCode },
             data: {
-              avgRating: newAvgRating,
-              numReviews: Math.max(0, department.numReviews - 1)
+              totalWeightedSum: {
+                set: Math.max(0, department.totalWeightedSum - reviewRatings.overall * weight)
+              },
+              totalWeight: {
+                set: Math.max(0, department.totalWeight - weight)
+              },
+              numReviews: {
+                set: Math.max(0, department.numReviews - 1)
+              },
+              avgRating: {
+                set: Number(
+                  (
+                    (department.totalWeightedSum - reviewRatings.overall * weight) /
+                    (department.totalWeight - weight)
+                  ).toFixed(1)
+                )
+              }
             }
           });
         }

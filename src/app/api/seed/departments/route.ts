@@ -18,6 +18,8 @@ async function seedDepartments() {
       data: departments.map((dept) => ({
         name: dept.name,
         code: dept.code,
+        totalWeightedSum: dept.totalWeightedSum,
+        totalWeight: dept.totalWeight,
         avgRating: dept.avgRating,
         numReviews: dept.numReviews
       }))

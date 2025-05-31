@@ -4,6 +4,8 @@ export const departments = [
     id: 'APD',
     name: 'Architecture, Planning and Design',
     code: 'APD',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -11,6 +13,8 @@ export const departments = [
     id: 'CER',
     name: 'Ceramic Engineering',
     code: 'CER',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -18,6 +22,8 @@ export const departments = [
     id: 'CHE',
     name: 'Chemical Engineering and Technology',
     code: 'CHE',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -25,6 +31,8 @@ export const departments = [
     id: 'CIV',
     name: 'Civil Engineering',
     code: 'CIV',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -32,6 +40,8 @@ export const departments = [
     id: 'CSE',
     name: 'Computer Science and Engineering',
     code: 'CSE',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -39,6 +49,8 @@ export const departments = [
     id: 'EEE',
     name: 'Electrical Engineering',
     code: 'EEE',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -46,6 +58,8 @@ export const departments = [
     id: 'ECE',
     name: 'Electronics Engineering',
     code: 'ECE',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -53,6 +67,8 @@ export const departments = [
     id: 'MEC',
     name: 'Mechanical Engineering',
     code: 'MEC',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -60,6 +76,8 @@ export const departments = [
     id: 'MET',
     name: 'Metallurgical Engineering',
     code: 'MET',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -67,6 +85,8 @@ export const departments = [
     id: 'MIN',
     name: 'Mining Engineering',
     code: 'MIN',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -74,6 +94,8 @@ export const departments = [
     id: 'PHE',
     name: 'Pharmaceutical Engineering and Technology',
     code: 'PHE',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -81,6 +103,8 @@ export const departments = [
     id: 'CHY',
     name: 'Chemistry',
     code: 'CHY',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -88,6 +112,8 @@ export const departments = [
     id: 'MAT',
     name: 'Mathematical Sciences',
     code: 'MAT',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -95,6 +121,8 @@ export const departments = [
     id: 'PHY',
     name: 'Physics',
     code: 'PHY',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -102,6 +130,8 @@ export const departments = [
     id: 'BCE',
     name: 'Biochemical Engineering',
     code: 'BCE',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -109,6 +139,8 @@ export const departments = [
     id: 'BME',
     name: 'Biomedical Engineering',
     code: 'BME',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -116,6 +148,8 @@ export const departments = [
     id: 'MST',
     name: 'Materials Science and Technology',
     code: 'MST',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   },
@@ -123,6 +157,8 @@ export const departments = [
     id: 'HS',
     name: 'Humanistic Studies',
     code: 'HS',
+    totalWeightedSum: 0,
+    totalWeight: 0,
     avgRating: 0,
     numReviews: 0
   }

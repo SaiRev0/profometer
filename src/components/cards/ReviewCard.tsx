@@ -42,7 +42,6 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [addCourseDialogOpen, setAddCourseDialogOpen] = useState(false);
 
   const userVote = (review.votes?.[0]?.voteType || null) as 'up' | 'down' | null;
   const [currentUserVote, setCurrentUserVote] = useState<'up' | 'down' | null>(userVote);

@@ -4,8 +4,6 @@ import { CourseReview, ProfessorReview } from '@/lib/types';
 import { CreateReviewApiData } from '@/lib/types/apiTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { PROFESSOR_QUERY_KEY } from './useGetProfessorById';
-
 export function useCreateReview() {
   const queryClient = useQueryClient();
 
@@ -29,11 +27,24 @@ export function useCreateReview() {
 
       return response.json();
     },
-    onSuccess: async (_, variables) => {
-      // Invalidate and refetch professor data
-      await queryClient.invalidateQueries({
-        queryKey: PROFESSOR_QUERY_KEY(variables.professorId)
-      });
+    onSuccess: async () => {
+      // Invalidate recent reviews
+      queryClient.invalidateQueries({ queryKey: ['recent-reviews'] });
+
+      // Invalidate course data
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      queryClient.invalidateQueries({ queryKey: ['course'] });
+
+      // Invalidate professor data
+      queryClient.invalidateQueries({ queryKey: ['professors'] });
+      queryClient.invalidateQueries({ queryKey: ['professor'] });
+
+      // Invalidate department data (both list and individual)
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+      queryClient.invalidateQueries({ queryKey: ['department'] });
+
+      // Invalidate profile data since it shows user's reviews
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     }
   });
 
