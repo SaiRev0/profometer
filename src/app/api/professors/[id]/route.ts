@@ -1,39 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 
-import { getServerSession } from 'next-auth';
-
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getServerSession(authOptions);
   const { id } = await params;
+
   try {
     const professor = await db.professor.findUnique({
       where: { id: id },
       include: {
-        reviews: {
-          include: {
-            user: true,
-            course: {
-              include: {
-                reviews: {
-                  where: { professorId: id }
-                }
-              }
-            },
-            professor: true,
-            ...(session?.user?.id && {
-              votes: {
-                where: { userId: session.user.id },
-                select: { voteType: true },
-                take: 1
-              }
-            })
-          },
-          orderBy: { createdAt: 'desc' },
-          where: { type: 'professor' }
-        },
         department: true
       }
     });
@@ -42,44 +17,27 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Professor not found' }, { status: 404 });
     }
 
-    // Get unique courses from reviews with their review counts
-    const uniqueCourses = Array.from(
-      new Map(
-        professor.reviews.map((review) => [
-          review.course.code,
-          {
-            ...review.course,
-            numReviews: review.course.reviews.length
-          }
-        ])
-      ).values()
-    );
-
-    const departmentCourses = await db.course.findMany({
+    // Get unique courses taught by this professor
+    const courses = await db.course.findMany({
       where: {
-        departmentCode: professor.department.code,
-        verified: true
+        reviews: {
+          some: {
+            professorId: id,
+            type: 'professor'
+          }
+        }
       },
-      include: {
-        reviews: true
-      }
+      select: {
+        code: true,
+        name: true
+      },
+      distinct: ['code']
     });
 
-    // Add numReviews to department courses
-    const departmentCoursesWithReviews = departmentCourses.map((course) => ({
-      ...course,
-      numReviews: course.reviews.length
-    }));
-
-    // Combine all data
-    const response = {
-      ...professor,
-      numCourses: uniqueCourses.length,
-      courses: uniqueCourses,
-      departmentCourses: departmentCoursesWithReviews
-    };
-
-    return NextResponse.json(response);
+    return NextResponse.json({
+      professor,
+      courses
+    });
   } catch (error) {
     console.error('Error fetching professor:', error);
     return NextResponse.json({ error: 'Failed to fetch professor' }, { status: 500 });

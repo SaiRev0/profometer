@@ -1,5 +1,7 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { notFound } from 'next/navigation';
 
 import ProfessorDetails from '@/components/professor';
@@ -7,7 +9,7 @@ import ProfessorDetailsSkeleton from '@/components/professor/ProfessorDetailsSke
 import { useGetProfessorById } from '@/hooks/useGetProfessorById';
 
 export default function ProfessorClientWrapper({ id }: { id: string }) {
-  const { data: professor, isLoading, error } = useGetProfessorById(id);
+  const { data, isLoading, error } = useGetProfessorById(id);
 
   if (error) {
     notFound();
@@ -17,9 +19,13 @@ export default function ProfessorClientWrapper({ id }: { id: string }) {
     return <ProfessorDetailsSkeleton />;
   }
 
-  if (!professor) {
+  if (!data || !data.professor) {
     notFound();
   }
 
-  return <ProfessorDetails professor={professor} initialReviews={professor.reviews} />;
+  return (
+    <Suspense fallback={<ProfessorDetailsSkeleton />}>
+      <ProfessorDetails professor={data.professor} courses={data.courses} />
+    </Suspense>
+  );
 }

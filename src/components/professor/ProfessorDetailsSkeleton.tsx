@@ -1,3 +1,4 @@
+import { ReviewCardSkeleton } from '@/components/cards/ReviewCard';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -130,45 +131,7 @@ export default function ProfessorDetailsSkeleton() {
 
             <div className='space-y-4'>
               {[1, 2, 3].map((i) => (
-                <Card key={i}>
-                  <CardContent className='p-4'>
-                    <div className='mb-4 flex items-start justify-between'>
-                      <div className='flex items-center gap-3'>
-                        <Skeleton className='h-10 w-10 rounded-full' />
-                        <div>
-                          <Skeleton className='mb-1 h-5 w-32' />
-                          <Skeleton className='h-4 w-48' />
-                        </div>
-                      </div>
-                      <Skeleton className='h-6 w-16' />
-                    </div>
-
-                    <div className='mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3'>
-                      {[1, 2, 3, 4, 5, 6].map((j) => (
-                        <div key={j}>
-                          <Skeleton className='mb-1 h-4 w-20' />
-                          <div className='flex gap-1'>
-                            {[1, 2, 3, 4, 5].map((k) => (
-                              <Skeleton key={k} className='h-4 w-4' />
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className='mb-4 space-y-2'>
-                      <Skeleton className='h-4 w-full' />
-                      <Skeleton className='h-4 w-5/6' />
-                      <Skeleton className='h-4 w-4/6' />
-                    </div>
-
-                    <div className='flex gap-2'>
-                      {[1, 2, 3].map((j) => (
-                        <Skeleton key={j} className='h-6 w-24' />
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                <ReviewCardSkeleton key={i} />
               ))}
             </div>
           </div>

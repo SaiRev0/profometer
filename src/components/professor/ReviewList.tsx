@@ -2,34 +2,44 @@
 
 import { useState } from 'react';
 
-import ReviewCard from '@/components/cards/ReviewCard';
+import ReviewCard, { ReviewCardSkeleton } from '@/components/cards/ReviewCard';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ProfessorReview } from '@/lib/types';
+import { useGetProfessorReviews } from '@/hooks/useGetProfessorReviews';
+import { Professor } from '@/lib/types';
+import { useIntersection } from '@mantine/hooks';
 
 import { useSession } from 'next-auth/react';
 
 interface ReviewListProps {
-  initialReviews: ProfessorReview[];
+  professor: Professor;
   selectedCourse: string;
 }
 
-export default function ReviewList({ initialReviews, selectedCourse }: ReviewListProps) {
+export default function ReviewList({ professor, selectedCourse }: ReviewListProps) {
   const { data: session } = useSession();
   const [sortOption, setSortOption] = useState<SortOption>('recent');
-  const [visibleReviews, setVisibleReviews] = useState(5);
-  const [loadingMore, setLoadingMore] = useState(false);
 
-  const handleLoadMore = () => {
-    setLoadingMore(true);
-    setTimeout(() => {
-      setVisibleReviews((prev) => prev + 5);
-      setLoadingMore(false);
-    }, 800);
-  };
+  const {
+    data: reviewsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetProfessorReviews(professor.id, 10);
 
-  const filteredReviews = initialReviews
+  const { ref, entry } = useIntersection({
+    root: null,
+    threshold: 0.5
+  });
+
+  // Load more reviews when the last review is visible
+  if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage();
+  }
+
+  // Combine initial reviews with fetched reviews
+  const allReviews = reviewsData?.pages.flatMap((page) => page.reviews) || [];
+
+  const filteredReviews = allReviews
     .filter((review) => selectedCourse === 'all' || review.courseCode === selectedCourse)
     .sort((a, b) => {
       if (sortOption === 'recent') {
@@ -56,31 +66,36 @@ export default function ReviewList({ initialReviews, selectedCourse }: ReviewLis
       </div>
 
       {filteredReviews.length === 0 ? (
-        <Card>
-          <CardContent className='p-6 text-center'>
-            <p className='text-muted-foreground mb-4'>No reviews found for the selected filters.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div>
-          {filteredReviews.slice(0, visibleReviews).map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              variant={session?.user?.email === review.user.email ? 'own' : 'default'}
-              usedIn='professor'
-            />
+        <div className='space-y-4'>
+          {[1, 2, 3].map((i) => (
+            <ReviewCardSkeleton key={i} />
           ))}
-
-          {visibleReviews < filteredReviews.length && (
-            <div className='mt-6 flex justify-center'>
-              <Button variant='outline' onClick={handleLoadMore} disabled={loadingMore}>
-                {loadingMore ? 'Loading...' : 'Load More Reviews'}
-              </Button>
-            </div>
-          )}
         </div>
-      )}
+      ) : null}
+
+      <div className='mt-8 space-y-6'>
+        {filteredReviews.map((review, index) => {
+          const isLastReview = index === filteredReviews.length - 1;
+          return (
+            <div key={review.id} ref={isLastReview ? ref : undefined}>
+              <ReviewCard
+                review={review}
+                variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+                usedIn='professor'
+                professor={professor}
+              />
+            </div>
+          );
+        })}
+        {isFetchingNextPage && (
+          <div className='flex justify-center py-4'>
+            <div className='border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent' />
+          </div>
+        )}
+        {!hasNextPage && filteredReviews.length > 0 && (
+          <div className='text-muted-foreground text-center text-sm'>No more reviews to load</div>
+        )}
+      </div>
     </div>
   );
 }

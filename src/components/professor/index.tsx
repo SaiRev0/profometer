@@ -2,30 +2,34 @@
 
 import { useState } from 'react';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { Professor, ProfessorReview } from '@/lib/types';
+import { Course, Professor, ProfessorReview } from '@/lib/types';
 
 import { Button } from '../ui/button';
 import CourseForm from './CourseForm';
 import CoursesSection from './CoursesSection';
 import RatingSummary from './RatingSummary';
-import ReviewForm from './ReviewForm';
 import ReviewList from './ReviewList';
 import SideBar from './SideBar';
 import { motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 
+const ReviewForm = dynamic(() => import('./ReviewForm'), {
+  loading: () => <div>Loading...</div>,
+  ssr: false
+});
+
 interface ProfessorDetailsProps {
   professor: Professor;
-  initialReviews: ProfessorReview[];
+  courses: Course[];
 }
 
-export default function ProfessorDetails({ professor, initialReviews }: ProfessorDetailsProps) {
+export default function ProfessorDetails({ professor, courses }: ProfessorDetailsProps) {
   const [reviewFormOpen, setReviewFormOpen] = useState(false);
   const [addCourseDialogOpen, setAddCourseDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<string>('all');
-
   return (
     <div className='mx-auto mt-4 max-w-4xl'>
       <div className='mb-6 flex items-center gap-2'>
@@ -43,26 +47,33 @@ export default function ProfessorDetails({ professor, initialReviews }: Professo
         transition={{ duration: 0.5 }}
         className='flex flex-col gap-6 md:flex-row'>
         {/* Professor Info Sidebar */}
-        <SideBar professor={professor} />
+        <SideBar professor={{ ...professor, numCourses: courses.length }} />
         {/* Main Content */}
         <div className='md:w-2/3'>
           {/* Rating Summary */}
           <RatingSummary professor={professor} setModalState={setReviewFormOpen} />
           {/* Courses Section In Review List */}
-          <CoursesSection professor={professor} selectedCourse={selectedCourse} onCourseSelect={setSelectedCourse} />
+          <CoursesSection
+            professor={professor}
+            courses={courses}
+            selectedCourse={selectedCourse}
+            onCourseSelect={setSelectedCourse}
+          />
           {/* Reviews Section */}
-          <ReviewList initialReviews={initialReviews} selectedCourse={selectedCourse} />
+          <ReviewList professor={professor} selectedCourse={selectedCourse} />
           {/* Add Course Dialog */}
           <CourseForm professor={professor} modalState={addCourseDialogOpen} setModalState={setAddCourseDialogOpen} />
         </div>
       </motion.div>
       {/* Review Form Dialog */}
-      <ReviewForm
-        professor={professor}
-        modalState={reviewFormOpen}
-        setModalState={setReviewFormOpen}
-        setAddCourseDialogOpen={setAddCourseDialogOpen}
-      />
+      {reviewFormOpen && (
+        <ReviewForm
+          professor={professor}
+          modalState={reviewFormOpen}
+          setModalState={setReviewFormOpen}
+          setAddCourseDialogOpen={setAddCourseDialogOpen}
+        />
+      )}
     </div>
   );
 }

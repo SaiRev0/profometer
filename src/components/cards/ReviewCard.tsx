@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { EditCourseReviewForm } from '@/components/course/EditCourseReviewForm';
+import CourseReviewForm from '@/components/course/CourseReviewForm';
 import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
-import { EditReviewForm } from '@/components/professor/EditReviewForm';
+import ReviewForm from '@/components/professor/ReviewForm';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import RatingStars from '@/components/ui/rating-stars';
 import { useReviewVote } from '@/hooks/useReviewVote';
-import { CourseReview, ProfessorReview } from '@/lib/types';
+import { Course, CourseReview, Professor, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 import { formatDistanceToNow } from 'date-fns';
@@ -32,11 +32,19 @@ interface ReviewCardProps {
   review: (ProfessorReview | CourseReview) & {
     votes?: { voteType: 'up' | 'down' }[];
   };
+  professor?: Professor;
+  course?: Course;
   variant?: 'default' | 'own';
   usedIn?: 'professor' | 'course';
 }
 
-export default function ReviewCard({ review, variant = 'default', usedIn = 'professor' }: ReviewCardProps) {
+export default function ReviewCard({
+  review,
+  professor,
+  course,
+  variant = 'default',
+  usedIn = 'professor'
+}: ReviewCardProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
@@ -117,6 +125,8 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
               <AvatarImage src={review.user.image} alt={review.user.name} />
               <AvatarFallback className='bg-secondary text-secondary-foreground'>A</AvatarFallback>
             </Avatar>
+
+            {/* User Details */}
             <div>
               <p className='font-medium'>{review.user.name}</p>
               <div className='text-muted-foreground flex flex-col text-sm'>
@@ -152,6 +162,7 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
             </div>
           </div>
 
+          {/* 3 Dot Options */}
           <div className='flex items-center'>
             <Badge
               className='mr-2'
@@ -184,6 +195,7 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
           </div>
         </div>
 
+        {/* Ratings and Grades */}
         <div className='mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3'>
           {Object.entries(review.ratings).map(([key, value]) => (
             <div key={key}>
@@ -199,10 +211,12 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
           )}
         </div>
 
+        {/* Comments */}
         <div className='mt-4'>
           <p className='text-sm whitespace-pre-line'>{review.comment}</p>
         </div>
 
+        {/* Stats */}
         <div className='mt-4 flex flex-wrap gap-3'>
           {review.statistics.wouldRecommend !== undefined && (
             <Badge variant={review.statistics.wouldRecommend ? 'default' : 'destructive'} className='text-xs'>
@@ -260,12 +274,24 @@ export default function ReviewCard({ review, variant = 'default', usedIn = 'prof
 
       <ReportDialog open={reportDialogOpen} onOpenChange={setReportDialogOpen} reviewId={review.id} />
       <DeleteDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} reviewId={review.id} />
-      {review.type === 'professor' && review.professor && (
-        <EditReviewForm open={editDialogOpen} onOpenChange={setEditDialogOpen} review={review as ProfessorReview} />
+      {review.type === 'professor' && professor && editDialogOpen && (
+        <ReviewForm
+          professor={professor}
+          modalState={editDialogOpen}
+          setModalState={setEditDialogOpen}
+          setAddCourseDialogOpen={setEditDialogOpen}
+          initialData={review as ProfessorReview}
+        />
       )}
-      {review.type === 'course' && (
-        <EditCourseReviewForm open={editDialogOpen} onOpenChange={setEditDialogOpen} review={review as CourseReview} />
-      )}
+      {/* {review.type === 'course' && course && (
+        <CourseReviewForm
+          course={course as Course & { professors: Professor[]; departmentProfessors: Professor[] }}
+          modalState={editDialogOpen}
+          setModalState={setEditDialogOpen}
+          setAddCourseDialogOpen={setEditDialogOpen}
+          initialData={review as CourseReview}
+        />
+      )} */}
     </Card>
   );
 }

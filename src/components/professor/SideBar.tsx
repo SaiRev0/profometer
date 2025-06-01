@@ -6,7 +6,7 @@ import { Professor } from '@/lib/types';
 
 import { BookOpen, Building, ClipboardList, ExternalLink, Mail } from 'lucide-react';
 
-const SideBar = ({ professor }: { professor: Professor }) => {
+const SideBar = ({ professor }: { professor: Professor & { numCourses: number } }) => {
   return (
     <div className='md:w-1/3'>
       <Card>

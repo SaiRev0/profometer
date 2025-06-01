@@ -1,12 +1,17 @@
 'use client';
 
-import { Professor } from '@/lib/types';
+import { Course, Professor, ProfessorReview } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 
 export const PROFESSOR_QUERY_KEY = (id: string) => ['professor', id];
 
+export interface GetProfessorResponse {
+  professor: Professor;
+  courses: Course[];
+}
+
 export function useGetProfessorById(id: string) {
-  return useQuery<Professor>({
+  return useQuery<GetProfessorResponse>({
     queryKey: PROFESSOR_QUERY_KEY(id),
     queryFn: async () => {
       const response = await fetch(`/api/professors/${id}`);

@@ -1,16 +1,17 @@
-import { useState } from 'react';
+'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Professor } from '@/lib/types';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Course, Professor } from '@/lib/types';
 
 interface CoursesSectionProps {
   professor: Professor;
+  courses: Course[];
   selectedCourse: string;
   onCourseSelect: (courseCode: string) => void;
 }
 
-function CoursesSection({ professor, selectedCourse, onCourseSelect }: CoursesSectionProps) {
+function CoursesSection({ professor, courses, selectedCourse, onCourseSelect }: CoursesSectionProps) {
   return (
     <Card className='mb-6'>
       <CardHeader className='pb-2'>
@@ -24,16 +25,16 @@ function CoursesSection({ professor, selectedCourse, onCourseSelect }: CoursesSe
             variant={selectedCourse === 'all' ? 'default' : 'outline'}
             className='cursor-pointer'
             onClick={() => onCourseSelect('all')}>
-            All Courses {professor.statistics.totalReviews || 0}
+            All Courses ({professor.statistics.totalReviews || 0})
           </Badge>
 
-          {professor.courses?.map((course) => (
+          {courses.map((course) => (
             <Badge
               key={course.code}
               variant={selectedCourse === course.code ? 'default' : 'outline'}
               className='cursor-pointer'
               onClick={() => onCourseSelect(course.code)}>
-              {course.code} ({course.reviews.length || 0})
+              {course.code}
             </Badge>
           ))}
         </div>

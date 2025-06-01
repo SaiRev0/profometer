@@ -58,13 +58,14 @@ export interface Course {
 export interface Professor {
   id: string;
   name: string;
+  departmentCode: string;
   department: Department;
   designation: string;
   photoUrl: string;
   email: string;
   website: string;
-  numReviews: number;
-  numCourses: number;
+  // numReviews: number;
+  // numCourses: number;
   reviews: ProfessorReview[];
   statistics: {
     ratings: ProfessorRating;
