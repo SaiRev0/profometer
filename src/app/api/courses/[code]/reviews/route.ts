@@ -5,9 +5,9 @@ import { db } from '@/lib/db';
 
 import { getServerSession } from 'next-auth';
 
-export async function GET(request: NextRequest, { params }: { params: { code: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   const session = await getServerSession(authOptions);
-  const { code } = params;
+  const { code } = await params;
   const { searchParams } = new URL(request.url);
   const cursor = searchParams.get('cursor');
   const limit = parseInt(searchParams.get('limit') || '10');
