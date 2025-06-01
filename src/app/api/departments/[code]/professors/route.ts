@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 
-export async function GET(request: NextRequest, { params }: { params: { code: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   try {
-    const { code } = params;
+    const { code } = await params;
 
     const professors = await db.professor.findMany({
       where: { departmentCode: code.toUpperCase() },
