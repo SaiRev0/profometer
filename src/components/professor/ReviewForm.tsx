@@ -271,19 +271,17 @@ export default function ReviewForm({
                           Add New Course
                         </Button>
                       </div>
-                      <div className='max-h-[300px] overflow-y-auto pt-1 pb-1'>
-                        {isLoadingDepartmentCourses ? (
-                          <div className='text-muted-foreground p-2 text-center text-sm'>Loading...</div>
-                        ) : filteredCourses?.length === 0 ? (
-                          <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
-                        ) : (
-                          filteredCourses?.map((course) => (
-                            <SelectItem key={course.code} value={course.code} className='py-2'>
-                              {course.code} - {course.name}
-                            </SelectItem>
-                          ))
-                        )}
-                      </div>
+                      {isLoadingDepartmentCourses ? (
+                        <div className='text-muted-foreground p-2 text-center text-sm'>Loading...</div>
+                      ) : filteredCourses?.length === 0 ? (
+                        <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
+                      ) : (
+                        filteredCourses?.map((course) => (
+                          <SelectItem key={course.code} value={course.code} className='py-2'>
+                            {course.code} - {course.name}
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

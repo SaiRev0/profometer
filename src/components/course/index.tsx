@@ -14,14 +14,7 @@ import CourseReviews from './CourseReviews';
 import { motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 
-interface CoursePageProps {
-  course: Course & {
-    professors: Professor[];
-    departmentProfessors: Professor[];
-  };
-}
-
-export default function CoursePage({ course }: CoursePageProps) {
+export default function CoursePage({ course, professors }: { course: Course; professors: Professor[] }) {
   const router = useRouter();
   const [reviewFormOpen, setReviewFormOpen] = useState(false);
 
@@ -36,17 +29,19 @@ export default function CoursePage({ course }: CoursePageProps) {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         {/* Course Overview */}
-        <CourseOverview course={course} setModalState={setReviewFormOpen} />
+        <CourseOverview course={course} setModalState={setReviewFormOpen} professors={professors} />
 
         {/* Professors Section */}
-        <CourseProfessors course={course} />
+        <CourseProfessors course={course} professors={professors} />
 
         {/* Reviews Section */}
         <CourseReviews course={course} />
       </motion.div>
 
       {/* Review Form Dialog */}
-      <CourseReviewForm course={course} modalState={reviewFormOpen} setModalState={setReviewFormOpen} />
+      {reviewFormOpen && (
+        <CourseReviewForm course={course} modalState={reviewFormOpen} setModalState={setReviewFormOpen} />
+      )}
     </div>
   );
 }

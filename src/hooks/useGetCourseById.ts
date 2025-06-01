@@ -1,16 +1,15 @@
-import type { Course, CourseReview, Professor } from '@/lib/types';
+import type { Course, Professor } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 
 export const COURSE_QUERY_KEY = (code: string) => ['course', code] as const;
 
-export function useGetCourse(code: string) {
-  return useQuery<
-    Course & {
-      reviews: CourseReview[];
-      professors: Professor[];
-      departmentProfessors: Professor[];
-    }
-  >({
+export interface GetCourseResponse {
+  course: Course;
+  professors: Professor[];
+}
+
+export function useGetCourseById(code: string) {
+  const { data, ...rest } = useQuery<GetCourseResponse>({
     queryKey: COURSE_QUERY_KEY(code),
     queryFn: async () => {
       const response = await fetch(`/api/courses/${code}`);
@@ -24,4 +23,9 @@ export function useGetCourse(code: string) {
     },
     enabled: !!code
   });
+
+  return {
+    data,
+    ...rest
+  };
 }

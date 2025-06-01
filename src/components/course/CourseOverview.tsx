@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Course } from '@/lib/types';
+import { Course, Professor } from '@/lib/types';
 
 import { BookOpen, Building, GraduationCap, NotebookPen, Star, Users } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -12,9 +12,10 @@ import { useSession } from 'next-auth/react';
 interface CourseOverviewProps {
   course: Course;
   setModalState: (state: boolean) => void;
+  professors: Professor[];
 }
 
-export default function CourseOverview({ course, setModalState }: CourseOverviewProps) {
+export default function CourseOverview({ course, setModalState, professors }: CourseOverviewProps) {
   const { status } = useSession();
   const router = useRouter();
 
@@ -67,7 +68,7 @@ export default function CourseOverview({ course, setModalState }: CourseOverview
               <div className='flex flex-col items-center text-center'>
                 <Users className='text-primary mb-2 h-6 w-6' />
                 <p className='text-sm font-medium'>Professors</p>
-                <p className='text-2xl font-bold'>{course.professors?.length || 0}</p>
+                <p className='text-2xl font-bold'>{professors.length}</p>
               </div>
             </CardContent>
           </Card>

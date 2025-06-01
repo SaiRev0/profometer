@@ -283,15 +283,14 @@ export default function ReviewCard({
           initialData={review as ProfessorReview}
         />
       )}
-      {/* {review.type === 'course' && course && (
+      {review.type === 'course' && course && (
         <CourseReviewForm
           course={course as Course & { professors: Professor[]; departmentProfessors: Professor[] }}
           modalState={editDialogOpen}
           setModalState={setEditDialogOpen}
-          setAddCourseDialogOpen={setEditDialogOpen}
           initialData={review as CourseReview}
         />
-      )} */}
+      )}
     </Card>
   );
 }

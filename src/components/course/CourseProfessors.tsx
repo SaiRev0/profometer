@@ -5,7 +5,7 @@ import { Course, Professor } from '@/lib/types';
 import ProfessorCard from '../cards/ProfessorCard';
 import { Users } from 'lucide-react';
 
-export default function CourseProfessors({ course }: { course: Course }) {
+export default function CourseProfessors({ course, professors }: { course: Course; professors: Professor[] }) {
   return (
     <div className='mb-8'>
       <div className='mb-4 flex items-center justify-between'>
@@ -15,9 +15,9 @@ export default function CourseProfessors({ course }: { course: Course }) {
         </h2>
       </div>
 
-      {course.professors && course.professors.length > 0 ? (
+      {professors && professors.length > 0 ? (
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-          {course.professors.map((professor: Professor) => (
+          {professors.map((professor: Professor) => (
             <ProfessorCard key={professor.id} professor={professor} variant='compact' />
           ))}
         </div>

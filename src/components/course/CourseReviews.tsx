@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import ReviewCard from '@/components/cards/ReviewCard';
+import ReviewCard, { ReviewCardSkeleton } from '@/components/cards/ReviewCard';
 import FilterDropdown, { SortOption } from '@/components/filters/filter-dropdown';
-import { Button } from '@/components/ui/button';
-import { Course, CourseReview } from '@/lib/types';
+import { useGetCourseReviews } from '@/hooks/useGetCourseReviews';
+import { Course } from '@/lib/types';
+import { useIntersection } from '@mantine/hooks';
 
 import { Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -11,18 +12,20 @@ import { useSession } from 'next-auth/react';
 export default function CourseReviews({ course }: { course: Course }) {
   const { data: session } = useSession();
   const [sortOption, setSortOption] = useState<SortOption>('recent');
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [visibleReviews, setVisibleReviews] = useState(5);
+  const { data: reviews, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetCourseReviews(course.code, 10);
 
-  const handleLoadMore = () => {
-    setLoadingMore(true);
-    setTimeout(() => {
-      setVisibleReviews((prev) => prev + 5);
-      setLoadingMore(false);
-    }, 800);
-  };
+  const { ref, entry } = useIntersection({
+    root: null,
+    threshold: 0.5
+  });
 
-  const sortedReviews = [...(course.reviews || [])].sort((a, b) => {
+  if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage();
+  }
+
+  const allReviews = reviews?.pages.flatMap((page) => page.reviews) || [];
+
+  const sortedReviews = allReviews.sort((a, b) => {
     if (sortOption === 'recent') {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     } else if (sortOption === 'rating-high') {
@@ -50,27 +53,41 @@ export default function CourseReviews({ course }: { course: Course }) {
           />
         </div>
       </div>
+
+      {sortedReviews.length === 0 ? (
+        <div className='space-y-4'>
+          {[1, 2, 3].map((i) => (
+            <ReviewCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : null}
+
       {sortedReviews.length > 0 ? (
         <div className='space-y-4'>
-          {sortedReviews.slice(0, visibleReviews).map((review: CourseReview) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              variant={session?.user?.email === review.user.email ? 'own' : 'default'}
-              usedIn='course'
-            />
-          ))}
-
-          {visibleReviews < sortedReviews.length && (
-            <div className='mt-6 flex justify-center'>
-              <Button variant='outline' onClick={handleLoadMore} disabled={loadingMore}>
-                {loadingMore ? 'Loading...' : 'Load More Reviews'}
-              </Button>
-            </div>
-          )}
+          {sortedReviews.map((review, index) => {
+            const isLastReview = index === sortedReviews.length - 1;
+            return (
+              <div key={review.id} ref={isLastReview ? ref : undefined}>
+                <ReviewCard
+                  review={review}
+                  variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+                  usedIn='course'
+                  course={course}
+                />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className='text-muted-foreground text-center text-sm'>No reviews found for this course.</p>
+      )}
+      {isFetchingNextPage && (
+        <div className='flex justify-center py-4'>
+          <div className='border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent' />
+        </div>
+      )}
+      {!hasNextPage && sortedReviews.length > 0 && (
+        <div className='text-muted-foreground text-center text-sm'>No more reviews to load</div>
       )}
     </div>
   );

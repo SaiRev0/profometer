@@ -5,7 +5,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { Course, Professor, ProfessorReview } from '@/lib/types';
+import { Course, Professor } from '@/lib/types';
 
 import { Button } from '../ui/button';
 import CourseForm from './CourseForm';

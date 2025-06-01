@@ -4,10 +4,10 @@ import { notFound } from 'next/navigation';
 
 import CourseDetails from '@/components/course';
 import CoursePageSkeleton from '@/components/course/CourseDetailsSkeleton';
-import { useGetCourse } from '@/hooks/useGetCourse';
+import { useGetCourseById } from '@/hooks/useGetCourseById';
 
 export default function CourseClientWrapper({ code }: { code: string }) {
-  const { data: course, isLoading, error } = useGetCourse(code);
+  const { data, isLoading, error } = useGetCourseById(code);
 
   if (error) {
     notFound();
@@ -17,9 +17,9 @@ export default function CourseClientWrapper({ code }: { code: string }) {
     return <CoursePageSkeleton />;
   }
 
-  if (!course) {
+  if (!data) {
     notFound();
   }
 
-  return <CourseDetails course={course} />;
+  return <CourseDetails course={data.course} professors={data.professors} />;
 }

@@ -43,7 +43,7 @@ export interface Course {
   name: string;
   description: string;
   credits: number;
-  departmentId: string;
+  departmentCode: string;
   department?: Department;
   professors?: Professor[];
   statistics: {
