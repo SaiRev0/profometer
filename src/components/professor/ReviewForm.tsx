@@ -463,14 +463,17 @@ export default function ReviewForm({
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className='flex items-center space-x-2'>
-                <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
-                <Label htmlFor='anonymous'>Submit review anonymously</Label>
-              </div>
-              <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
-                Can not be traced back to you.
-              </p>
+              {!initialData && (
+                <>
+                  <div className='flex items-center space-x-2'>
+                    <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+                    <Label htmlFor='anonymous'>Submit review anonymously</Label>
+                  </div>
+                  <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
+                    Can not be traced back to you.
+                  </p>
+                </>
+              )}
 
               <div className='mt-2 flex justify-end gap-2'>
                 <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>

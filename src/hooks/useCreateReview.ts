@@ -34,11 +34,11 @@ export function useCreateReview() {
       // Invalidate course data
       queryClient.invalidateQueries({ queryKey: ['courses'] });
       queryClient.invalidateQueries({ queryKey: ['course'] });
-
+      queryClient.invalidateQueries({ queryKey: ['course-reviews'] });
       // Invalidate professor data
       queryClient.invalidateQueries({ queryKey: ['professors'] });
       queryClient.invalidateQueries({ queryKey: ['professor'] });
-
+      queryClient.invalidateQueries({ queryKey: ['professor-reviews'] });
       // Invalidate department data (both list and individual)
       queryClient.invalidateQueries({ queryKey: ['departments'] });
       queryClient.invalidateQueries({ queryKey: ['department'] });
