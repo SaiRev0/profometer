@@ -114,8 +114,8 @@ ProfOMeter is a specialized platform designed to help students make informed dec
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/yourusername/rateThatProf.git
-    cd rateThatProf
+    git clone https://github.com/SaiRev0/profometer.git
+    cd profometer
     ```
 
 2. **Install Dependencies**:
