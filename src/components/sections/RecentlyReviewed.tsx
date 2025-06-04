@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import CourseCard, { CourseCardSkeleton } from '@/components/cards/CourseCard';
 import ProfessorCard, { ProfessorCardSkeleton } from '@/components/cards/ProfessorCard';
 import { useGetRecentReviews } from '@/hooks/useGetRecentReviews';
-import { useIntersection } from '@mantine/hooks';
+import { useSmartLoading } from '@/hooks/useSmartLoading';
 
 import { Star } from 'lucide-react';
 
@@ -51,9 +51,10 @@ function RecentlyReviewedContent() {
 
 // Main component
 export default function RecentlyReviewedSection() {
-  const { ref, entry } = useIntersection({
+  const { ref, shouldLoad } = useSmartLoading({
     threshold: 0.1,
-    rootMargin: '100px'
+    rootMargin: '100px',
+    timeThreshold: 2000 // Load after 2 seconds if not scrolled to
   });
 
   return (
@@ -64,7 +65,7 @@ export default function RecentlyReviewedSection() {
           <h2 className='text-2xl font-bold'>Recently Reviewed</h2>
         </div>
       </div>
-      {entry?.isIntersecting ? (
+      {shouldLoad ? (
         <Suspense fallback={<LoadingFallback />}>
           <RecentlyReviewedContent />
         </Suspense>

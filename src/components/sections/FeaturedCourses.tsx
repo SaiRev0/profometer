@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import CourseCard, { CourseCardSkeleton } from '@/components/cards/CourseCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useGetCourses } from '@/hooks/useGetCourses';
+import { useSmartLoading } from '@/hooks/useSmartLoading';
 import { Course } from '@/lib/types';
-import { useIntersection } from '@mantine/hooks';
 
 import { BarChart4, Star } from 'lucide-react';
 
@@ -81,15 +81,16 @@ function FeaturedCoursesContent() {
 
 // Main component
 export default function FeaturedCourses() {
-  const { ref, entry } = useIntersection({
+  const { ref, shouldLoad } = useSmartLoading({
     threshold: 0.1,
-    rootMargin: '100px'
+    rootMargin: '100px',
+    timeThreshold: 4000 // Load after 4 seconds if not scrolled to
   });
 
   return (
     <section ref={ref} className='mt-8'>
       <h2 className='mb-6 text-2xl font-bold'>Featured Courses</h2>
-      {entry?.isIntersecting ? (
+      {shouldLoad ? (
         <Suspense fallback={<FeaturedCoursesUI isLoadingLoved={true} isLoadingChallenging={true} />}>
           <FeaturedCoursesContent />
         </Suspense>

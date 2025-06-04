@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import ProfessorCard, { ProfessorCardSkeleton } from '@/components/cards/ProfessorCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useGetProfessors } from '@/hooks/useGetProfessors';
+import { useSmartLoading } from '@/hooks/useSmartLoading';
 import { Professor } from '@/lib/types';
-import { useIntersection } from '@mantine/hooks';
 
 import { ArrowUpDown, ThumbsUp } from 'lucide-react';
 
@@ -83,15 +83,16 @@ function LovedChallengingContent() {
 
 // Main component
 export default function LovedChallengingSection() {
-  const { ref, entry } = useIntersection({
+  const { ref, shouldLoad } = useSmartLoading({
     threshold: 0.1,
-    rootMargin: '100px'
+    rootMargin: '100px',
+    timeThreshold: 3000 // Load after 3 seconds if not scrolled to
   });
 
   return (
     <section ref={ref} className='mt-8'>
       <h2 className='mb-6 text-2xl font-bold'>Most Loved vs Most Challenging</h2>
-      {entry?.isIntersecting ? (
+      {shouldLoad ? (
         <Suspense fallback={<LovedChallengingUI isLoadingLoved={true} isLoadingChallenging={true} />}>
           <LovedChallengingContent />
         </Suspense>

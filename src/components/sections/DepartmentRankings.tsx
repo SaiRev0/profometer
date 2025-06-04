@@ -7,8 +7,8 @@ import Link from 'next/link';
 import DepartmentCard, { DepartmentCardSkeleton } from '@/components/cards/DepartmentCard';
 import { Button } from '@/components/ui/button';
 import { useGetDepartments } from '@/hooks/useGetDepartments';
+import { useSmartLoading } from '@/hooks/useSmartLoading';
 import { Department } from '@/lib/types';
-import { useIntersection } from '@mantine/hooks';
 
 const DepartmentRankingsUI = ({ isLoading, departments }: { isLoading: boolean; departments?: Department[] }) => (
   <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
@@ -29,9 +29,10 @@ function DepartmentRankingsContent() {
 
 // Main component
 export function DepartmentRankings() {
-  const { ref, entry } = useIntersection({
+  const { ref, shouldLoad } = useSmartLoading({
     threshold: 0.1,
-    rootMargin: '100px'
+    rootMargin: '100px',
+    timeThreshold: 5000 // Load after 5 seconds if not scrolled to
   });
 
   return (
@@ -43,7 +44,7 @@ export function DepartmentRankings() {
             See how different departments at IIT BHU compare based on student ratings
           </p>
         </div>
-        {entry?.isIntersecting ? (
+        {shouldLoad ? (
           <Suspense fallback={<DepartmentRankingsUI isLoading={true} />}>
             <DepartmentRankingsContent />
           </Suspense>
