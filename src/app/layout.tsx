@@ -15,7 +15,7 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
 export const metadata: Metadata = {
-  title: 'RateThatProf - Find & Rate Professors',
+  title: 'ProfOMeter - Find & Rate Professors',
   description: 'Discover, rate, and review professors at your university'
 };
 

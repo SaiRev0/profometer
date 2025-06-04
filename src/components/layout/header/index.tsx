@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { useTheme } from 'next-themes';
@@ -38,8 +39,10 @@ export default function Header() {
       <header className='bg-background border-border fixed top-0 right-0 left-0 z-50 h-16 border-b'>
         <div className='container mx-auto flex h-full items-center justify-between px-4'>
           <div className='flex items-center gap-2'>
-            <GraduationCap className='text-primary h-6 w-6' />
-            <span className='text-lg font-bold'>RateThatProf</span>
+            <Link href='/' className='flex items-center gap-2'>
+              <Image src='/images/logo.png' alt='ProfOMeter' width={35} height={35} className='rounded-full' />
+              <span className='inline text-lg font-bold'>ProfOMeter</span>
+            </Link>
           </div>
         </div>
       </header>
@@ -58,8 +61,8 @@ export default function Header() {
         <div className='container mx-auto flex h-full items-center justify-between px-4'>
           <div className='flex items-center gap-2'>
             <Link href='/' className='flex items-center gap-2'>
-              <GraduationCap className='text-primary h-6 w-6' />
-              <span className='inline text-lg font-bold'>RateThatProf</span>
+              <Image src='/images/logo.png' alt='ProfOMeter' width={35} height={35} className='rounded-full' />
+              <span className='inline text-lg font-bold'>ProfOMeter</span>
             </Link>
           </div>
 

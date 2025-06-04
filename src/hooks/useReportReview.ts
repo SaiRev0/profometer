@@ -32,7 +32,7 @@ export function useReportReview() {
     },
     onSuccess: () => {
       toast.success('Report submitted', {
-        description: 'Thank you for helping keep RateThatProf accurate and appropriate.'
+        description: 'Thank you for helping keep ProfOMeter accurate and appropriate.'
       });
     },
     onError: (error: Error) => {

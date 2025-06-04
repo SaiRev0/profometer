@@ -19,7 +19,7 @@ const page: FC = () => {
           <div className='container mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]'>
             <div className='flex flex-col space-y-2 text-center'>
               <GraduationCap className='text-primary mx-auto my-[-0.5rem] h-14 w-14' />
-              <h1 className='text-2xl font-semibold tracking-tight'>Welcome to RateThatProf</h1>
+              <h1 className='text-2xl font-semibold tracking-tight'>Welcome to ProfOMeter</h1>
               <p className='text-muted-foreground mx-auto max-w-xs text-sm'>
                 By proceeding, you agree to our <br />
                 <Link href='/' className='text-primary hover:text-primary/80 underline'>

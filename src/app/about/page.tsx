@@ -296,7 +296,7 @@ export default function AboutPage() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}>
             <h1 className='from-primary via-primary/80 to-primary/60 mb-4 bg-gradient-to-r bg-clip-text text-4xl font-bold text-transparent'>
-              About RateThatProf
+              About ProfOMeter
             </h1>
             <p className='text-muted-foreground mx-auto max-w-2xl text-xl'>
               Helping students make informed decisions about their education through transparent professor reviews and
@@ -322,7 +322,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className='text-muted-foreground'>
-                At RateThatProf, we believe that every student deserves access to transparent, honest information about
+                At ProfOMeter, we believe that every student deserves access to transparent, honest information about
                 their professors. Our platform empowers students to make informed decisions about their education while
                 helping professors receive constructive feedback to improve their teaching methods.
               </p>

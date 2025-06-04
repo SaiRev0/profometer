@@ -1,10 +1,10 @@
-# RateThatProf - Professor Rating Platform
+# ProfOMeter - Professor Rating Platform
 
 ![MIT License](https://img.shields.io/badge/license-MIT-blue) [![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)](https://typescriptlang.org) ![ESLint](https://img.shields.io/badge/code%20style-eslint-brightgreen) ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![React](https://img.shields.io/badge/React-19-blue)
 
-## 📚 About RateThatProf
+## 📚 About ProfOMeter
 
-RateThatProf is a specialized platform designed to help students make informed decisions about their education through transparent professor reviews and ratings. The platform serves as a community-driven resource where students can share their experiences and insights about professors and courses.
+ProfOMeter is a specialized platform designed to help students make informed decisions about their education through transparent professor reviews and ratings. The platform serves as a community-driven resource where students can share their experiences and insights about professors and courses.
 
 ### 🎯 Core Features
 
@@ -143,11 +143,11 @@ RateThatProf is a specialized platform designed to help students make informed d
 To use Docker, make sure Docker is installed on your machine. Then, build and run the Docker container:
 
 ```bash
-docker build . -t ratethatprof
+docker build . -t profometer
 # or if using Bun
-docker build . -t ratethatprof -f Dockerfile.bun
+docker build . -t profometer -f Dockerfile.bun
 
-docker run -p 3000:3000 ratethatprof
+docker run -p 3000:3000 profometer
 ```
 
 ## 📄 License

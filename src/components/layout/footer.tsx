@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { motion } from 'framer-motion';
@@ -92,9 +93,9 @@ export default function Footer() {
               whileHover={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 300 }}>
               <motion.div
-                className='from-primary/30 to-primary/20 dark:from-primary/20 dark:to-primary/10 group-hover:bg-primary/30 dark:group-hover:bg-primary/20 rounded-2xl bg-gradient-to-br p-3 shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 dark:shadow-none'
+                className='from-primary/30 to-primary/20 dark:from-primary/20 dark:to-primary/10 group-hover:bg-primary/30 dark:group-hover:bg-primary/20 rounded-2xl bg-gradient-to-br p-2 shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 dark:shadow-none'
                 whileHover={{ rotate: 5 }}>
-                <School className='text-primary h-8 w-8' />
+                <Image src='/images/logo.png' alt='ProfOMeter' width={40} height={40} className='rounded-full' />
               </motion.div>
               <div>
                 <motion.span
@@ -107,7 +108,7 @@ export default function Footer() {
                     repeat: Infinity,
                     repeatType: 'reverse'
                   }}>
-                  RateThatProf
+                  ProfOMeter
                 </motion.span>
                 <p className='text-muted-foreground mt-1 text-sm'>Your Academic Guide</p>
               </div>
@@ -173,7 +174,7 @@ export default function Footer() {
                 </h3>
                 <div className='space-y-4'>
                   <motion.a
-                    href='mailto:contact@ratethatprof.com'
+                    href='mailto:contact@profometer.com'
                     className='group flex items-center gap-3 rounded-xl bg-white/80 p-3 shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/90 hover:shadow-[0_4px_6px_rgba(0,0,0,0.07)] dark:bg-white/5 dark:shadow-none dark:hover:bg-white/10 dark:hover:shadow-none'
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}>
@@ -189,7 +190,7 @@ export default function Footer() {
                       <motion.p
                         className='text-muted-foreground group-hover:text-primary text-sm transition-colors'
                         whileHover={{ x: 5 }}>
-                        contact@ratethatprof.com
+                        contact@profometer.com
                       </motion.p>
                     </div>
                   </motion.a>
@@ -217,7 +218,7 @@ export default function Footer() {
           transition={{ duration: 0.5, delay: 0.4 }}>
           <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
             <motion.p className='text-muted-foreground text-sm' whileHover={{ scale: 1.02 }}>
-              © {new Date().getFullYear()} RateThatProf. All rights reserved.
+              © {new Date().getFullYear()} ProfOMeter. All rights reserved.
             </motion.p>
             <div className='flex items-center gap-4'>
               <motion.p className='text-muted-foreground flex items-center gap-2 text-sm' whileHover={{ scale: 1.02 }}>
