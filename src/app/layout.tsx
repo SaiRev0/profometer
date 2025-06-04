@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 
 import BottomNavigation from '@/components/layout/BottomNavigation';
@@ -15,8 +15,63 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
 export const metadata: Metadata = {
-  title: 'ProfOMeter - Find & Rate Professors',
-  description: 'Discover, rate, and review professors at your university'
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://profometer.com'),
+  title: {
+    default: 'ProfOMeter - Rate and Review Your Professors',
+    template: '%s | ProfOMeter'
+  },
+  description:
+    'Find and share professor ratings, reviews, and course information. Make informed decisions about your courses and professors.',
+  keywords: ['professor ratings', 'course reviews', 'university professors', 'academic reviews', 'professor reviews'],
+  authors: [{ name: 'Saiyam Jain' }],
+  creator: 'Saiyam Jain',
+  publisher: 'Saiyam Jain',
+  alternates: {
+    canonical: '/'
+  },
+  openGraph: {
+    title: 'ProfOMeter - Rate and Review Your Professors',
+    description: 'Find and share professor ratings, reviews, and course information.',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://profometer.com',
+    siteName: 'ProfOMeter',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'ProfOMeter',
+        type: 'image/png'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ProfOMeter - Rate and Review Your Professors',
+    description: 'Find and share professor ratings, reviews, and course information.',
+    images: ['/opengraph-image.png']
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true
+    }
+  },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png'
+  }
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 5,
+  userScalable: true
 };
 
 interface RootLayoutProps {

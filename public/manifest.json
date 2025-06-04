@@ -1,0 +1,77 @@
+{
+  "id": "/",
+  "name": "ProfOMeter",
+  "short_name": "ProfOMeter",
+  "description": "Rate your professors and courses.",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "1010x1010",
+      "src": "maskable_icon.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "48x48",
+      "src": "maskable_icon_x48.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "72x72",
+      "src": "maskable_icon_x72.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "96x96",
+      "src": "maskable_icon_x96.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "128x128",
+      "src": "maskable_icon_x128.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "192x192",
+      "src": "maskable_icon_x192.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "384x384",
+      "src": "maskable_icon_x384.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "maskable_icon_x512.png",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#a71b4a",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "screenshots": [
+    {
+      "src": "screenshort.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ProfOMeter"
+    },
+    {
+      "src": "narrowBanner.png",
+      "sizes": "450x600",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ProfOMeter"
+    }
+  ]
+}
