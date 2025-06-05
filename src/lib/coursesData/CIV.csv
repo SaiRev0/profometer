@@ -1,54 +1,141 @@
 Course Code,Course Name,Credits
-CE101,Basic Surveying,11
-CE201,Mechanics of Solids,6
-CE202,Engineering Geology,8
-CE204,Concrete Laboratory,2
+CE101,Basic Surveying,9
+CE102,Surveying Laboratory,3
+CE201,Mechanics of Solids,8
+CE202,Engineering Geology,9
 CE203,Building Materials and Construction,6
-CE205,"Building Planning, Drawing and Estimation",3
-CE241,Environmental Engineering-I,10
-CE221,Geotechnical Engineering–I,10
-CE231,Structural Mechanics-I,8
-CE251,Transportation Engineering-I,10
+CE204,Concrete Laboratory,2
+CE205,Engineering Geology Laboratory,2
+CE206,Building Planning, Drawing and Estimation,3
+CE221,Geotechnical Engineering - I,9
+CE222,Geotechnical Engineering Laboratory,2
+CE231,Structural Mechanics - 1,9
+CE241,Environmental Engineering-I,9
+CE242,Environmental Engineering Laboratory,2
+CE251,Transportation Engineering - I,9
+CE252,Transportation Engineering Laboratory,2
+CE291,Exploratory Project,5
+CE311,Open Channel Flow,8
+CE312,Urban Hydrology and Hydraulics,9
+CE313,Hydraulic Modeling,9
+CE314,Open Channel Flow Laboratory,2
 CE321,Geotechnical Engineering-II,8
-CE351,Transportation Engineering-II,8
-CE331,Structural Mechanics-II,8
+CE322,Introduction to FEM in Civil Engineering Applications,9
+CE323,Geotechnical Engineering Design,9
+CE331,Structural Mechanics - II,8
 CE332,Design of RC Structures,8
-CE333,Drawing & Detailing of RC Structures,2
-CE312,Urban Hydrology and Hydraulics,8
-CE322,Introduction to FEM in Civil Engineering Applications,8
-CE336,Matrix Analysis of Structures,8
-CE341,Conveyance of Water and Waste Water,8
-CE342,Ecological Engineering,8
-CE352,Pavement Material,8
+CE333,Drawing & Detailing of RC Structures,3
 CE334,Design of Steel Structure,8
 CE335,Drawing & Detailing of Steel Structures,2
-CE311,Open Channel Flow,10
-CE313,Water Rescoures Feild Methods,8
-CE323,Geotechnical Engineering Design,8
-CE337,Prestressed Concrete Design,8
-CE343,Rural Water Supply and Onsite Sanitation Systems,8
-CE353,Transportation Economics,8
-CE411,Engineering Hydrology,6
-CE441,Environmental Engineering-II,8
-CE431,Structural Engineering Laboratory,2
-CE413,Water Power Engineering,8
-CE422,Ground Modification Techniques,8
-CE435,Mechanics of Composite Materials,8
-CE443,Environmental Pollution & Control,8
-CE453,Traffic Engineering,8
+CE336,Matrix Analysis of Structures,9
+CE337,Prestressed Concrete Design,9
+CE341,Conveyance of Water and Waste Water,9
+CE342,Ecological Engineering,9
+CE343,Rural Water Supply and Onsite Sanitation Systems,9
+CE352,Pavement Material,9
+CE353,Traffic Engineering,9
+CE401,Construction Economics and Management,8
+CE411,Engineering Hydrology,9
 CE412,Irrigation Engineering,8
-CE401,Construction Economics and Management,6
-CE414,Design of Hydraulic Structure,8
-CE421,Rock Mechanics,8
-CE423,Introduction to Geotechnical Earthquake Engineering,8
+CE413,Water Power Engineering,9
+CE414,Design of Hydraulic Structure,9
+CE415,River Engineering,9
+CE421,Rock Mechanics,9
+CE422,Ground Modification Techniques,9
+CE423,Introduction to Geotechnical Earthquake Engineering,9
+CE424,Applications of Geosynthetics in Civil Engineering,9
+CE431,Structural Engineering Laboratory,2
+CE432,Advanced Design of RC Structures,9
 CE433,Plastic Design of Structures,8
-CE434,Earthquake Resistant Design of Structures,8
-CE442,Advanced Water & Waste Water Treatment Engineering,8
-CE451,Analysis and Design of Pavements,8
-CE461,Geoinformatics,8
-CE415,River Engineering,8
-CE424,Applications of Geosynthetics in Civil Engineering,8
-CE432,Advanced Design of RC Structures,8
-CE444,Solid and Hazardous Waste management,8
+CE434,Earthquake Resistant Design of Structures,9
+CE435,Mechanics of Composite Materials,9
+CE442,Advanced Water & Waste Water Treatment Engineering,9
+CE443,Environmental Pollution & Control,9
+CE444,Solid and Hazardous Waste management,9
+CE451,Analysis and Design of Pavements,9
 CE452,High Speed Rail Engineering,8
+CE453,Airport Engineering,9
+CE460,Transport Economics,9
+CE461,Geoinformatics,9
 CE462,Disaster Mitigation and Earthquake Engg.,8
+CE465,Optimization Methods,9
+CE486,Environmental Impact Assessment and Auditing,9
+CE487,Automobile Pollution and Control,9
+CE530,Advanced Soil Mechanics,9
+CE534,Ground Improvement Techniques,9
+CE540,Advanced Foundation Engineering,9
+CE543,Rock Mechanics,9
+CE550,Matrix Analysis of Structures,9
+CE551,Structural Dynamics,9
+CE553,Concrete Structures,9
+CE554,Elasticity and Experimental Stress Analysis,9
+CE555,Stability of Structures,9
+CE556,Metal and Cable Structures,9
+CE557,Advanced Concrete Technology,9
+CE560,Finite Element Methods,9
+CE563,Shell Structures,9
+CE565,Optimization Methods,9
+CE570,Environmental System Engineering I,9
+CE571,Design of Water Supply & Waste Water Collection System,9
+CE572,Laboratory Environmental Engineering - 1,3
+CE573,Environmental Sanitation,9
+CE574,Industrial Water and Waste Water Treatment,9
+CE580,Environmental System Engineering II,9
+CE581,Design of Water Supply and Wastewater Treatment System,9
+CE582,Laboratory Environmental Engineering - 2,3
+CE583,Air Pollution and Control,9
+CE584,Environmental System Management,9
+CE585,Solid Waste Engineering and Management,9
+CE586,Environmental Impact Assessment and Auditing,9
+CE587,Automobile Pollution and Control,9
+CE610,Pavement Materials,9
+CE611,Traffic Flow Theory,9
+CE612,Laboratory Transportation Engineering - 1,3
+CE613,Modeling, Analysis and Simulation,9
+CE614,Analysis of Transportation Systems,9
+CE615,Geometric Design of Transport Facilities,9
+CE616,Transport and Environment,9
+CE620,Analysis and Design of Pavements,9
+CE621,Urban Transportation Systems Planning,9
+CE622,Laboratory Transportation Engineering - 2,3
+CE623,Highway Construction Practice,9
+CE624,Mass and Multimodal Transportation Systems,9
+CE625,Traffic Engineering and Management,9
+CE626,Pavement Evaluation, Rehabilitaion and Maintenance,9
+CE627,Transport Economics,9
+CE630,Principles of Remote Sensing,9
+CE631,Geographical Information System,9
+CE632,Laboratory Geoinformatics Engineering -1,3
+CE634,Geodesy and Global Navigation Satellite System,9
+CE635,Computer Programming for Geoinformatics,9
+CE636,Database Management, Data Structure and Algorithms in GIS,9
+CE637,Remote Sensing for Water Resources and Environmental Management,9
+CE638,GIS Application in Transportation Engineering,9
+CE640,Digital Image Processing,9
+CE641,Principles of Surveying and Photogrammetry,9
+CE642,Laboratory Geoinformatics Engineering - 2,3
+CE643,Geoinformatics in Disaster Management,9
+CE644,Web Technology for GIS & Mapping,9
+CE645,Satellite Remote Sensing & GIS for Geo-resources Evaluation,9
+CE646,Geoinformatics Applications,9
+CE648,Spatial Decision Support System,9
+CE650,Applied Geochemistry,9
+CE651,Engineering Geology,9
+CE652,Laboratory Geosciences Engineering - 1,3
+CE653,Engineering Geosciences,9
+CE654,Hydrogeology,9
+CE655,Stratigraphy,9
+CE656,Advanced Structural Geology,9
+CE657,Geophysical Prospecting,9
+CE660,Hydrogeomorphology,9
+CE661,Advance Petrology,9
+CE662,Laboratory Geosciences Engineering - 2,3
+CE663,Environmental Geology,9
+CE664,Petroleum Geology,9
+CE665,Technique of Mineral Exploration,9
+CE666,Ore Geology,9
+CE667,Well Logging,9
+CE668,Remote Sensing and GIS for Geological Engineering,9
+MN542,Geo-Informatics,9
+MA551,Mathematics,9
+MA552,Advanced Numerical Methods,9
