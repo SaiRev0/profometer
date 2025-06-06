@@ -1,104 +1,80 @@
-Course Code,Course Name,Credits
-PHY101,"Physics-I Classical, Quantum & Relativistic Mechanics",13
-PHY102,Physics-II; Introduction To Engineering Electromagnetics,13
-PHY103,Modern Physics,9
-EP101,Practices of Engineering Physics,6
-PHY201,Quantum Physics,11
-EO237,Fibre Optics,9
-PHY211,Solar and Space Plasma Physics,9
-PHY221,Condensed Matter Physics,11
-EP201,"Instrumentation, Measurement and Analysis",6
-EP291,Exploratory Project,5
-PHY202,Computational Physics,8
-PHY301,Atomic and Molecular Physics,9
-PHY302,Relativistic Electrodynamics,9
-PHY306,Classical Mechanics,9
-EP341,Biophysics,9
-EP351,Renewable Energy Sources,9
-EP361,Remote Sensing,9
-PHY303,Statistical Physics,9
-PHY332,Fourier Optics,6
-PHY305,Advanced Quantum Mechanics,9
-PHY311,Introduction to Astronomy & Astrophysics,9
-PHY321,Physics of Materials,9
-EP331,Advanced Optical fiber & Components,9
-EP342,Biophysical Techniques,9
-EP362,Microwave Remote Sensing,9
-PHY307,Advanced Mathematical Methods,9
-PHY401,Nuclear and Particle Physics,11
-PHY402,Quantum Electronics,6
-PHY403,Introduction to Quantum Field Theory,9
-PHY411,Magnetohydrodynamics,9
-EP421,Advanced Materials & Characterization techniques,9
-EP431,Integrated Optics,9
-EP451,Non-Conventional Energy Sources,9
-PHY404,Phase Transition & Critical Phenomena,9
-PHY412,Physics of the Sun and its Atmosphere,9
-PHY421,Advanced Condensed Matter Physics,9
-EP432,Photonics & Optoelectronics,9
-EP441,Advanced Biophysics,9
-EP452,Fuel Cell,9
-EP461,Antenna & Radar Engineering,9
-PHY405,Advance Quantum Field Theory,9
-PHY501,Simulation Methods in Statistical Physics,9
-EP511,Atmospheric Physics & Environmental Sciences,9
-EP512,Space Weather,9
-PHY521,Low Dimensional Physics,9
-PHY531,PBG & Meta - Materials,9
-EP561,Satellite Image Processing,9
-PHY502,Advanced Classical Mechanics and Electrodynamics,
-PHY503,Advanced Experimental Physics,
-PHY522,Tribiophysics of Composite Materials,
-PHY541,Nanotechnology for Health, Energy and Environment,
-PHY561,Principle of Remote Sensing,
-AP-5101,Physics of Atmospheric Sciences,
-AP-5102,Fiber and Integrated Optics,
-AP-5104,Optoelectronics and Photonics,
-AP-5105,Fluids and Plasma,
-PHY504,Advanced Mathematical and Computational Physics,
-PHY505,Advanced Quantum and Statistical Physics,
-PHY513,Astrophysics of the Sun and Galaxies,
-PHY523,Quantum Phase Transition,
-PHY524,Advanced Condensed Matter Physics and Materials Science,
-PYM 401.18,Classical Mechanics,11
-PYM 402.18,Mathematical Methods,11
-PYM 403.18,Quantum Mechanics-I,11
-PYM 404.18,Classical Electrodynamics,11
-PYM 405.18,Quantum Mechanics-II,11
-PYM 406.18,Condensed Matter Physics-I,11
-PYM 407.18,Statistical Physics,11
-PYM 408.18,Electronics,9
-PYM 411.18,Computational Physics,11
-PYM 412.18,Advanced Mathematical Methods,11
-PYM 501.18,Nuclear & Particle Physics,11
-PYM 502.18,Atomic & Molecular Physics,11
-PYM 511.18,Group Theory and its Applications,9
-PYM 512.18,Quantum Field Theory,9
-PYM 513.18,Nonlinear Dynamics,9
-PYM 514.18,Phase Transition & Critical Phenomena,9
-PYM 515.18,Quantum Information Theory,9
-PYM 521.18,Space & Solar Physics,9
-PYM 531.18,Condensed Matter Physics-II,9
-PYM 541.18,Laser Physics,9
-PYM 542.18,Optics & Photonics,9
-PYM 551.18,Advanced Electronics & Communication,9
-PYM 545.21,Wave Optics and Imaging,9
-PYM 516.18,General Theory of Relativity and Cosmology,9
-PYM 517.18,Simulation Methods in Statistical Physics,9
-PYM 518.18,Experimental Aspects of Quantum Information,9
-PYM 522.18,High Energy Physics,9
-PYM 523.18,Astronomy and Astrophysics,9
-PYM 524.18,Magnetohydrodynamics,9
-PYM 525.18,Atmospheric Physics and Environment Science,9
-PYM 526.18,Introduction to Planetary Physics,9
-PYM 527.18,Advanced Nuclear Physics,9
-PYM 532.18,Advanced Condensed Matter Physics,9
-PYM 533.18,Nanomaterials,9
-PYM 534.18,Materials & Characterization Techniques,9
-PYM 535.18,Renewable Energy Sources,9
-PYM 536.18,Biophysics,9
-PYM 543.18,Fibre & Integrated Optics,9
-PYM 544.18,PBG & Meta-materials,9
-PYM 552.18,Microwave Remote Sensing,9
-PYM 553.18,Satellite Image Processing,9
-PYM 546.21,Statistical and Quantum Optics,9
+"Course Code","Course Name","Credits"
+"PHY101","Physics-I Classical, Quantum & Relativistic Mechanics","13"
+"PHY102","Physics-II; Introduction To Engineering Electromagnetics","13"
+"PHY103","Modern Physics","9"
+"EP101","Practices of Engineering Physics","6"
+"PHY201","Quantum Physics","11"
+"EO237","Fibre Optics","9"
+"PHY211","Solar and Space Plasma Physics","9"
+"PHY221","Condensed Matter Physics","11"
+"EP201","Instrumentation, Measurement and Analysis","6"
+"EP291","Exploratory Project","5"
+"PHY202","Computational Physics","8"
+"PHY301","Atomic and Molecular Physics","9"
+"PHY302","Relativistic Electrodynamics","9"
+"PHY306","Classical Mechanics","9"
+"EP341","Biophysics","9"
+"EP351","Renewable Energy Sources","9"
+"EP361","Remote Sensing","9"
+"PHY303","Statistical Physics","9"
+"PHY332","Fourier Optics","6"
+"PHY305","Advanced Quantum Mechanics","9"
+"PHY311","Introduction to Astronomy & Astrophysics","9"
+"PHY321","Physics of Materials","9"
+"EP331","Advanced Optical fiber & Components","9"
+"EP342","Biophysical Techniques","9"
+"EP362","Microwave Remote Sensing","9"
+"PHY307","Advanced Mathematical Methods","9"
+"PHY401","Nuclear and Particle Physics","11"
+"PHY402","Quantum Electronics","6"
+"PHY403","Introduction to Quantum Field Theory","9"
+"PHY411","Magnetohydrodynamics","9"
+"EP421","Advanced Materials & Characterization techniques","9"
+"EP431","Integrated Optics","9"
+"EP451","Non-Conventional Energy Sources","9"
+"PHY404","Phase Transition & Critical Phenomena","9"
+"PHY412","Physics of the Sun and its Atmosphere","9"
+"PHY421","Advanced Condensed Matter Physics","9"
+"EP432","Photonics & Optoelectronics","9"
+"EP441","Advanced Biophysics","9"
+"EP452","Fuel Cell","9"
+"EP461","Antenna & Radar Engineering","9"
+"PHY405","Advance Quantum Field Theory","9"
+"PHY501","Simulation Methods in Statistical Physics","9"
+"EP511","Atmospheric Physics & Environmental Sciences","9"
+"EP512","Space Weather","9"
+"PHY521","Low Dimensional Physics","9"
+"PHY531","PBG & Meta - Materials","9"
+"EP561","Satellite Image Processing","9"
+"PHY406","Condensed Matter Physics-I","11"
+"PHY407","Statistical Physics","11"
+"PHY408","Electronics","9"
+"PHY502","Atomic & Molecular Physics","11"
+"PHY511","Group Theory and its Applications","9"
+"PHY512","Quantum Field Theory","9"
+"PHY513","Nonlinear Dynamics","9"
+"PHY514","Phase Transition & Critical Phenomena","9"
+"PHY515","Quantum Information Theory","9"
+"PHY541","Laser Physics","9"
+"PHY542","Optics & Photonics","9"
+"PHY551","Advanced Electronics & Communication","9"
+"PHY545","Wave Optics and Imaging","9"
+"PHY516","General Theory of Relativity and Cosmology","9"
+"PHY517","Simulation Methods in Statistical Physics","9"
+"PHY518","Experimental Aspects of Quantum Information","9"
+"PHY522","High Energy Physics","9"
+"PHY523","Astronomy and Astrophysics","9"
+"PHY524","Magnetohydrodynamics","9"
+"PHY525","Atmospheric Physics and Environment Science","9"
+"PHY526","Introduction to Planetary Physics","9"
+"PHY527","Advanced Nuclear Physics","9"
+"PHY532","Advanced Condensed Matter Physics","9"
+"PHY533","Nanomaterials","9"
+"PHY534","Materials & Characterization Techniques","9"
+"PHY535","Renewable Energy Sources","9"
+"PHY536","Biophysics","9"
+"PHY543","Fibre & Integrated Optics","9"
+"PHY544","PBG & Meta-materials","9"
+"PHY552","Microwave Remote Sensing","9"
+"PHY553","Satellite Image Processing","9"
+"PHY546","Statistical and Quantum Optics","9"

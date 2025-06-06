@@ -1,42 +1,40 @@
-Course Code,Course Name,Credits
-MS101,Introduction to Engineering Materials,12
-MS201,Phase Diagrams & Phase Transformations,12
-MS202,Crystallography & Crystal Structures,12
-BO201,Introduction to Bio-Engineering,11
-CHO206,Quantum Chemistry and Molecular Spectroscopy,9
-MS203,Polymeric Materials,12
-MS291,Exploratory Project,5
-MS301,Polymer Processing,12
-MS302,Physical Behaviour of Materials,12
-MS303,Materials Characterization,12
-MS401,Energy Materials,11
-MS332,Semiconducting Materials,11
-MS403,Optical Materials,9
-MS331,Advanced Ceramics,9
-MS232,Industrial Polymers,12
-MS311,Synthesis and Processing of Materials,9
-MS233,Mechanical Behaviour of Materials,11
-MS333,Magnetism & Magnetic Materials,9
-MS212,"Thin Films, Interfaces & Multilayers",9
-MS332,Semiconducting Materials,9
-MS334,Organic Electronics & Organic Conductors,9
-MS421,Advance Characterization of Materials,11
-MS422,Diffraction Techniques in Materials Science,9
-MS431,Nanostructured Materials,9
-MS432,Functional Materials,9
-MS433,Applied Magnetic Materials,9
-MS451,Mechanical Characterizations of Materials,3
-MS501,Thermodynamics and Phase Diagrams,9
-MS521,Elements of Crystallography,9
-MS522,Principles of Materials Characterization,9
-MS531,Properties of Engineering Materials,9
-MS532,Magnetism & Magnetic Materials,9
-MS533,Nanostructured Materials,9
-MS432,Mechanical Behaviour of Materials,9
-MS555,Structural Characterizations of Materials (Lab),3
-MS556,Physical Characterization of Materials (Lab),3
-MS402,Composite Materials,9
-MS502,Introduction to Polymeric Materials,9
-MS503,Electrical and Electronic Ceramics,9
-MS504,Organic Electronics and organic Conductors,9
-MS505,Energy Materials,9
+"Course Code","Course Name","Credits"
+"MS101","Introduction to Engineering Materials","12"
+"MS201","Phase Diagrams & Phase Transformations","12"
+"MS202","Crystallography & Crystal Structures","12"
+"BO201","Introduction to Bio-Engineering","11"
+"CHO206","Quantum Chemistry and Molecular Spectroscopy","9"
+"MS203","Polymeric Materials","12"
+"MS291","Exploratory Project","5"
+"MS301","Polymer Processing","12"
+"MS302","Physical Behaviour of Materials","12"
+"MS303","Materials Characterization","12"
+"MS401","Energy Materials","11"
+"MS332","Semiconducting Materials","11"
+"MS403","Optical Materials","9"
+"MS331","Advanced Ceramics","9"
+"MS232","Industrial Polymers","12"
+"MS311","Synthesis and Processing of Materials","9"
+"MS233","Mechanical Behaviour of Materials","11"
+"MS333","Magnetism & Magnetic Materials","9"
+"MS212","Thin Films, Interfaces & Multilayers","9"
+"MS334","Organic Electronics & Organic Conductors","9"
+"MS421","Advance Characterization of Materials","11"
+"MS422","Diffraction Techniques in Materials Science","9"
+"MS431","Nanostructured Materials","9"
+"MS432","Mechanical Behaviour of Materials","9"
+"MS433","Applied Magnetic Materials","9"
+"MS451","Mechanical Characterizations of Materials","3"
+"MS501","Thermodynamics and Phase Diagrams","9"
+"MS521","Elements of Crystallography","9"
+"MS522","Principles of Materials Characterization","9"
+"MS531","Properties of Engineering Materials","9"
+"MS532","Magnetism & Magnetic Materials","9"
+"MS533","Nanostructured Materials","9"
+"MS555","Structural Characterizations of Materials (Lab)","3"
+"MS556","Physical Characterization of Materials (Lab)","3"
+"MS402","Composite Materials","9"
+"MS502","Introduction to Polymeric Materials","9"
+"MS503","Electrical and Electronic Ceramics","9"
+"MS504","Organic Electronics and organic Conductors","9"
+"MS505","Energy Materials","9"

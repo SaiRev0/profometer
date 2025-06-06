@@ -1,80 +1,78 @@
-Course Code,Course Name,Credits
-MT101,Introduction to Metallurgy and Materials Engineering,6
-MT102,Metallurgical Thermodynamics and Kinetics,11
-MT103,Metallurgical Practices – I,3
-MT201,Structure of Materials,11
-MT202,Principles of Extractive Metallurgy,9
-MT203,Materials Testing,9
-MT204,Extractive Metallurgy Practical,3
-MT205,Phase Diagrams,9
-MT206,Transport Phenomena Practical,3
-MT207,Materials Testing Practical,3
-MT211,Iron Making Technologies,9
-MT221,Metallography Techniques,9
-MT222,Metallography Techniques Practical,3
-MT291,Exploratory Project,5
-MT301,Mechanics of Deformation and Fracture,9
-MT302,Non-Ferrous Extractive Metallurgy,9
-MT311,Steel Making Technologies,9
-MT321,Phase Transformations,9
-MT313,Metallurgical Practices-II: Ferrous Metallurgy,3
-MT303,Nuclear Metallurgy,9
-MT312,Fuels & Refractories,9
-MT322,Instrumental Analysis,9
-MT304,Heat Treatment,9
-MT305,Heat Treatment Practical,3
-MT314,Materials Processing Technologies,9
-MT323,Mechanical Behaviour of Materials,9
-MT306,Composite Materials,9
-MT315,Alternative Routes of Iron and Steel Making,9
-MT324,Electronic and Magnetic Materials,9
-MT408,Automotive and Aerospace Materials,9
-MT401,Corrosion and Prevention,6
-MT402,Electrometallurgy and Corrosion Practical,3
-MT411,Metallurgical Practices-III : Materials Processing,2
-MT551,"Wear, Friction and Lubrication",9
-MT583,Stainless Steel Technologies,9
-MT413,Non-Metallic Materials,9
-MT403,Materials Selection and Design,9
-MT404,Modeling and Simulation in Metallurgy,9
-MT409,Modeling and Simulation in Metallurgy Practical,3
-MT423,Cast Iron Technology,9
-MT523,Alloy Steel Production Technology,9
-MT524,Physical Metallurgy of Alloy Steel,9
-MT406,Advanced Processing Technologies,9
-MT407,Energy and Environment in Metallurgical Industries,9
-MT568,Metal Joining Technology,9
-DE.MT502,Advanced X-Ray and Electron Metallography,9  
-DE.MT511,Intermetallics,9  
-DE.MT512,Advanced Materials,9  
-DE.MT541,Solidification Processing,9  
-DE.MT542,Near-Net Shape Processing,9  
-DE.MT543,Surface Engineering,9  
-DE.MT545,Nanostructured Materials,9  
-DE.MT551,Wear, Friction and Lubrication,9  
-DE.MT552,Failure Analysis,9  
-DE.MT565,Thermodynamics of Phase Equilibria,9  
-DE.MT566,Deformation Behaviour,9  
-DE.MT583,Stainless Steel Technologies,9  
-DE.MT521,Plasma Technologies for Metallurgical Applications,9  
-DE.MT572,Alternative Methods of Iron Making,9  
-DE.MT573,Raw Materials Preparation for Iron Making,9  
-DE.MT574,Hydrometallurgy,9  
-DE.MT575,Kinetics of Metallurgical Reactions,9  
-DE.MT584,Extraction of Metals from Lunar Resources,9  
-DE.MT522,Heat Treatment of Advanced Ferrous Alloys,9  
-DE.MT524,Physical Metallurgy of Alloy Steels,9  
-DE.MT567,Fracture Mechanics,9  
-DE.MT568,Metal Joining Technology,9  
-DE.MT570,Structural Phase Transformations,9  
-DE.MT571,Tribology of Composites,9  
-DE.MT582,Crystallographic Texture of Materials,9  
-DE.MT501,Electrometallurgy and Corrosion,9  
-DE.MT523,Alloy Steels Production Technology,9  
-DE.MT578,Physical Chemistry of Metallurgical Processes,9  
-DE.MT579,Advances in Production of NonFerrous Metals,9  
-DE.MT580,Transport Processes,9  
-DE.MT581,Recycling and Management of Electronic Waste,9  
-MT306,Nuclear Metallurgy,9  
-MT361,Composite Materials,9  
-MT503,Advanced Materials,9
+"Course Code","Course Name","Credits"
+"MT101","Introduction to Metallurgy and Materials Engineering","6"
+"MT102","Metallurgical Thermodynamics and Kinetics","11"
+"MT103","Metallurgical Practices – I","3"
+"MT201","Structure of Materials","11"
+"MT202","Principles of Extractive Metallurgy","9"
+"MT203","Materials Testing","9"
+"MT204","Extractive Metallurgy Practical","3"
+"MT205","Phase Diagrams","9"
+"MT206","Transport Phenomena Practical","3"
+"MT207","Materials Testing Practical","3"
+"MT211","Iron Making Technologies","9"
+"MT221","Metallography Techniques","9"
+"MT222","Metallography Techniques Practical","3"
+"MT291","Exploratory Project","5"
+"MT301","Mechanics of Deformation and Fracture","9"
+"MT302","Non-Ferrous Extractive Metallurgy","9"
+"MT311","Steel Making Technologies","9"
+"MT321","Phase Transformations","9"
+"MT313","Metallurgical Practices-II: Ferrous Metallurgy","3"
+"MT303","Nuclear Metallurgy","9"
+"MT312","Fuels & Refractories","9"
+"MT322","Instrumental Analysis","9"
+"MT304","Heat Treatment","9"
+"MT305","Heat Treatment Practical","3"
+"MT314","Materials Processing Technologies","9"
+"MT323","Mechanical Behaviour of Materials","9"
+"MT306","Composite Materials","9"
+"MT315","Alternative Routes of Iron and Steel Making","9"
+"MT324","Electronic and Magnetic Materials","9"
+"MT408","Automotive and Aerospace Materials","9"
+"MT401","Corrosion and Prevention","6"
+"MT402","Electrometallurgy and Corrosion Practical","3"
+"MT411","Metallurgical Practices-III : Materials Processing","2"
+"MT551","Wear, Friction and Lubrication","9"
+"MT583","Stainless Steel Technologies","9"
+"MT413","Non-Metallic Materials","9"
+"MT403","Materials Selection and Design","9"
+"MT404","Modeling and Simulation in Metallurgy","9"
+"MT409","Modeling and Simulation in Metallurgy Practical","3"
+"MT423","Cast Iron Technology","9"
+"MT523","Alloy Steel Production Technology","9"
+"MT524","Physical Metallurgy of Alloy Steel","9"
+"MT406","Advanced Processing Technologies","9"
+"MT407","Energy and Environment in Metallurgical Industries","9"
+"MT568","Metal Joining Technology","9"
+"DE.MT502","Advanced X-Ray and Electron Metallography","9"
+"DE.MT511","Intermetallics","9"
+"DE.MT512","Advanced Materials","9"
+"DE.MT541","Solidification Processing","9"
+"DE.MT542","Near-Net Shape Processing","9"
+"DE.MT543","Surface Engineering","9"
+"DE.MT545","Nanostructured Materials","9"
+"DE.MT552","Failure Analysis","9"
+"DE.MT565","Thermodynamics of Phase Equilibria","9"
+"DE.MT566","Deformation Behaviour","9"
+"DE.MT583","Stainless Steel Technologies","9"
+"DE.MT521","Plasma Technologies for Metallurgical Applications","9"
+"DE.MT572","Alternative Methods of Iron Making","9"
+"DE.MT573","Raw Materials Preparation for Iron Making","9"
+"DE.MT574","Hydrometallurgy","9"
+"DE.MT575","Kinetics of Metallurgical Reactions","9"
+"DE.MT584","Extraction of Metals from Lunar Resources","9"
+"DE.MT522","Heat Treatment of Advanced Ferrous Alloys","9"
+"DE.MT524","Physical Metallurgy of Alloy Steels","9"
+"DE.MT567","Fracture Mechanics","9"
+"DE.MT568","Metal Joining Technology","9"
+"DE.MT570","Structural Phase Transformations","9"
+"DE.MT571","Tribology of Composites","9"
+"DE.MT582","Crystallographic Texture of Materials","9"
+"DE.MT501","Electrometallurgy and Corrosion","9"
+"DE.MT523","Alloy Steels Production Technology","9"
+"DE.MT578","Physical Chemistry of Metallurgical Processes","9"
+"DE.MT579","Advances in Production of NonFerrous Metals","9"
+"DE.MT580","Transport Processes","9"
+"DE.MT581","Recycling and Management of Electronic Waste","9"
+"MT361","Composite Materials","9"
+"MT503","Advanced Materials","9"

@@ -1,186 +1,173 @@
-Course Code,Course Name,Credits
-CSO101,Computer Programming,13
-CSO204,Discrete Maths,9
-CSO102,Data Structures,11
-CSE352,Computer Vision,9
-CSE342,Intelligent Computing,9
-CSE454,Pattern Recognition,9
-CSE464,Machine Learning,9
-CSE456,Biometrics,9
-CSE362,Data Mining,9
-CSE371,Parallel Computing,9
-CSE472,Distributed Computing,9
-CSE103,Information Technology Workshop-I,9
-CSO211,Computer  System Organization,11
-CSE205,Information Technology Workshop-II,9
-CSE241,Artificial Intelligence,11
-CSO221,Algorithms,11
-CSO231,Operating Systems,11
-CSE291,Exploratory Project,5
-CSE361,Database Management System,11
-CSO351,Computer Graphics,11
-CSE443,Natural Language Processing,9
-CSO323,Graph Theory and Applications,9
-CSE353,Multimedia Systems,9
-CSO332,Ubiquitous Computing,9
-CSE372,Introduction to High Performance Computing,9
-CSE381,Software Engineering,11
-CSO322,Theory of Computation,9
-CSE312,Computer Architecture,11
-CSE324,Operations Research,9
-CSE363,Information Retrieval,9
-CSE425,Compiler Design,11
-CSO445,Game Theory,9
-CSE444,Neural Networks,9
-CSE434,Fault Tolerant Computing,9
-CSE435,Real Time Systems,9
-CSE583,Advanced Software Engg.,9
-CSE559,Medical Image Processing,9
-CSE529,BioInformatics Algorithms,9
-CSE582,Software Reuse and Re-engineering,9
-CSE539,Social Network Analysis,9
-CSE573,Parallel Algorithms,9
-CSE530,Information Security,9
-CSE546,Robotics,9
-CSE585,Software Engineering Project Management,9
-CSE574,Cloud Computing,9
-CSE433,Computer Networks,11
-CSE436,Cyber Security,9
-CSE426,Cryptography,9
-CSE457,Data Compression,9
-CSE458,Soft Computing,9
-CSE465,Advanced Databases,9
-CSE537,Network Security,9
-CSE528,Approximation Algorithms,9
-CSE538,Semantic Web,9
-CSE568,Web Mining,9
-CS-7001,Selected Topics in Machine Learning,11
-CS-7002,Bio inspired Computation,11
-CS-7003,Software Metrics,11
-CS-7004,Digital Video Processing,11
-CS-7005,Biometrics,11
-CS-7006,Image Processing & Computers Vision,11
-CS-7007,Advanced Parallel Algorithms,11
-CS-7008,Advanced Computational Mathematics,11
-CS-7009,Advanced Simulation & Modeling,11
-CS-7010,Pattern Recognition,11
-CS-7011,High Performance Computing,11
-CS-7012,Computational Aspects of Bioinformatics,11
-CS-7013,Selected Topics in Social Network Analysis,11
-CS-7014,Advanced Topics in Multimedia & Application,11
-CS-7015,Advanced Knowledge Based Systems,11
-CS-7016,Researches Software Implementation,11
-CS-7017,Research Tools Programming Practice,11
-CS-7018,Advanced Topics in Data Mining,11
-CS-7019,Recent Topics in Computer Networking,11
-CS-7020,Cloud Computing,11
-CS-7021,Advanced Topics in Algorithms,11
-CS-7022,Cognitive Computation,11
-CS-7023,Computer and Scripting - I,11
-CS-7024,Computer and Scripting – II,11
-CS-7025,Selected Topics in Artificial Intelligence,11
-CS-7026,Selected Topics in Natural Language Processing,11
-CS-7027,Selected Topics in Mobile Computing,11
-CS-7028,Selected Topics in Wireless Network,11
-CS-7029,Selected Topics in Augmented Reality and Virtual Reality,11
-CS-7030,Information Retrieval,11
-CSE501,Advanced Algorithms,11
-CSE502,Computer Systems,11
-CSE595,Scientific Computing Lab,4
-CSE511,Advanced Graph Theory,9
-CSE512,Data Warehousing & Data Mining,9
-CSE513,Optimization Theory,9
-CSE514,Social Network Analysis,9
-CSE516,Information Security,9
-CSE517,Recent Trends in Distributed Computing,9
-CSE518,Advances in Compiler Construction,9
-CSE519,Real-Time Systems,9
-CSE520,Advanced Computer Communications,9
-CSE521,Advanced Software Engineering,9
-CSE523,Intelligent Systems,9
-CSE524,Advances in Natural Language Processing,9
-CSE525,Affective Computing,9
-CSE526,Advanced Topics in Wireless Networks,9
-CSE548,Recent Trends in Cloud Computing,9
-CSE515,Advanced Communication Networks and Systems,9
-CSE503,Selected Topics in Artificial Intelligence,11
-CSE504,Mathematics for Computer Science,11
-CSE596,Comprehensive Viva Voce & Seminar,3
-CSE531,Advanced Database Management Systems,9
-CSE532,Computational Geometry,9
-CSE533,Multimedia Systems and Applications,9
-CSE534,High Performance Computing,9
-CSE535,Network Security,9
-CSE536,Reinforcement Learning,9
-CSE522,Recent Trends in Computer Vision,9
-CSE540,Selected Topics in Machine Learning,9
-CSE541,Selected Topics in Information Retrieval,9
-CSE542,Selected Topics in Bio-inspired Computation,9
-CSE543,Introduction to Data Science,9
-CSE544,IoT Protocols and Standards,9
-CSE547,Wireless Sensor Networks,9
-CSE549,IoT Security,9
-CSO 101,Computer Programming,13
-CSE 102,Data Structures,11
-CSE103,Information Technology Workshop (ITW),9
-CSE201,Computer System Organization,11
-CSE202,Digital Logic Design and Microprocessors,11
-CSE203,Discrete Maths,9
-CSE204,Algorithms,11
-CSE205,Operating Systems,11
-CSE206,Computer Networks,11
-CSE207,Exploratory Project,5
-CSE301,Computer Graphics,11
-CSE302,Database Management System,11
-CSE310,Graph Theory and Applications,9
-CSE311,Ubiquitous Computing,9
-CSE312,Intelligent Computing,9
-CSE313,Data Mining,9
-CSE314,Cyber Physical Systems,9
-CSE315,Introduction to Cryptography,9
-CSE316,Introduction to High Performance Computing,9
-CSE317,Biometrics,9
-CSE303,Computer Architecture,11
-CSE304,Theory of Computation,9
-CSE305,Software Engineering,11
-CSE320,Introduction to Computer Vision,9
-CSE321,Parallel Computing,9
-CSE322,Operations Research,9
-CSE323,Quantum Computing,9
-CSE324,Optimization Techniques,9
-CSE325,Wireless Body Area Networks,9
-CSE326,Web Science,9
-CSE327,Information Retrieval,9
-CSE401,Compiler Design,11
-CSE410,Game Theory,9
-CSE411,Fundamentals of Distributed Computing,9
-CSE412,Neural Networks,9
-CSE413,Fault Tolerant Computing,9
-CSE414,Bio-Informatics Algorithms,9
-CSE415,Software Architecture,9
-CSE416,Parallel Algorithms,9
-CSE417,Usable Computer Networks and its Security,9
-CSE418,Cloud Computing,9
-CSE403,Artificial Intelligence,11
-CSE420,Pattern Recognition,9
-CSE421,Learning with Graphs,9
-CSE422,Machine Learning,9
-CSE423,Soft Computing,9
-CSE424,Advanced Databases,9
-CSE425,Offensive and Defensive Security,9
-CSE426,Approximation Algorithms,9
-CSE427,Introduction to Natural Language Processing,9
-CSE428,Modern Cryptography,9
-CSE429,Deep Learning,9
-CSE441,Computational Geometry,9
-CSE442,Multimedia Systems,9
-CSE443,IoT Protocols and Standards,9
-CSE444,Mathematics for Computer Science,9
-CSE445,Wireless Sensor Network,9
-CSE446,Selected Topics in Aritifical Intelligence,9
-CSE447,Reinforcement Learning,9
-CSE448,IoT Security,9
-CSE519,Real Time Systems,9
-CSE531,Robotics,9
-CSE532,Software Engineering Project Management,9
-CSE515,Advanced Communications Networks and Systems,9
+"Course Code","Course Name","Credits"
+"CSO101","Computer Programming","13"
+"CSO204","Discrete Maths","9"
+"CSO102","Data Structures","11"
+"CSE352","Computer Vision","9"
+"CSE342","Intelligent Computing","9"
+"CSE454","Pattern Recognition","9"
+"CSE464","Machine Learning","9"
+"CSE456","Biometrics","9"
+"CSE362","Data Mining","9"
+"CSE371","Parallel Computing","9"
+"CSE472","Distributed Computing","9"
+"CSE103","Information Technology Workshop-I","9"
+"CSO211","Computer  System Organization","11"
+"CSE205","Operating Systems","11"
+"CSE241","Artificial Intelligence","11"
+"CSO221","Algorithms","11"
+"CSO231","Operating Systems","11"
+"CSE291","Exploratory Project","5"
+"CSE361","Database Management System","11"
+"CSO351","Computer Graphics","11"
+"CSE443","Natural Language Processing","9"
+"CSO323","Graph Theory and Applications","9"
+"CSE353","Multimedia Systems","9"
+"CSO332","Ubiquitous Computing","9"
+"CSE372","Introduction to High Performance Computing","9"
+"CSE381","Software Engineering","11"
+"CSO322","Theory of Computation","9"
+"CSE312","Computer Architecture","11"
+"CSE324","Operations Research","9"
+"CSE363","Information Retrieval","9"
+"CSE425","Compiler Design","11"
+"CSO445","Game Theory","9"
+"CSE444","Neural Networks","9"
+"CSE434","Fault Tolerant Computing","9"
+"CSE435","Real Time Systems","9"
+"CSE583","Advanced Software Engg.","9"
+"CSE559","Medical Image Processing","9"
+"CSE529","BioInformatics Algorithms","9"
+"CSE582","Software Reuse and Re-engineering","9"
+"CSE539","Social Network Analysis","9"
+"CSE573","Parallel Algorithms","9"
+"CSE530","Information Security","9"
+"CSE546","Robotics","9"
+"CSE585","Software Engineering Project Management","9"
+"CSE574","Cloud Computing","9"
+"CSE433","Computer Networks","11"
+"CSE436","Cyber Security","9"
+"CSE426","Cryptography","9"
+"CSE457","Data Compression","9"
+"CSE458","Soft Computing","9"
+"CSE465","Advanced Databases","9"
+"CSE537","Network Security","9"
+"CSE528","Approximation Algorithms","9"
+"CSE538","Semantic Web","9"
+"CSE568","Web Mining","9"
+"CS-7001","Selected Topics in Machine Learning","11"
+"CS-7002","Bio inspired Computation","11"
+"CS-7003","Software Metrics","11"
+"CS-7004","Digital Video Processing","11"
+"CS-7005","Biometrics","11"
+"CS-7006","Image Processing & Computers Vision","11"
+"CS-7007","Advanced Parallel Algorithms","11"
+"CS-7008","Advanced Computational Mathematics","11"
+"CS-7009","Advanced Simulation & Modeling","11"
+"CS-7010","Pattern Recognition","11"
+"CS-7011","High Performance Computing","11"
+"CS-7012","Computational Aspects of Bioinformatics","11"
+"CS-7013","Selected Topics in Social Network Analysis","11"
+"CS-7014","Advanced Topics in Multimedia & Application","11"
+"CS-7015","Advanced Knowledge Based Systems","11"
+"CS-7016","Researches Software Implementation","11"
+"CS-7017","Research Tools Programming Practice","11"
+"CS-7018","Advanced Topics in Data Mining","11"
+"CS-7019","Recent Topics in Computer Networking","11"
+"CS-7020","Cloud Computing","11"
+"CS-7021","Advanced Topics in Algorithms","11"
+"CS-7022","Cognitive Computation","11"
+"CS-7023","Computer and Scripting - I","11"
+"CS-7024","Computer and Scripting – II","11"
+"CS-7025","Selected Topics in Artificial Intelligence","11"
+"CS-7026","Selected Topics in Natural Language Processing","11"
+"CS-7027","Selected Topics in Mobile Computing","11"
+"CS-7028","Selected Topics in Wireless Network","11"
+"CS-7029","Selected Topics in Augmented Reality and Virtual Reality","11"
+"CS-7030","Information Retrieval","11"
+"CSE501","Advanced Algorithms","11"
+"CSE502","Computer Systems","11"
+"CSE595","Scientific Computing Lab","4"
+"CSE511","Advanced Graph Theory","9"
+"CSE512","Data Warehousing & Data Mining","9"
+"CSE513","Optimization Theory","9"
+"CSE514","Social Network Analysis","9"
+"CSE516","Information Security","9"
+"CSE517","Recent Trends in Distributed Computing","9"
+"CSE518","Advances in Compiler Construction","9"
+"CSE519","Real Time Systems","9"
+"CSE520","Advanced Computer Communications","9"
+"CSE521","Advanced Software Engineering","9"
+"CSE523","Intelligent Systems","9"
+"CSE524","Advances in Natural Language Processing","9"
+"CSE525","Affective Computing","9"
+"CSE526","Advanced Topics in Wireless Networks","9"
+"CSE548","Recent Trends in Cloud Computing","9"
+"CSE515","Advanced Communications Networks and Systems","9"
+"CSE503","Selected Topics in Artificial Intelligence","11"
+"CSE504","Mathematics for Computer Science","11"
+"CSE596","Comprehensive Viva Voce & Seminar","3"
+"CSE531","Advanced Database Management Systems","9"
+"CSE532","Computational Geometry","9"
+"CSE533","Multimedia Systems and Applications","9"
+"CSE534","High Performance Computing","9"
+"CSE535","Network Security","9"
+"CSE536","Reinforcement Learning","9"
+"CSE522","Recent Trends in Computer Vision","9"
+"CSE540","Selected Topics in Machine Learning","9"
+"CSE541","Selected Topics in Information Retrieval","9"
+"CSE542","Selected Topics in Bio-inspired Computation","9"
+"CSE543","Introduction to Data Science","9"
+"CSE544","IoT Protocols and Standards","9"
+"CSE547","Wireless Sensor Networks","9"
+"CSE549","IoT Security","9"
+"CSE102","Data Structures","11"
+"CSE201","Computer System Organization","11"
+"CSE202","Digital Logic Design and Microprocessors","11"
+"CSE203","Discrete Maths","9"
+"CSE204","Algorithms","11"
+"CSE206","Computer Networks","11"
+"CSE207","Exploratory Project","5"
+"CSE301","Computer Graphics","11"
+"CSE302","Database Management System","11"
+"CSE310","Graph Theory and Applications","9"
+"CSE311","Ubiquitous Computing","9"
+"CSE313","Data Mining","9"
+"CSE314","Cyber Physical Systems","9"
+"CSE315","Introduction to Cryptography","9"
+"CSE316","Introduction to High Performance Computing","9"
+"CSE317","Biometrics","9"
+"CSE303","Computer Architecture","11"
+"CSE304","Theory of Computation","9"
+"CSE305","Software Engineering","11"
+"CSE320","Introduction to Computer Vision","9"
+"CSE321","Parallel Computing","9"
+"CSE322","Operations Research","9"
+"CSE323","Quantum Computing","9"
+"CSE325","Wireless Body Area Networks","9"
+"CSE326","Web Science","9"
+"CSE327","Information Retrieval","9"
+"CSE401","Compiler Design","11"
+"CSE410","Game Theory","9"
+"CSE411","Fundamentals of Distributed Computing","9"
+"CSE412","Neural Networks","9"
+"CSE413","Fault Tolerant Computing","9"
+"CSE414","Bio-Informatics Algorithms","9"
+"CSE415","Software Architecture","9"
+"CSE416","Parallel Algorithms","9"
+"CSE417","Usable Computer Networks and its Security","9"
+"CSE418","Cloud Computing","9"
+"CSE403","Artificial Intelligence","11"
+"CSE420","Pattern Recognition","9"
+"CSE421","Learning with Graphs","9"
+"CSE422","Machine Learning","9"
+"CSE423","Soft Computing","9"
+"CSE424","Advanced Databases","9"
+"CSE427","Introduction to Natural Language Processing","9"
+"CSE428","Modern Cryptography","9"
+"CSE429","Deep Learning","9"
+"CSE441","Computational Geometry","9"
+"CSE442","Multimedia Systems","9"
+"CSE445","Wireless Sensor Network","9"
+"CSE446","Selected Topics in Aritifical Intelligence","9"
+"CSE447","Reinforcement Learning","9"
+"CSE448","IoT Security","9"

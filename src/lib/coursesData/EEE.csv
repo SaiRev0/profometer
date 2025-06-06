@@ -1,82 +1,81 @@
-Course Code,Course Name,Credits
-EO102,Fundamentals of Electronics & Instrumentation Engineering,13
-EE101,Electrical Circuits and Measurement,13
-PE102,Elementary Physical Education,5
-CMO101,Basics of Mechanical Engineering,11
-EE221,DC Machines & Transformer,13
-EE261,Electrical Engineering Practice,5
-EE241,Power Transmission & Distribution,13
-EE231,Power Electronic Devices & Converters,13
-EE211,Linear Control Systems,13
-EE272,Exploratory Project,5
-EO301,Digital Circuits & Systems,11
-EE342,Power System Protection and Switchgear,11
-EE322,Synchronous and Induction Machines,11
-EE343,Power System Analysis & Control,11
-EE332,Analysis & Applications of Power Electronic Converters,11
-EE323,Condition Monitoring and energy conservation,9
-EE401,"Design & Simulation of Electrical Systems (PS, CS, MD & PE)",8
-EE413,Digital Control System,9
-EE447,High Voltage Engineering,11
-EE414,Optimal and Adaptive control System,9
-EE415,Special Topics in Control Systems,9
-EO201,Network Analysis & Synthesis,11
-EE501,Electromagnetic Fields Applied to Electrical Machines,9
-EE503,Analysis and Control of Electric Drives,9
-EE505,Special Electrical Machines,9
-EE502,Dynamics of Electric Machines,9
-EE504,Power Semiconductor Controlled Drives,9
-EE523,Power Electronic Converter-I,9
-EE525,Advanced Power Electronics,9
-EE563,Digital Control Systems,9
-EE527,AI Applications in Power Electronics,9
-EE543,Advanced Protection of Power Apparatus and Systems,9
-EE511,Electrical Machines and Drives Laboratory,3
-EE513,CAD and Analysis of Electrical Machines,3
-EE522,Power Electronic Converter-II,9
-EE508,Electric Traction Systems,9
-EE524,Converter Applications,9
-EE510,Solar and Wind Power Technologies,9
-EE545,EHV AC and HVDC Transmission,9
-EE547,High Voltage and Insulation Engineering,9
-EE549,Power System Dynamics,9
-EE542,Power System Operation and Control,9
-EE544,Power System Transients,9
-EE546,Advanced Power System Stability,9
-EE548,Smart Grid,9
-EE554,Special Topics in Power Systems: FACTS and Distribution Automation,9
-EE561,Modern Control Theory,9
-EE562,Robust Control,9
-EE564,Optimal Control,9
-EE565,Nonlinear Control Systems,9
-EE567,Control System Design,9
-EE569,Stochastic Processes and System Identification,9
-EE541,Power System Analysis,9
-EE566,Adaptive Control,9
-EE571,Control Systems Laboratory,3
-EE573,Control Systems Simulation Laboratory,3
-EE568,Sliding Mode Control and Applications,9
-EE570,Estimation of Signals and Systems,9
-EE582,Modeling and Simulation,9
-EE584,Artificial Intelligence,9
-EE581,Systems Theory,9
-EE583,Operations Research,9
-EE585,Machine Learning and Pattern Recognition,9
-EE586,Systems Reliability,9
-EE591,Systems Laboratory,3
-EE593,Systems Simulation Laboratory,3
-EE241,Power Transmission & Distribution,13
-EE312,Physical Significance of Mathematical Methods,11
-EE345,Artificial Intelligence,11
-EE324,Analysis & Control of Electric Drives,11
-EE433,Converter Applications,11
-EE446,EHV AC & DC Transmission,9
-EE403,Energy Technologies,9
-EE404,Operations Research,9
-EE427,Electric Utilization & Traction,9
-EE434,Design of Power Electronic Converters,9
-EE426,Semiconductor Controlled Drives,9
-EE535,Advanced Power Electronics,9
-EE536,AI Applications in Power Electronics,9
-EE531,Power Electronics Laboratory,3 
-EE533,Simulation of Power Electronic Converters,3
+"Course Code","Course Name","Credits"
+"EO102","Fundamentals of Electronics & Instrumentation Engineering","13"
+"EE101","Electrical Circuits and Measurement","13"
+"PE102","Elementary Physical Education","5"
+"CMO101","Basics of Mechanical Engineering","11"
+"EE221","DC Machines & Transformer","13"
+"EE261","Electrical Engineering Practice","5"
+"EE241","Power Transmission & Distribution","13"
+"EE231","Power Electronic Devices & Converters","13"
+"EE211","Linear Control Systems","13"
+"EE272","Exploratory Project","5"
+"EO301","Digital Circuits & Systems","11"
+"EE342","Power System Protection and Switchgear","11"
+"EE322","Synchronous and Induction Machines","11"
+"EE343","Power System Analysis & Control","11"
+"EE332","Analysis & Applications of Power Electronic Converters","11"
+"EE323","Condition Monitoring and energy conservation","9"
+"EE401","Design & Simulation of Electrical Systems (PS, CS, MD & PE)","8"
+"EE413","Digital Control System","9"
+"EE447","High Voltage Engineering","11"
+"EE414","Optimal and Adaptive control System","9"
+"EE415","Special Topics in Control Systems","9"
+"EO201","Network Analysis & Synthesis","11"
+"EE501","Electromagnetic Fields Applied to Electrical Machines","9"
+"EE503","Analysis and Control of Electric Drives","9"
+"EE505","Special Electrical Machines","9"
+"EE502","Dynamics of Electric Machines","9"
+"EE504","Power Semiconductor Controlled Drives","9"
+"EE523","Power Electronic Converter-I","9"
+"EE525","Advanced Power Electronics","9"
+"EE563","Digital Control Systems","9"
+"EE527","AI Applications in Power Electronics","9"
+"EE543","Advanced Protection of Power Apparatus and Systems","9"
+"EE511","Electrical Machines and Drives Laboratory","3"
+"EE513","CAD and Analysis of Electrical Machines","3"
+"EE522","Power Electronic Converter-II","9"
+"EE508","Electric Traction Systems","9"
+"EE524","Converter Applications","9"
+"EE510","Solar and Wind Power Technologies","9"
+"EE545","EHV AC and HVDC Transmission","9"
+"EE547","High Voltage and Insulation Engineering","9"
+"EE549","Power System Dynamics","9"
+"EE542","Power System Operation and Control","9"
+"EE544","Power System Transients","9"
+"EE546","Advanced Power System Stability","9"
+"EE548","Smart Grid","9"
+"EE554","Special Topics in Power Systems: FACTS and Distribution Automation","9"
+"EE561","Modern Control Theory","9"
+"EE562","Robust Control","9"
+"EE564","Optimal Control","9"
+"EE565","Nonlinear Control Systems","9"
+"EE567","Control System Design","9"
+"EE569","Stochastic Processes and System Identification","9"
+"EE541","Power System Analysis","9"
+"EE566","Adaptive Control","9"
+"EE571","Control Systems Laboratory","3"
+"EE573","Control Systems Simulation Laboratory","3"
+"EE568","Sliding Mode Control and Applications","9"
+"EE570","Estimation of Signals and Systems","9"
+"EE582","Modeling and Simulation","9"
+"EE584","Artificial Intelligence","9"
+"EE581","Systems Theory","9"
+"EE583","Operations Research","9"
+"EE585","Machine Learning and Pattern Recognition","9"
+"EE586","Systems Reliability","9"
+"EE591","Systems Laboratory","3"
+"EE593","Systems Simulation Laboratory","3"
+"EE312","Physical Significance of Mathematical Methods","11"
+"EE345","Artificial Intelligence","11"
+"EE324","Analysis & Control of Electric Drives","11"
+"EE433","Converter Applications","11"
+"EE446","EHV AC & DC Transmission","9"
+"EE403","Energy Technologies","9"
+"EE404","Operations Research","9"
+"EE427","Electric Utilization & Traction","9"
+"EE434","Design of Power Electronic Converters","9"
+"EE426","Semiconductor Controlled Drives","9"
+"EE535","Advanced Power Electronics","9"
+"EE536","AI Applications in Power Electronics","9"
+"EE531","Power Electronics Laboratory","3"
+"EE533","Simulation of Power Electronic Converters","3"

@@ -1,137 +1,134 @@
-Course Code,Course Name,Credits
-ME103,Engineering Thermodynamics,11
-ME105,Manufacturing Practice I,3
-ME104,Engineering Drawing,6
-ME102,Engineering Mechanics,11
-ME221,Mechanical Measurement,9
-ME106,Manufacturing Practice II,3
-ME222,Machine Drawing,3
-ME214,Mechanics of Materials,11
-ME231,Fluid Mechanics and Fluid Machinery,11
-ME251,Manufacturing Technology,11
-ME252,Materials for Mechanical Engineerning,6
-ME223,Kinematics of Machines,9
-ME224,Mechanics of Deformable Solids,11
-ME241,Heat and Mass Transfer,11
-ME261,Metal Machining & Machine Tools,11
-ME311,Fundamentals of Machine Design,9
-ME351,Tool Design and Metrology,11
-ME312N,Dynamics of Machines,9
-ME312,Vibrations,9
-ME313,Materials for Tribological  Applications,9
-ME314,Mechatronics,9
-ME331,Combustion Technology,9
-ME332,Thermal Management of Electronic System,9
-ME352,Mechanical Behaviour of  Engineering Materials,9
-ME353,Lasers in Manufacturing Technology,9
-ME579,Engineering Economics,9
-ME574,Production Planning and Control,9
-ME321,Design of Machine Elements,11
-ME341,Energy Conversion Systems,11
-ME471,Industrial Management,9
-ME322,Computational Mechanics,3
-ME323,Composite Materials,9
-ME324,Biomaterials,9
-ME325,Smart Materials and Structures,9
-ME342,Refrigeration & Air-conditioning,9
-ME343,Non-Conventional Energy Resources,9
-ME361,Tribology of Manufacturing Processes,9
-ME587,Forecasting and Time Series Analysis,9
-ME485,Operations Research,9
-ME412,Fracture Mechanics,9
-ME413,Experimental Mechanics & NDT,9
-ME511,Optimization for Engineering Design,9
-ME512,Computer-aided Design,9
-ME513,Theory of elasticity,9
-ME514,Theory of vibrations,9
-ME515,Advanced composite materials,9
-ME516,Mechanics of fracture and fatigue,9
-ME517,Vehicle Dynamics,9
-ME432,Automobile Engineering,9
-ME433,Computational Fluid Dynamics,9
-ME453,Manufacturing Systems,9
-ME454,Rapid Design & Manufacturing,9
-ME586,Facility Planning : Layout and Location,9
-ME573,Supply Chain Management,9
-MO102,Transport Phenomena,11
-ME431,Turbomachines,6
-ME401,Mechanical Engineering Lab,3
-ME411,Finite Element Method,9
-ME526,Impact Dynamics and Crashworthiness,9
-ME527,Theory of Plasticity,9
-ME441,Internal Combustion Engine,9
-ME442,Bio Transport Mechanism,9
-ME451,Unconventional Machining Processes,9
-ME452,Theory of Abrasive Machining,9
-ME461,Robotics,9
-ME583,Simulation for Decision Making,9
-ME582,Total Quality Management,9
-ME584,Marketing Management,9
-ME421,Control Systems Engineering,9
-ME525,Tribology,9
-ME443,Power Generation,9
-ME444,Wind Power Meteorology,9
-ME445,Applied CFD,9
-ME581,Management Information System,9
-ME585,Design of Production System,9
-ME563,Green Manufacturing,9
-ME533,Conduction & Radiation,9
-ME551,Theory of Metal Machining,9
-ME552,Technology for Competitive Manufacturing,9
-ME553,Surface Engineering,9
-ME554,Computer Integrated Manufacturing Systems,9
-ME557,Additive Manufacturing,9
-ME577,Financial Engineering,9
-ME531,Advanced Thermodynamics,9
-ME532,Advanced Fluid Mechanics,9
-ME454,Rapid Design and Manufacturing,9
-ME683,Project Management,9
-ME521,Nuclear Reactor Design & Technology,9
-ME522,Finite Element Analysis,9
-ME523,Introduction to Micro Electro Mechanical Systems (MEMS),9
-ME534,Convection Heat Transfer,9
-ME541,Advances in Internal Combustion Engines,9
-ME542,Gas Dynamics,9
-ME561,Unconventional Manufacturing Processes,9
-ME562,Machine Tool Engineering,9
-ME524,Introduction to Nanomechanics,9
-ME543,Design of Thermal Systems,9
-ME544,Advanced Computational Fluid Dynamics,9
-ME564,Micro-Nano Manufacturing,9
-ME585,Design of Production Systems,9
-ME-DSE511,Deterministic Decision Modelling,9
-ME-DSE512,Probability and Statistics for Data Sciences,9
-ME-DSE513,Programming, Data Structures and Algorithms,9
-ME-DSE514,Production and Operations Analysis,9
-ME-DSE515,Multi Criteria Decision Making,9
-ME-DSE516,Engineering Economics,9
-ME-DSE517,Financial Analytics,9
-ME-DSE521,Stochastic Decision Modelling,9
-ME-DSE522,Simulation for Decision Making,9
-ME-DSE523,Machine Learning for Decision Making,9
-ME-DSE531,Project Management,9
-ME-DSE532,Production Planning and Control,9
-ME-DSE524,Supply Chain & Logistics Management,9
-ME-DSE525,Facility Location: Models and Algorithms,9
-ME-DSE526,Network Flows and Graphs,9
-ME-DSE533,Forecasting & Time Series Analysis,9
-ME-DSE534,Blockchain Technology,9
-ME-DSE535,Total Quality Management,9
-ME-DSE536,Design of Production Systems,9
-ME-DSE537,Quality Engineering & Design of Experiments,9
-ME-DSE538,Product Design and Development,9
-ME-DSE527,Agri-import and export management,9
-ME-DSE528,Legal Aspects and Ethics in Healthcare,9
-ME-DSE539,Data Mining & Applications,9
-ME-DSE529,Operations & Quality Management of Healthcare Systems,9
-ME-510,Biomaterials: Principles and Practices,9
-ME518,Biomechanics,9
-ME519,Theory of Mechanisms,9
-ME528,Engineering Design,9
-ME536,Combustion Generated Pollution,9
-ME537,Advanced Refrigeration Systems,9
-ME538,Advanced Turbo-machines,9
-ME559,Casting and Welding,9
-ME560,Mechanics of Metal Forming,9
-ME575,Multi Criteria Decision Analysis,9
-ME572,Quality Engineering,9
+"Course Code","Course Name","Credits"
+"ME103","Engineering Thermodynamics","11"
+"ME105","Manufacturing Practice I","3"
+"ME104","Engineering Drawing","6"
+"ME102","Engineering Mechanics","11"
+"ME221","Mechanical Measurement","9"
+"ME106","Manufacturing Practice II","3"
+"ME222","Machine Drawing","3"
+"ME214","Mechanics of Materials","11"
+"ME231","Fluid Mechanics and Fluid Machinery","11"
+"ME251","Manufacturing Technology","11"
+"ME252","Materials for Mechanical Engineerning","6"
+"ME223","Kinematics of Machines","9"
+"ME224","Mechanics of Deformable Solids","11"
+"ME241","Heat and Mass Transfer","11"
+"ME261","Metal Machining & Machine Tools","11"
+"ME311","Fundamentals of Machine Design","9"
+"ME351","Tool Design and Metrology","11"
+"ME312N","Dynamics of Machines","9"
+"ME312","Vibrations","9"
+"ME313","Materials for Tribological  Applications","9"
+"ME314","Mechatronics","9"
+"ME331","Combustion Technology","9"
+"ME332","Thermal Management of Electronic System","9"
+"ME352","Mechanical Behaviour of  Engineering Materials","9"
+"ME353","Lasers in Manufacturing Technology","9"
+"ME579","Engineering Economics","9"
+"ME574","Production Planning and Control","9"
+"ME321","Design of Machine Elements","11"
+"ME341","Energy Conversion Systems","11"
+"ME471","Industrial Management","9"
+"ME322","Computational Mechanics","3"
+"ME323","Composite Materials","9"
+"ME324","Biomaterials","9"
+"ME325","Smart Materials and Structures","9"
+"ME342","Refrigeration & Air-conditioning","9"
+"ME343","Non-Conventional Energy Resources","9"
+"ME361","Tribology of Manufacturing Processes","9"
+"ME587","Forecasting and Time Series Analysis","9"
+"ME485","Operations Research","9"
+"ME412","Fracture Mechanics","9"
+"ME413","Experimental Mechanics & NDT","9"
+"ME511","Optimization for Engineering Design","9"
+"ME512","Computer-aided Design","9"
+"ME513","Theory of elasticity","9"
+"ME514","Theory of vibrations","9"
+"ME515","Advanced composite materials","9"
+"ME516","Mechanics of fracture and fatigue","9"
+"ME517","Vehicle Dynamics","9"
+"ME432","Automobile Engineering","9"
+"ME433","Computational Fluid Dynamics","9"
+"ME453","Manufacturing Systems","9"
+"ME454","Rapid Design & Manufacturing","9"
+"ME586","Facility Planning : Layout and Location","9"
+"ME573","Supply Chain Management","9"
+"MO102","Transport Phenomena","11"
+"ME431","Turbomachines","6"
+"ME401","Mechanical Engineering Lab","3"
+"ME411","Finite Element Method","9"
+"ME526","Impact Dynamics and Crashworthiness","9"
+"ME527","Theory of Plasticity","9"
+"ME441","Internal Combustion Engine","9"
+"ME442","Bio Transport Mechanism","9"
+"ME451","Unconventional Machining Processes","9"
+"ME452","Theory of Abrasive Machining","9"
+"ME461","Robotics","9"
+"ME583","Simulation for Decision Making","9"
+"ME582","Total Quality Management","9"
+"ME584","Marketing Management","9"
+"ME421","Control Systems Engineering","9"
+"ME525","Tribology","9"
+"ME443","Power Generation","9"
+"ME444","Wind Power Meteorology","9"
+"ME445","Applied CFD","9"
+"ME581","Management Information System","9"
+"ME585","Design of Production System","9"
+"ME563","Green Manufacturing","9"
+"ME533","Conduction & Radiation","9"
+"ME551","Theory of Metal Machining","9"
+"ME552","Technology for Competitive Manufacturing","9"
+"ME553","Surface Engineering","9"
+"ME554","Computer Integrated Manufacturing Systems","9"
+"ME557","Additive Manufacturing","9"
+"ME577","Financial Engineering","9"
+"ME531","Advanced Thermodynamics","9"
+"ME532","Advanced Fluid Mechanics","9"
+"ME683","Project Management","9"
+"ME521","Nuclear Reactor Design & Technology","9"
+"ME522","Finite Element Analysis","9"
+"ME523","Introduction to Micro Electro Mechanical Systems (MEMS)","9"
+"ME534","Convection Heat Transfer","9"
+"ME541","Advances in Internal Combustion Engines","9"
+"ME542","Gas Dynamics","9"
+"ME561","Unconventional Manufacturing Processes","9"
+"ME562","Machine Tool Engineering","9"
+"ME524","Introduction to Nanomechanics","9"
+"ME543","Design of Thermal Systems","9"
+"ME544","Advanced Computational Fluid Dynamics","9"
+"ME564","Micro-Nano Manufacturing","9"
+"ME-DSE511","Deterministic Decision Modelling","9"
+"ME-DSE512","Probability and Statistics for Data Sciences","9"
+"ME-DSE514","Production and Operations Analysis","9"
+"ME-DSE515","Multi Criteria Decision Making","9"
+"ME-DSE516","Engineering Economics","9"
+"ME-DSE517","Financial Analytics","9"
+"ME-DSE521","Stochastic Decision Modelling","9"
+"ME-DSE522","Simulation for Decision Making","9"
+"ME-DSE523","Machine Learning for Decision Making","9"
+"ME-DSE531","Project Management","9"
+"ME-DSE532","Production Planning and Control","9"
+"ME-DSE524","Supply Chain & Logistics Management","9"
+"ME-DSE525","Facility Location: Models and Algorithms","9"
+"ME-DSE526","Network Flows and Graphs","9"
+"ME-DSE533","Forecasting & Time Series Analysis","9"
+"ME-DSE534","Blockchain Technology","9"
+"ME-DSE535","Total Quality Management","9"
+"ME-DSE536","Design of Production Systems","9"
+"ME-DSE537","Quality Engineering & Design of Experiments","9"
+"ME-DSE538","Product Design and Development","9"
+"ME-DSE527","Agri-import and export management","9"
+"ME-DSE528","Legal Aspects and Ethics in Healthcare","9"
+"ME-DSE539","Data Mining & Applications","9"
+"ME-DSE529","Operations & Quality Management of Healthcare Systems","9"
+"ME-510","Biomaterials: Principles and Practices","9"
+"ME518","Biomechanics","9"
+"ME519","Theory of Mechanisms","9"
+"ME528","Engineering Design","9"
+"ME536","Combustion Generated Pollution","9"
+"ME537","Advanced Refrigeration Systems","9"
+"ME538","Advanced Turbo-machines","9"
+"ME559","Casting and Welding","9"
+"ME560","Mechanics of Metal Forming","9"
+"ME575","Multi Criteria Decision Analysis","9"
+"ME572","Quality Engineering","9"
