@@ -5,13 +5,13 @@ import { departments } from '@/lib/mock-data';
 
 async function seedDepartments() {
   try {
-    await db.department.deleteMany();
-    await db.professor.deleteMany();
-    await db.course.deleteMany();
-    await db.review.deleteMany();
     await db.reviewVote.deleteMany();
-    await db.user.deleteMany();
+    await db.review.deleteMany();
+    await db.course.deleteMany();
+    await db.professor.deleteMany();
     await db.account.deleteMany();
+    await db.user.deleteMany();
+    await db.department.deleteMany();
 
     // Create departments
     const createdDepartments = await db.department.createMany({

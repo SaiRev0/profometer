@@ -6,7 +6,7 @@ CE202,Engineering Geology,9
 CE203,Building Materials and Construction,6
 CE204,Concrete Laboratory,2
 CE205,Engineering Geology Laboratory,2
-CE206,Building Planning, Drawing and Estimation,3
+CE206,"Building Planning, Drawing and Estimation",3
 CE221,Geotechnical Engineering - I,9
 CE222,Geotechnical Engineering Laboratory,2
 CE231,Structural Mechanics - 1,9
@@ -91,7 +91,7 @@ CE587,Automobile Pollution and Control,9
 CE610,Pavement Materials,9
 CE611,Traffic Flow Theory,9
 CE612,Laboratory Transportation Engineering - 1,3
-CE613,Modeling, Analysis and Simulation,9
+CE613,"Modeling, Analysis and Simulation",9
 CE614,Analysis of Transportation Systems,9
 CE615,Geometric Design of Transport Facilities,9
 CE616,Transport and Environment,9
@@ -101,14 +101,14 @@ CE622,Laboratory Transportation Engineering - 2,3
 CE623,Highway Construction Practice,9
 CE624,Mass and Multimodal Transportation Systems,9
 CE625,Traffic Engineering and Management,9
-CE626,Pavement Evaluation, Rehabilitaion and Maintenance,9
+CE626,"Pavement Evaluation, Rehabilitaion and Maintenance",9
 CE627,Transport Economics,9
 CE630,Principles of Remote Sensing,9
 CE631,Geographical Information System,9
 CE632,Laboratory Geoinformatics Engineering -1,3
 CE634,Geodesy and Global Navigation Satellite System,9
 CE635,Computer Programming for Geoinformatics,9
-CE636,Database Management, Data Structure and Algorithms in GIS,9
+CE636,"Database Management, Data Structure and Algorithms in GIS",9
 CE637,Remote Sensing for Water Resources and Environmental Management,9
 CE638,GIS Application in Transportation Engineering,9
 CE640,Digital Image Processing,9
