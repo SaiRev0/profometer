@@ -26,11 +26,11 @@ export default function Page() {
             <h1 className='text-2xl font-semibold tracking-tight'>Welcome to ProfOMeter</h1>
             <p className='mx-auto max-w-xs text-sm'>
               By proceeding, you agree to our <br />
-              <Link href='/' className='underline'>
-                User Agreement
+              <Link href='/terms' className='underline'>
+                Terms and Conditions
               </Link>{' '}
               and{' '}
-              <Link href='/' className='underline'>
+              <Link href='/privacy' className='underline'>
                 Privacy Policy
               </Link>
               .

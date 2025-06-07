@@ -22,11 +22,11 @@ const page: FC = () => {
               <h1 className='text-2xl font-semibold tracking-tight'>Welcome to ProfOMeter</h1>
               <p className='text-muted-foreground mx-auto max-w-xs text-sm'>
                 By proceeding, you agree to our <br />
-                <Link href='/' className='text-primary hover:text-primary/80 underline'>
-                  User Agreement
+                <Link href='/terms' className='text-primary hover:text-primary/80 underline'>
+                  Terms and Conditions
                 </Link>{' '}
                 and{' '}
-                <Link href='/' className='text-primary hover:text-primary/80 underline'>
+                <Link href='/privacy' className='text-primary hover:text-primary/80 underline'>
                   Privacy Policy
                 </Link>
                 .
