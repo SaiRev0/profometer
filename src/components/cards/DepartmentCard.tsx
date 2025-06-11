@@ -46,7 +46,7 @@ export function DepartmentCardSkeleton() {
 
 export default function DepartmentCard({ department, index = 0 }: DepartmentCardProps) {
   const getRatingColor = (rating: number) => {
-    if (rating >= 4.0) return 'bg-success';
+    if (rating >= 4.0) return 'bg-green-400';
     if (rating >= 3.5) return 'bg-primary';
     if (rating >= 3.0) return 'bg-amber-500';
     if (rating >= 2.5) return 'bg-orange-500';

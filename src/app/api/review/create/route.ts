@@ -74,15 +74,20 @@ export async function POST(req: Request) {
             data: {
               totalCourses: {
                 set: await tx.review
-                  .groupBy({
-                    by: ['courseCode'],
+                  .findMany({
                     where: {
                       professorId,
                       type: 'professor'
                     },
-                    _count: true
+                    select: {
+                      courseCode: true
+                    },
+                    distinct: ['courseCode']
                   })
-                  .then((result) => result.length)
+                  .then((courses) => {
+                    // Add 1 if the new course is not in the existing courses
+                    return courses.length + (courses.some((c) => c.courseCode === courseCode) ? 0 : 1);
+                  })
               }
             }
           }),
@@ -91,15 +96,20 @@ export async function POST(req: Request) {
             data: {
               totalProfessors: {
                 set: await tx.review
-                  .groupBy({
-                    by: ['professorId'],
+                  .findMany({
                     where: {
                       courseCode,
                       type: 'course'
                     },
-                    _count: true
+                    select: {
+                      professorId: true
+                    },
+                    distinct: ['professorId']
                   })
-                  .then((result) => result.length)
+                  .then((professors) => {
+                    // Add 1 if the new professor is not in the existing professors
+                    return professors.length + (professors.some((p) => p.professorId === professorId) ? 0 : 1);
+                  })
               }
             }
           })
@@ -115,71 +125,131 @@ export async function POST(req: Request) {
 
           // Calculate new professor averages
           const newProfRatings: ProfessorRating = {
-            overall: Number(
-              (
-                (currentProfStats.ratings.overall * profTotalReviews + professorRatings.overall) /
-                newProfTotalReviews
-              ).toFixed(1)
+            overall: Math.min(
+              5,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.ratings.overall * profTotalReviews + professorRatings.overall) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            teaching: Number(
-              (
-                (currentProfStats.ratings.teaching * profTotalReviews + professorRatings.teaching) /
-                newProfTotalReviews
-              ).toFixed(1)
+            teaching: Math.min(
+              5,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.ratings.teaching * profTotalReviews + professorRatings.teaching) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            helpfulness: Number(
-              (
-                (currentProfStats.ratings.helpfulness * profTotalReviews + professorRatings.helpfulness) /
-                newProfTotalReviews
-              ).toFixed(1)
+            helpfulness: Math.min(
+              5,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.ratings.helpfulness * profTotalReviews + professorRatings.helpfulness) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            fairness: Number(
-              (
-                (currentProfStats.ratings.fairness * profTotalReviews + professorRatings.fairness) /
-                newProfTotalReviews
-              ).toFixed(1)
+            fairness: Math.min(
+              5,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.ratings.fairness * profTotalReviews + professorRatings.fairness) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            clarity: Number(
-              (
-                (currentProfStats.ratings.clarity * profTotalReviews + professorRatings.clarity) /
-                newProfTotalReviews
-              ).toFixed(1)
+            clarity: Math.min(
+              5,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.ratings.clarity * profTotalReviews + professorRatings.clarity) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            communication: Number(
-              (
-                (currentProfStats.ratings.communication * profTotalReviews + professorRatings.communication) /
-                newProfTotalReviews
-              ).toFixed(1)
+            communication: Math.min(
+              5,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.ratings.communication * profTotalReviews + professorRatings.communication) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             )
           };
 
           // Calculate new professor percentages
           const newProfPercentages: ProfessorPercentages = {
-            wouldRecommend: Number(
-              (
-                (currentProfStats.percentages.wouldRecommend * profTotalReviews +
-                  professorStatistics.wouldRecommend * 100) /
-                newProfTotalReviews
-              ).toFixed(1)
+            wouldRecommend: Math.min(
+              100,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.percentages.wouldRecommend * profTotalReviews +
+                      professorStatistics.wouldRecommend * 100) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            attendanceRating: Number(
-              (
-                (currentProfStats.percentages.attendanceRating * profTotalReviews +
-                  professorStatistics.attendanceRating) /
-                newProfTotalReviews
-              ).toFixed(1)
+            attendanceRating: Math.min(
+              100,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.percentages.attendanceRating * profTotalReviews +
+                      professorStatistics.attendanceRating) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            quizes: Number(
-              (
-                (currentProfStats.percentages.quizes * profTotalReviews + professorStatistics.quizes * 100) /
-                newProfTotalReviews
-              ).toFixed(1)
+            quizes: Math.min(
+              100,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.percentages.quizes * profTotalReviews + professorStatistics.quizes * 100) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             ),
-            assignments: Number(
-              (
-                (currentProfStats.percentages.assignments * profTotalReviews + professorStatistics.assignments * 100) /
-                newProfTotalReviews
-              ).toFixed(1)
+            assignments: Math.min(
+              100,
+              Math.max(
+                0,
+                Number(
+                  (
+                    (currentProfStats.percentages.assignments * profTotalReviews + professorStatistics.assignments * 100) /
+                    newProfTotalReviews
+                  ).toFixed(1)
+                )
+              )
             )
           };
 
@@ -237,26 +307,19 @@ export async function POST(req: Request) {
 
           if (department) {
             const weight = 8; // Using 8 as weight for professor reviews
+            const newTotalWeightedSum = department.totalWeightedSum + ratings.overall * weight;
+            const newTotalWeight = department.totalWeight + weight;
+            const newAvgRating = Math.min(5, Math.max(0, Number((newTotalWeightedSum / newTotalWeight).toFixed(1))));
+
             await tx.department.update({
               where: { code: professor.departmentCode },
               data: {
-                totalWeightedSum: {
-                  increment: ratings.overall * weight
-                },
-                totalWeight: {
-                  increment: weight
-                },
+                totalWeightedSum: newTotalWeightedSum,
+                totalWeight: newTotalWeight,
                 numReviews: {
                   increment: 1
                 },
-                avgRating: {
-                  set: Number(
-                    (
-                      (department.totalWeightedSum + ratings.overall * weight) /
-                      (department.totalWeight + weight)
-                    ).toFixed(1)
-                  )
-                }
+                avgRating: newAvgRating
               }
             });
           }
@@ -270,35 +333,50 @@ export async function POST(req: Request) {
 
           // Calculate new course averages
           const newCourseRatings: CourseRating = {
-            overall: Number(
-              (
-                (currentCourseStats.ratings.overall * courseTotalReviews + courseRatings.overall) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            overall: Math.min(
+              5,
+              Number(
+                (
+                  (currentCourseStats.ratings.overall * courseTotalReviews + courseRatings.overall) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            difficulty: Number(
-              (
-                (currentCourseStats.ratings.difficulty * courseTotalReviews + courseRatings.difficulty) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            scoring: Math.min(
+              5,
+              Number(
+                (
+                  (currentCourseStats.ratings.scoring * courseTotalReviews + courseRatings.scoring) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            workload: Number(
-              (
-                (currentCourseStats.ratings.workload * courseTotalReviews + courseRatings.workload) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            engaging: Math.min(
+              5,
+              Number(
+                (
+                  (currentCourseStats.ratings.engaging * courseTotalReviews + courseRatings.engaging) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            content: Number(
-              (
-                (currentCourseStats.ratings.content * courseTotalReviews + courseRatings.content) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            conceptual: Math.min(
+              5,
+              Number(
+                (
+                  (currentCourseStats.ratings.conceptual * courseTotalReviews + courseRatings.conceptual) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            numerical: Number(
-              (
-                (currentCourseStats.ratings.numerical * courseTotalReviews + courseRatings.numerical) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            easyToLearn: Math.min(
+              5,
+              Number(
+                (
+                  (currentCourseStats.ratings.easyToLearn * courseTotalReviews + courseRatings.easyToLearn) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             )
           };
 
@@ -320,31 +398,43 @@ export async function POST(req: Request) {
 
           // Calculate new course percentages
           const newCoursePercentages: CoursePercentages = {
-            wouldRecommend: Number(
-              (
-                (currentCourseStats.percentages.wouldRecommend * courseTotalReviews +
-                  courseStatistics.wouldRecommend * 100) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            wouldRecommend: Math.min(
+              100,
+              Number(
+                (
+                  (currentCourseStats.percentages.wouldRecommend * courseTotalReviews +
+                    courseStatistics.wouldRecommend * 100) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            attendanceRating: Number(
-              (
-                (currentCourseStats.percentages.attendanceRating * courseTotalReviews +
-                  courseStatistics.attendanceRating) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            attendanceRating: Math.min(
+              100,
+              Number(
+                (
+                  (currentCourseStats.percentages.attendanceRating * courseTotalReviews +
+                    courseStatistics.attendanceRating) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            quizes: Number(
-              (
-                (currentCourseStats.percentages.quizes * courseTotalReviews + courseStatistics.quizes * 100) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            quizes: Math.min(
+              100,
+              Number(
+                (
+                  (currentCourseStats.percentages.quizes * courseTotalReviews + courseStatistics.quizes * 100) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
-            assignments: Number(
-              (
-                (currentCourseStats.percentages.assignments * courseTotalReviews + courseStatistics.assignments * 100) /
-                newCourseTotalReviews
-              ).toFixed(1)
+            assignments: Math.min(
+              100,
+              Number(
+                (
+                  (currentCourseStats.percentages.assignments * courseTotalReviews + courseStatistics.assignments * 100) /
+                  newCourseTotalReviews
+                ).toFixed(1)
+              )
             ),
             averageGrade: averageGradeString
           };
@@ -368,26 +458,18 @@ export async function POST(req: Request) {
 
           if (department) {
             const weight = course.credits; // Using course credits as weight
+            const newTotalWeightedSum = department.totalWeightedSum + ratings.overall * weight;
+            const newTotalWeight = department.totalWeight + weight;
+            const newAvgRating = Math.min(5, Math.max(0, Number((newTotalWeightedSum / newTotalWeight).toFixed(1))));
             await tx.department.update({
               where: { code: course.departmentCode },
               data: {
-                totalWeightedSum: {
-                  increment: ratings.overall * weight
-                },
-                totalWeight: {
-                  increment: weight
-                },
+                totalWeightedSum: newTotalWeightedSum,
+                totalWeight: newTotalWeight,
                 numReviews: {
                   increment: 1
                 },
-                avgRating: {
-                  set: Number(
-                    (
-                      (department.totalWeightedSum + ratings.overall * weight) /
-                      (department.totalWeight + weight)
-                    ).toFixed(1)
-                  )
-                }
+                avgRating: newAvgRating
               }
             });
           }

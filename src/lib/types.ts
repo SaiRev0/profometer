@@ -1,9 +1,9 @@
 export interface CourseRating {
   overall: number;
-  difficulty: number;
-  workload: number;
-  content: number;
-  numerical: number;
+  scoring: number;
+  engaging: number;
+  conceptual: number;
+  easyToLearn: number;
 }
 export interface CoursePercentages {
   wouldRecommend: number;

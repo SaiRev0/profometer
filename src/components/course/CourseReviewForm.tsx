@@ -59,10 +59,10 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
   const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || `Odd-${getCurrentYear()}`);
   const [reviewRatings, setReviewRatings] = useState(
     initialData?.ratings || {
-      difficulty: 0,
-      workload: 0,
-      content: 0,
-      numerical: 0
+      scoring: 0,
+      engaging: 0,
+      conceptual: 0,
+      easyToLearn: 0
     }
   );
   const [reviewStatistics, setReviewStatistics] = useState(
@@ -168,10 +168,10 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
         toast.success('Review Submitted!');
         // Reset form only for new reviews
         setReviewRatings({
-          difficulty: 0,
-          workload: 0,
-          content: 0,
-          numerical: 0
+          scoring: 0,
+          engaging: 0,
+          conceptual: 0,
+          easyToLearn: 0
         });
         setReviewStatistics({
           wouldRecommend: -1,

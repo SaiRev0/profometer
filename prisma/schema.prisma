@@ -105,7 +105,7 @@ model Course {
     department      Department @relation(fields: [departmentCode], references: [code])
     reviews         Review[]
     totalProfessors Int        @default(0)
-    statistics      Json       @default("{\"ratings\":{\"overall\":0, \"difficulty\":0, \"workload\":0, \"content\":0, \"numerical\":0},\"percentages\":{\"wouldRecommend\":0, \"attendanceRating\":0, \"quizes\":0, \"assignments\":0, \"averageGrade\": \"NA\"},\"totalReviews\":0}")
+    statistics      Json       @default("{\"ratings\":{\"overall\":0, \"scoring\":0, \"engaging\":0, \"conceptual\":0, \"easyToLearn\":0},\"percentages\":{\"wouldRecommend\":0, \"attendanceRating\":0, \"quizes\":0, \"assignments\":0, \"averageGrade\": \"NA\"},\"totalReviews\":0}")
     verified        Boolean    @default(false)
     createdAt       DateTime   @default(now())
     updatedAt       DateTime   @updatedAt
