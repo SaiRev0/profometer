@@ -12,7 +12,13 @@ import { useSession } from 'next-auth/react';
 export default function CourseReviews({ course }: { course: Course }) {
   const { data: session } = useSession();
   const [sortOption, setSortOption] = useState<SortOption>('recent');
-  const { data: reviews, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetCourseReviews(course.code, 10);
+  const {
+    data: reviews,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage
+  } = useGetCourseReviews(course.code, 10);
 
   const { ref, entry } = useIntersection({
     root: null,
@@ -54,7 +60,7 @@ export default function CourseReviews({ course }: { course: Course }) {
         </div>
       </div>
 
-      {sortedReviews.length === 0 ? (
+      {isFetching && !isFetchingNextPage ? (
         <div className='space-y-4'>
           {[1, 2, 3].map((i) => (
             <ReviewCardSkeleton key={i} />

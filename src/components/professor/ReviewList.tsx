@@ -23,6 +23,7 @@ export default function ReviewList({ professor, selectedCourse }: ReviewListProp
     data: reviewsData,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage
   } = useGetProfessorReviews(professor.id, 10);
 
@@ -65,7 +66,7 @@ export default function ReviewList({ professor, selectedCourse }: ReviewListProp
         />
       </div>
 
-      {filteredReviews.length === 0 ? (
+      {isFetching && !isFetchingNextPage ? (
         <div className='space-y-4'>
           {[1, 2, 3].map((i) => (
             <ReviewCardSkeleton key={i} />
@@ -73,29 +74,33 @@ export default function ReviewList({ professor, selectedCourse }: ReviewListProp
         </div>
       ) : null}
 
-      <div className='mt-8 space-y-6'>
-        {filteredReviews.map((review, index) => {
-          const isLastReview = index === filteredReviews.length - 1;
-          return (
-            <div key={review.id} ref={isLastReview ? ref : undefined}>
-              <ReviewCard
-                review={review}
-                variant={session?.user?.email === review.user.email ? 'own' : 'default'}
-                usedIn='professor'
-                professor={professor}
-              />
-            </div>
-          );
-        })}
-        {isFetchingNextPage && (
-          <div className='flex justify-center py-4'>
-            <div className='border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent' />
-          </div>
-        )}
-        {!hasNextPage && filteredReviews.length > 0 && (
-          <div className='text-muted-foreground text-center text-sm'>No more reviews to load</div>
-        )}
-      </div>
+      {filteredReviews.length > 0 ? (
+        <div className='mt-8 space-y-6'>
+          {filteredReviews.map((review, index) => {
+            const isLastReview = index === filteredReviews.length - 1;
+            return (
+              <div key={review.id} ref={isLastReview ? ref : undefined}>
+                <ReviewCard
+                  review={review}
+                  variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+                  usedIn='professor'
+                  professor={professor}
+                />
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className='text-muted-foreground text-center text-sm'>No reviews found for this professor.</p>
+      )}
+      {isFetchingNextPage && (
+        <div className='flex justify-center py-4'>
+          <div className='border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent' />
+        </div>
+      )}
+      {!hasNextPage && filteredReviews.length > 0 && (
+        <div className='text-muted-foreground text-center text-sm'>No more reviews to load</div>
+      )}
     </div>
   );
 }
