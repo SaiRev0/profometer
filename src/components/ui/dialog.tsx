@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 import { X } from 'lucide-react';
 
@@ -27,8 +28,11 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { hideClose?: boolean }
->(({ className, children, hideClose, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    hideClose?: boolean;
+    title?: string;
+  }
+>(({ className, children, hideClose, title = 'Dialog', ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -38,6 +42,9 @@ const DialogContent = React.forwardRef<
         className
       )}
       {...props}>
+      <VisuallyHidden.Root>
+        <DialogTitle>{title}</DialogTitle>
+      </VisuallyHidden.Root>
       {children}
       {!hideClose && (
         <DialogPrimitive.Close className='ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none'>

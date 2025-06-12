@@ -15,7 +15,7 @@ export function SearchBar({ onSearchClick }: SearchBarProps) {
           <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform' />
           <Input
             type='search'
-            placeholder='Search for professors, branches...'
+            placeholder='Search for professors, courses, departments...'
             className='focus-visible:ring-primary w-full border-2 pr-4 pl-10'
             onClick={onSearchClick}
           />

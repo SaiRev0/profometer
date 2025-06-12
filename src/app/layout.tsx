@@ -4,13 +4,14 @@ import { Inter } from 'next/font/google';
 import BottomNavigation from '@/components/layout/BottomNavigation';
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
-import AuthProvider from '@/components/providers/session-provider';
-import { ThemeProvider } from '@/components/theme-provider';
+import ProgressBarProvider from '@/components/providers/progressBar-provider';
+import QueryProviders from '@/components/providers/query-providers';
+import SessionProvider from '@/components/providers/session-provider';
+import ThemeProvider from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { SearchProvider } from '@/contexts/SearchContext';
 
 import './globals.css';
-import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
@@ -82,9 +83,10 @@ interface RootLayoutProps {
 export default function RootLayout({ children, authModal }: RootLayoutProps) {
   return (
     <html lang='en' suppressHydrationWarning>
+      <head />
       <body className={inter.className}>
-        <Providers>
-          <AuthProvider>
+        <QueryProviders>
+          <SessionProvider>
             <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
               <SearchProvider>
                 <div className='flex min-h-screen flex-col'>
@@ -97,8 +99,8 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
                 <Toaster richColors position='top-right' closeButton />
               </SearchProvider>
             </ThemeProvider>
-          </AuthProvider>
-        </Providers>
+          </SessionProvider>
+        </QueryProviders>
       </body>
     </html>
   );

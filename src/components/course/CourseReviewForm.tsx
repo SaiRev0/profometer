@@ -32,7 +32,6 @@ interface CourseReviewFormProps {
 }
 
 export default function CourseReviewForm({ course, modalState, setModalState, initialData }: CourseReviewFormProps) {
-  console.log(course);
   const { status } = useSession();
   const router = useRouter();
   const { createReview, isLoading: isCreating } = useCreateReview();
