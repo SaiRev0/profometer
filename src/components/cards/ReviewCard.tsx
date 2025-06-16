@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import CourseReviewForm from '@/components/course/CourseReviewForm';
 import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
@@ -22,6 +20,7 @@ import RatingStars from '@/components/ui/rating-stars';
 import { useReviewVote } from '@/hooks/useReviewVote';
 import { Course, CourseReview, Professor, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useRouter } from '@bprogress/next/app';
 
 import { formatDistanceToNow } from 'date-fns';
 import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';

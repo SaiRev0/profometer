@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import ReviewCard from '@/components/cards/ReviewCard';
 import {
   AlertDialog,
@@ -21,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProfile } from '@/hooks/useProfile';
+import { useRouter } from '@bprogress/next/app';
 
 import ProfileSkeleton from './_UI/ProfileSkeleton';
 import { motion } from 'framer-motion';

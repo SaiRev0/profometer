@@ -88,16 +88,18 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
         <QueryProviders>
           <SessionProvider>
             <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-              <SearchProvider>
-                <div className='flex min-h-screen flex-col'>
-                  <Header />
-                  {authModal}
-                  <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
-                  <Footer />
-                  <BottomNavigation />
-                </div>
-                <Toaster richColors position='top-right' closeButton />
-              </SearchProvider>
+              <ProgressBarProvider>
+                <SearchProvider>
+                  <div className='flex min-h-screen flex-col'>
+                    <Header />
+                    {authModal}
+                    <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
+                    <Footer />
+                    <BottomNavigation />
+                  </div>
+                  <Toaster richColors position='top-right' closeButton />
+                </SearchProvider>
+              </ProgressBarProvider>
             </ThemeProvider>
           </SessionProvider>
         </QueryProviders>

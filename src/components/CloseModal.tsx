@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@bprogress/next/app';
 
 import { Button } from './ui/button';
 import { IoClose } from 'react-icons/io5';

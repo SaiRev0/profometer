@@ -38,10 +38,10 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const closeSearch = () => {
     setSearchTerm(''); // Clear search term when closing
     setIsSearchOpen(false);
-    // If we're closing via the back button, we don't need to modify history
-    // If we're closing via other means (like clicking outside), we need to go back
+    // Only go back if we're closing via the back button or manual close
+    // Don't interfere if navigation is happening
     if (window.history.state?.modal === 'search') {
-      window.history.back();
+      window.history.replaceState(null, '');
     }
   };
 

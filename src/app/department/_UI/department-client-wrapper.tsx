@@ -9,15 +9,11 @@ import { useGetDepartmentByCode } from '@/hooks/useGetDepartmentByCode';
 export default function DepartmentClientWrapper({ code }: { code: string }) {
   const { data: department, isLoading, error } = useGetDepartmentByCode({ code });
 
-  if (error) {
-    notFound();
-  }
-
   if (isLoading) {
     return <DepartmentSkeleton />;
   }
 
-  if (!department) {
+  if (error || !department) {
     notFound();
   }
 

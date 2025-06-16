@@ -1,14 +1,13 @@
 import { useEffect, useRef } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSearch } from '@/hooks/useSearch';
+import { useRouter } from '@bprogress/next/app';
 
-import { BookOpen, Building2, GraduationCap, Search, User, XIcon } from 'lucide-react';
+import { BookOpen, Building2, Search, User, XIcon } from 'lucide-react';
 
 interface SearchDialogProps {
   open: boolean;
@@ -36,18 +35,22 @@ export function SearchDialog({ open, onOpenChange, searchTerm, setSearchTerm }: 
   };
 
   const handleSelect = (type: 'professor' | 'department' | 'course', id: string) => {
-    onOpenChange(false);
-    switch (type) {
-      case 'professor':
-        router.push(`/professor/${id}`);
-        break;
-      case 'department':
-        router.push(`/department/${id}`);
-        break;
-      case 'course':
-        router.push(`/course/${id}`);
-        break;
+    // Clear the search history state first to prevent navigation interference
+    if (window.history.state?.modal === 'search') {
+      window.history.replaceState(null, '');
     }
+
+    // Start navigation immediately to trigger progress bar
+    try {
+      router.push(`/${type}/${id}`);
+    } catch (error) {
+      // Fallback to window.location if router fails
+      console.error('Router navigation failed, using fallback:', error);
+      window.location.href = `/${type}/${id}`;
+    }
+
+    // Close dialog after navigation starts
+    onOpenChange(false);
   };
 
   return (

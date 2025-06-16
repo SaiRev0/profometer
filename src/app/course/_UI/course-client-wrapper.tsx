@@ -9,15 +9,11 @@ import { useGetCourseById } from '@/hooks/useGetCourseById';
 export default function CourseClientWrapper({ code }: { code: string }) {
   const { data, isLoading, error } = useGetCourseById(code);
 
-  if (error) {
-    notFound();
-  }
-
   if (isLoading) {
     return <CoursePageSkeleton />;
   }
 
-  if (!data) {
+  if (error || !data) {
     notFound();
   }
 

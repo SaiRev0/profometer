@@ -2,8 +2,6 @@
 
 import { useRef, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -18,6 +16,7 @@ import { useEditReview } from '@/hooks/useEditReview';
 import { useGetDepartmentProfessors } from '@/hooks/useGetDepartmentProfessors';
 import { Course, CourseReview, Professor } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useRouter } from '@bprogress/next/app';
 import { useIntersection } from '@mantine/hooks';
 
 import { Search } from 'lucide-react';

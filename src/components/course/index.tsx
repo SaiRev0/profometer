@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Button } from '@/components/ui/button';
 import { Course, Professor } from '@/lib/types';
+import { useRouter } from '@bprogress/next/app';
 
 import CourseOverview from './CourseOverview';
 import CourseProfessors from './CourseProfessors';

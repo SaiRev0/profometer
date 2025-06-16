@@ -1,10 +1,9 @@
-import { useRouter } from 'next/navigation';
-
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Course, Professor } from '@/lib/types';
+import { useRouter } from '@bprogress/next/app';
 
 import { BookOpen, Building, GraduationCap, NotebookPen, Star, Users } from 'lucide-react';
 import { useSession } from 'next-auth/react';
