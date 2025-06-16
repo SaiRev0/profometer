@@ -10,6 +10,7 @@ import SessionProvider from '@/components/providers/session-provider';
 import ThemeProvider from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { SearchProvider } from '@/contexts/SearchContext';
+import { Analytics } from '@vercel/analytics/next';
 
 import './globals.css';
 
@@ -96,6 +97,7 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
                     <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
                     <Footer />
                     <BottomNavigation />
+                    <Analytics />
                   </div>
                   <Toaster richColors position='top-right' closeButton />
                 </SearchProvider>
