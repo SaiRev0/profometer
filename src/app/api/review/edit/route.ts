@@ -4,7 +4,14 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { CoursePercentages, CourseRating, ProfessorPercentages, ProfessorRating } from '@/lib/types';
 import { CreateReviewApiData } from '@/lib/types/apiTypes';
-import { convertNumberToGrade, gradeNumberMap } from '@/lib/utils';
+import {
+  calculateUpdatedAverage,
+  calculateUpdatedGradeAverage,
+  calculateUpdatedPercentage,
+  convertNumberToGrade,
+  gradeNumberMap,
+  safeClamp
+} from '@/lib/utils';
 
 import { getServerSession } from 'next-auth';
 
@@ -152,149 +159,73 @@ export async function PUT(req: Request) {
 
           // Calculate new professor averages
           const newProfRatings: ProfessorRating = {
-            overall: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.ratings.overall * profTotalReviews -
-                      oldProfessorRatings.overall +
-                      professorRatings.overall) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            overall: calculateUpdatedAverage(
+              currentProfStats.ratings.overall,
+              profTotalReviews,
+              oldProfessorRatings.overall,
+              professorRatings.overall
             ),
-            teaching: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.ratings.teaching * profTotalReviews -
-                      oldProfessorRatings.teaching +
-                      professorRatings.teaching) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            teaching: calculateUpdatedAverage(
+              currentProfStats.ratings.teaching,
+              profTotalReviews,
+              oldProfessorRatings.teaching,
+              professorRatings.teaching
             ),
-            helpfulness: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.ratings.helpfulness * profTotalReviews -
-                      oldProfessorRatings.helpfulness +
-                      professorRatings.helpfulness) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            helpfulness: calculateUpdatedAverage(
+              currentProfStats.ratings.helpfulness,
+              profTotalReviews,
+              oldProfessorRatings.helpfulness,
+              professorRatings.helpfulness
             ),
-            fairness: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.ratings.fairness * profTotalReviews -
-                      oldProfessorRatings.fairness +
-                      professorRatings.fairness) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            fairness: calculateUpdatedAverage(
+              currentProfStats.ratings.fairness,
+              profTotalReviews,
+              oldProfessorRatings.fairness,
+              professorRatings.fairness
             ),
-            clarity: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.ratings.clarity * profTotalReviews -
-                      oldProfessorRatings.clarity +
-                      professorRatings.clarity) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            clarity: calculateUpdatedAverage(
+              currentProfStats.ratings.clarity,
+              profTotalReviews,
+              oldProfessorRatings.clarity,
+              professorRatings.clarity
             ),
-            communication: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.ratings.communication * profTotalReviews -
-                      oldProfessorRatings.communication +
-                      professorRatings.communication) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            communication: calculateUpdatedAverage(
+              currentProfStats.ratings.communication,
+              profTotalReviews,
+              oldProfessorRatings.communication,
+              professorRatings.communication
             )
           };
 
           // Calculate new professor percentages
           const newProfPercentages: ProfessorPercentages = {
-            wouldRecommend: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.percentages.wouldRecommend * profTotalReviews -
-                      oldProfessorStatistics.wouldRecommend * 100 +
-                      professorStatistics.wouldRecommend * 100) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            wouldRecommend: calculateUpdatedPercentage(
+              currentProfStats.percentages.wouldRecommend,
+              profTotalReviews,
+              oldProfessorStatistics.wouldRecommend,
+              professorStatistics.wouldRecommend,
+              true
             ),
-            attendanceRating: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.percentages.attendanceRating * profTotalReviews -
-                      oldProfessorStatistics.attendanceRating +
-                      professorStatistics.attendanceRating) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            attendanceRating: calculateUpdatedPercentage(
+              currentProfStats.percentages.attendanceRating,
+              profTotalReviews,
+              oldProfessorStatistics.attendanceRating,
+              professorStatistics.attendanceRating,
+              false
             ),
-            quizes: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.percentages.quizes * profTotalReviews -
-                      oldProfessorStatistics.quizes * 100 +
-                      professorStatistics.quizes * 100) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            quizes: calculateUpdatedPercentage(
+              currentProfStats.percentages.quizes,
+              profTotalReviews,
+              oldProfessorStatistics.quizes,
+              professorStatistics.quizes,
+              true
             ),
-            assignments: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentProfStats.percentages.assignments * profTotalReviews -
-                      oldProfessorStatistics.assignments * 100 +
-                      professorStatistics.assignments * 100) /
-                    profTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            assignments: calculateUpdatedPercentage(
+              currentProfStats.percentages.assignments,
+              profTotalReviews,
+              oldProfessorStatistics.assignments,
+              professorStatistics.assignments,
+              true
             )
           };
 
@@ -311,48 +242,12 @@ export async function PUT(req: Request) {
           });
 
           // Update Grades
-          let averageGradeString = currentCourseStats.percentages.averageGrade;
-
-          if (currentCourseStats.percentages.averageGrade === 'NA') {
-            averageGradeString = reviewData.grade ? reviewData.grade : 'NA';
-          } else {
-            if (existingReview.grade) {
-              if (reviewData.grade) {
-                // If both old and new grades exist, recalculate average
-                const oldGradeValue = gradeNumberMap[existingReview.grade];
-                const newGradeValue = gradeNumberMap[reviewData.grade];
-                const totalGradeValue =
-                  (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews -
-                    oldGradeValue +
-                    newGradeValue) /
-                  currentCourseStats.totalReviews;
-                averageGradeString = convertNumberToGrade(totalGradeValue);
-              } else {
-                // If only old grade exists but new one doesn't, remove old grade from average
-                const oldGradeValue = gradeNumberMap[existingReview.grade];
-                const totalGradeValue =
-                  (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews -
-                    oldGradeValue) /
-                  (currentCourseStats.totalReviews - 1);
-                averageGradeString = convertNumberToGrade(totalGradeValue);
-              }
-            } else {
-              // If old grade doesn't exist, just adjust for the new grade
-              if (reviewData.grade) {
-                // If both old and new grades exist, recalculate average
-                const newGradeValue = gradeNumberMap[reviewData.grade];
-                const totalGradeValue =
-                  (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews +
-                    newGradeValue) /
-                    currentCourseStats.totalReviews +
-                  1;
-                averageGradeString = convertNumberToGrade(totalGradeValue);
-              } else {
-                // If new grade also does not exists, keep the current average grade
-                averageGradeString = currentCourseStats.percentages.averageGrade;
-              }
-            }
-          }
+          const averageGradeString = calculateUpdatedGradeAverage(
+            currentCourseStats.percentages.averageGrade,
+            currentCourseStats.totalReviews,
+            existingReview.grade || null,
+            reviewData.grade || null
+          );
 
           // Calculate new course percentages
           const newCoursePercentages: CoursePercentages = {
@@ -384,10 +279,7 @@ export async function PUT(req: Request) {
             const weight = 8; // Using 8 as weight for professor reviews
             const newTotalWeightedSum =
               department.totalWeightedSum - oldProfessorRatings.overall * weight + professorRatings.overall * weight;
-            const newAvgRating = Math.min(
-              5,
-              Math.max(0, Number((newTotalWeightedSum / department.totalWeight).toFixed(1)))
-            );
+            const newAvgRating = safeClamp(newTotalWeightedSum / department.totalWeight, 0, 5);
 
             await tx.department.update({
               where: { code: professor.departmentCode },
@@ -411,179 +303,75 @@ export async function PUT(req: Request) {
 
           // Calculate new course averages
           const newCourseRatings: CourseRating = {
-            overall: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.ratings.overall * courseTotalReviews -
-                      oldCourseRatings.overall +
-                      courseRatings.overall) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            overall: calculateUpdatedAverage(
+              currentCourseStats.ratings.overall,
+              courseTotalReviews,
+              oldCourseRatings.overall,
+              courseRatings.overall
             ),
-            scoring: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.ratings.scoring * courseTotalReviews -
-                      oldCourseRatings.scoring +
-                      courseRatings.scoring) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            scoring: calculateUpdatedAverage(
+              currentCourseStats.ratings.scoring,
+              courseTotalReviews,
+              oldCourseRatings.scoring,
+              courseRatings.scoring
             ),
-            engaging: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.ratings.engaging * courseTotalReviews -
-                      oldCourseRatings.engaging +
-                      courseRatings.engaging) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            engaging: calculateUpdatedAverage(
+              currentCourseStats.ratings.engaging,
+              courseTotalReviews,
+              oldCourseRatings.engaging,
+              courseRatings.engaging
             ),
-            conceptual: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.ratings.conceptual * courseTotalReviews -
-                      oldCourseRatings.conceptual +
-                      courseRatings.conceptual) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            conceptual: calculateUpdatedAverage(
+              currentCourseStats.ratings.conceptual,
+              courseTotalReviews,
+              oldCourseRatings.conceptual,
+              courseRatings.conceptual
             ),
-            easyToLearn: Math.min(
-              5,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.ratings.easyToLearn * courseTotalReviews -
-                      oldCourseRatings.easyToLearn +
-                      courseRatings.easyToLearn) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            easyToLearn: calculateUpdatedAverage(
+              currentCourseStats.ratings.easyToLearn,
+              courseTotalReviews,
+              oldCourseRatings.easyToLearn,
+              courseRatings.easyToLearn
             )
           };
 
           // Update Grades
-          let averageGradeString = currentCourseStats.percentages.averageGrade;
-
-          if (currentCourseStats.percentages.averageGrade === 'NA') {
-            averageGradeString = reviewData.grade ? reviewData.grade : 'NA';
-          } else {
-            if (existingReview.grade) {
-              if (reviewData.grade) {
-                // If both old and new grades exist, recalculate average
-                const oldGradeValue = gradeNumberMap[existingReview.grade];
-                const newGradeValue = gradeNumberMap[reviewData.grade];
-                const totalGradeValue =
-                  (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews -
-                    oldGradeValue +
-                    newGradeValue) /
-                  currentCourseStats.totalReviews;
-                averageGradeString = convertNumberToGrade(totalGradeValue);
-              } else {
-                // If only old grade exists but new one doesn't, remove old grade from average
-                const oldGradeValue = gradeNumberMap[existingReview.grade];
-                const totalGradeValue =
-                  (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews -
-                    oldGradeValue) /
-                  (currentCourseStats.totalReviews - 1);
-                averageGradeString = convertNumberToGrade(totalGradeValue);
-              }
-            } else {
-              // If old grade doesn't exist, just adjust for the new grade
-              if (reviewData.grade) {
-                // If both old and new grades exist, recalculate average
-                const newGradeValue = gradeNumberMap[reviewData.grade];
-                const totalGradeValue =
-                  (gradeNumberMap[currentCourseStats.percentages.averageGrade] * currentCourseStats.totalReviews +
-                    newGradeValue) /
-                    currentCourseStats.totalReviews +
-                  1;
-                averageGradeString = convertNumberToGrade(totalGradeValue);
-              } else {
-                // If new grade also does not exists, keep the current average grade
-                averageGradeString = currentCourseStats.percentages.averageGrade;
-              }
-            }
-          }
+          const averageGradeString = calculateUpdatedGradeAverage(
+            currentCourseStats.percentages.averageGrade,
+            currentCourseStats.totalReviews,
+            existingReview.grade || null,
+            reviewData.grade || null
+          );
 
           // Calculate new course percentages
           const newCoursePercentages: CoursePercentages = {
-            wouldRecommend: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.percentages.wouldRecommend * courseTotalReviews -
-                      oldCourseStatistics.wouldRecommend * 100 +
-                      courseStatistics.wouldRecommend * 100) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            wouldRecommend: calculateUpdatedPercentage(
+              currentCourseStats.percentages.wouldRecommend,
+              courseTotalReviews,
+              oldCourseStatistics.wouldRecommend,
+              courseStatistics.wouldRecommend,
+              true
             ),
-            attendanceRating: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.percentages.attendanceRating * courseTotalReviews -
-                      oldCourseStatistics.attendanceRating +
-                      courseStatistics.attendanceRating) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            attendanceRating: calculateUpdatedPercentage(
+              currentCourseStats.percentages.attendanceRating,
+              courseTotalReviews,
+              oldCourseStatistics.attendanceRating,
+              courseStatistics.attendanceRating,
+              false
             ),
-            quizes: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.percentages.quizes * courseTotalReviews -
-                      oldCourseStatistics.quizes * 100 +
-                      courseStatistics.quizes * 100) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            quizes: calculateUpdatedPercentage(
+              currentCourseStats.percentages.quizes,
+              courseTotalReviews,
+              oldCourseStatistics.quizes,
+              courseStatistics.quizes,
+              true
             ),
-            assignments: Math.min(
-              100,
-              Math.max(
-                0,
-                Number(
-                  (
-                    (currentCourseStats.percentages.assignments * courseTotalReviews -
-                      oldCourseStatistics.assignments * 100 +
-                      courseStatistics.assignments * 100) /
-                    courseTotalReviews
-                  ).toFixed(1)
-                )
-              )
+            assignments: calculateUpdatedPercentage(
+              currentCourseStats.percentages.assignments,
+              courseTotalReviews,
+              oldCourseStatistics.assignments,
+              courseStatistics.assignments,
+              true
             ),
             averageGrade: averageGradeString
           };
@@ -609,10 +397,7 @@ export async function PUT(req: Request) {
             const weight = course.credits;
             const newTotalWeightedSum =
               department.totalWeightedSum - oldCourseRatings.overall * weight + courseRatings.overall * weight;
-            const newAvgRating = Math.min(
-              5,
-              Math.max(0, Number((newTotalWeightedSum / department.totalWeight).toFixed(1)))
-            );
+            const newAvgRating = safeClamp(newTotalWeightedSum / department.totalWeight, 0, 5);
             await tx.department.update({
               where: { code: course.departmentCode },
               data: {

@@ -3,7 +3,14 @@ import { NextResponse } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { CoursePercentages, CourseRating, ProfessorPercentages, ProfessorRating } from '@/lib/types';
-import { convertNumberToGrade, gradeNumberMap } from '@/lib/utils';
+import {
+  calculateAverageAfterRemoval,
+  calculateGradeAverageAfterRemoval,
+  calculatePercentageAfterRemoval,
+  convertNumberToGrade,
+  gradeNumberMap,
+  safeClamp
+} from '@/lib/utils';
 
 import { getServerSession } from 'next-auth';
 
@@ -103,132 +110,63 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
         // Recalculate professor ratings
         const newProfRatings: ProfessorRating = {
-          overall: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.overall * currentStats.totalReviews - reviewRatings.overall) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          overall: calculateAverageAfterRemoval(
+            currentStats.ratings.overall,
+            currentStats.totalReviews,
+            reviewRatings.overall
           ),
-          teaching: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.teaching * currentStats.totalReviews - reviewRatings.teaching) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          teaching: calculateAverageAfterRemoval(
+            currentStats.ratings.teaching,
+            currentStats.totalReviews,
+            reviewRatings.teaching
           ),
-          helpfulness: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.helpfulness * currentStats.totalReviews - reviewRatings.helpfulness) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          helpfulness: calculateAverageAfterRemoval(
+            currentStats.ratings.helpfulness,
+            currentStats.totalReviews,
+            reviewRatings.helpfulness
           ),
-          fairness: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.fairness * currentStats.totalReviews - reviewRatings.fairness) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          fairness: calculateAverageAfterRemoval(
+            currentStats.ratings.fairness,
+            currentStats.totalReviews,
+            reviewRatings.fairness
           ),
-          clarity: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.clarity * currentStats.totalReviews - reviewRatings.clarity) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          clarity: calculateAverageAfterRemoval(
+            currentStats.ratings.clarity,
+            currentStats.totalReviews,
+            reviewRatings.clarity
           ),
-          communication: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.communication * currentStats.totalReviews - reviewRatings.communication) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          communication: calculateAverageAfterRemoval(
+            currentStats.ratings.communication,
+            currentStats.totalReviews,
+            reviewRatings.communication
           )
         };
 
         // Recalculate professor percentages
         const newProfPercentages: ProfessorPercentages = {
-          wouldRecommend: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.wouldRecommend * currentStats.totalReviews -
-                    reviewStatistics.wouldRecommend * 100) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          wouldRecommend: calculatePercentageAfterRemoval(
+            currentStats.percentages.wouldRecommend,
+            currentStats.totalReviews,
+            reviewStatistics.wouldRecommend,
+            true
           ),
-          attendanceRating: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.attendanceRating * currentStats.totalReviews -
-                    reviewStatistics.attendanceRating) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          attendanceRating: calculatePercentageAfterRemoval(
+            currentStats.percentages.attendanceRating,
+            currentStats.totalReviews,
+            reviewStatistics.attendanceRating,
+            false
           ),
-          quizes: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.quizes * currentStats.totalReviews - reviewStatistics.quizes * 100) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          quizes: calculatePercentageAfterRemoval(
+            currentStats.percentages.quizes,
+            currentStats.totalReviews,
+            reviewStatistics.quizes,
+            true
           ),
-          assignments: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.assignments * currentStats.totalReviews -
-                    reviewStatistics.assignments * 100) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          assignments: calculatePercentageAfterRemoval(
+            currentStats.percentages.assignments,
+            currentStats.totalReviews,
+            reviewStatistics.assignments,
+            true
           )
         };
 
@@ -252,17 +190,15 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         if (department) {
           const weight = 8; // Using 8 as weight for professor reviews
           const newTotalWeightedSum = Math.max(0, department.totalWeightedSum - reviewRatings.overall * weight);
-          const newAvgRating = Math.min(
-            5,
-            Math.max(0, Number((newTotalWeightedSum / department.totalWeight).toFixed(1)))
-          );
+          const newTotalWeight = Math.max(0, department.totalWeight - weight);
+          const newAvgRating = newTotalWeight > 0 ? safeClamp(newTotalWeightedSum / newTotalWeight, 0, 5) : 0;
 
           await tx.department.update({
             where: { code: professor.departmentCode },
             data: {
               totalWeightedSum: newTotalWeightedSum,
               totalWeight: {
-                set: Math.max(0, department.totalWeight - weight)
+                set: newTotalWeight
               },
               numReviews: {
                 set: Math.max(0, department.numReviews - 1)
@@ -289,131 +225,67 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
         // Recalculate course ratings
         const newCourseRatings: CourseRating = {
-          overall: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.overall * currentStats.totalReviews - reviewRatings.overall) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          overall: calculateAverageAfterRemoval(
+            currentStats.ratings.overall,
+            currentStats.totalReviews,
+            reviewRatings.overall
           ),
-          scoring: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.scoring * currentStats.totalReviews - reviewRatings.scoring) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          scoring: calculateAverageAfterRemoval(
+            currentStats.ratings.scoring,
+            currentStats.totalReviews,
+            reviewRatings.scoring
           ),
-          engaging: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.engaging * currentStats.totalReviews - reviewRatings.engaging) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          engaging: calculateAverageAfterRemoval(
+            currentStats.ratings.engaging,
+            currentStats.totalReviews,
+            reviewRatings.engaging
           ),
-          conceptual: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.conceptual * currentStats.totalReviews - reviewRatings.conceptual) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          conceptual: calculateAverageAfterRemoval(
+            currentStats.ratings.conceptual,
+            currentStats.totalReviews,
+            reviewRatings.conceptual
           ),
-          easyToLearn: Math.min(
-            5,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.ratings.easyToLearn * currentStats.totalReviews - reviewRatings.easyToLearn) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          easyToLearn: calculateAverageAfterRemoval(
+            currentStats.ratings.easyToLearn,
+            currentStats.totalReviews,
+            reviewRatings.easyToLearn
           )
         };
 
         // Handle grade recalculation
-        let averageGradeString = 'NA';
-        if (review.grade && currentStats.percentages.averageGrade !== 'NA') {
-          const currentGradeNumber = gradeNumberMap[currentStats.percentages.averageGrade];
-          const reviewGradeNumber = gradeNumberMap[review.grade];
-          const newGradeNumber = (currentGradeNumber * currentStats.totalReviews - reviewGradeNumber) / newTotalReviews;
-          averageGradeString = convertNumberToGrade(newGradeNumber);
-        } else if (currentStats.percentages.averageGrade !== 'NA') {
-          averageGradeString = currentStats.percentages.averageGrade;
-        }
+        const averageGradeString = review.grade
+          ? calculateGradeAverageAfterRemoval(
+              currentStats.percentages.averageGrade,
+              currentStats.totalReviews,
+              review.grade
+            )
+          : currentStats.percentages.averageGrade;
 
         // Calculate new course percentages
         const newCoursePercentages: CoursePercentages = {
-          wouldRecommend: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.wouldRecommend * currentStats.totalReviews -
-                    reviewStatistics.wouldRecommend * 100) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          wouldRecommend: calculatePercentageAfterRemoval(
+            currentStats.percentages.wouldRecommend,
+            currentStats.totalReviews,
+            reviewStatistics.wouldRecommend,
+            true
           ),
-          attendanceRating: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.attendanceRating * currentStats.totalReviews -
-                    reviewStatistics.attendanceRating) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          attendanceRating: calculatePercentageAfterRemoval(
+            currentStats.percentages.attendanceRating,
+            currentStats.totalReviews,
+            reviewStatistics.attendanceRating,
+            false
           ),
-          quizes: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.quizes * currentStats.totalReviews - reviewStatistics.quizes * 100) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          quizes: calculatePercentageAfterRemoval(
+            currentStats.percentages.quizes,
+            currentStats.totalReviews,
+            reviewStatistics.quizes,
+            true
           ),
-          assignments: Math.min(
-            100,
-            Math.max(
-              0,
-              Number(
-                (
-                  (currentStats.percentages.assignments * currentStats.totalReviews -
-                    reviewStatistics.assignments * 100) /
-                  newTotalReviews
-                ).toFixed(1)
-              )
-            )
+          assignments: calculatePercentageAfterRemoval(
+            currentStats.percentages.assignments,
+            currentStats.totalReviews,
+            reviewStatistics.assignments,
+            true
           ),
           averageGrade: averageGradeString
         };
@@ -438,17 +310,15 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         if (department) {
           const weight = course.credits; // Using course credits as weight
           const newTotalWeightedSum = Math.max(0, department.totalWeightedSum - reviewRatings.overall * weight);
-          const newAvgRating = Math.min(
-            5,
-            Math.max(0, Number((newTotalWeightedSum / department.totalWeight).toFixed(1)))
-          );
+          const newTotalWeight = Math.max(0, department.totalWeight - weight);
+          const newAvgRating = newTotalWeight > 0 ? safeClamp(newTotalWeightedSum / newTotalWeight, 0, 5) : 0;
 
           await tx.department.update({
             where: { code: course.departmentCode },
             data: {
               totalWeightedSum: newTotalWeightedSum,
               totalWeight: {
-                set: Math.max(0, department.totalWeight - weight)
+                set: newTotalWeight
               },
               numReviews: {
                 set: Math.max(0, department.numReviews - 1)
