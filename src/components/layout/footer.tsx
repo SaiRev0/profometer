@@ -174,7 +174,7 @@ export default function Footer() {
                 </h3>
                 <div className='space-y-4'>
                   <motion.a
-                    href='mailto:contact@profometer.com'
+                    href='mailto:profometer2025@gmail.com'
                     className='group flex items-center gap-3 rounded-xl bg-white/80 p-3 shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/90 hover:shadow-[0_4px_6px_rgba(0,0,0,0.07)] dark:bg-white/5 dark:shadow-none dark:hover:bg-white/10 dark:hover:shadow-none'
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}>
@@ -190,7 +190,7 @@ export default function Footer() {
                       <motion.p
                         className='text-muted-foreground group-hover:text-primary text-sm transition-colors'
                         whileHover={{ x: 5 }}>
-                        contact@profometer.com
+                        profometer2025@gmail.com
                       </motion.p>
                     </div>
                   </motion.a>
