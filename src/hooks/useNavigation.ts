@@ -22,7 +22,7 @@ export function useNavigation() {
       icon: Search,
       active: pathname === '/search'
     },
-    ...(session?.user
+    ...(session?.user?.email
       ? [
           {
             label: 'Profile',
@@ -42,7 +42,7 @@ export function useNavigation() {
   ];
 
   const desktopNavItems: NavItem[] = [
-    ...(session?.user
+    ...(session?.user?.email
       ? [
           {
             label: 'Profile',

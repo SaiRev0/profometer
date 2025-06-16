@@ -40,7 +40,7 @@ function WriteFirstReview() {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const { profile, isLoading, error } = useProfile();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function ProfilePage() {
     await signOut({ redirect: true, callbackUrl: '/' });
   };
 
-  if (isLoading || status === 'loading') {
+  if (isLoading) {
     return <ProfileSkeleton />;
   }
 

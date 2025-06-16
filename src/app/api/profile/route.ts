@@ -21,6 +21,7 @@ export async function GET() {
           include: {
             course: true,
             professor: true,
+            user: true,
             // Only get the vote for the current user
             votes: {
               select: { voteType: true },

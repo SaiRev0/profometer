@@ -4,13 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
 export function useProfile() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const {
-    data: profile,
-    isLoading,
-    error,
-    refetch
+    data,
+    isLoading: queryLoading,
+    ...rest
   } = useQuery<User>({
     queryKey: ['profile'],
     queryFn: async () => {
@@ -23,11 +22,12 @@ export function useProfile() {
     enabled: status === 'authenticated'
   });
 
+  // Combine session loading and query loading states
+  const isLoading = status === 'loading' || (status === 'authenticated' && queryLoading);
+
   return {
-    profile,
-    isLoading: isLoading || status === 'loading',
-    error,
-    refetch,
-    isAuthenticated: status === 'authenticated'
+    ...rest,
+    profile: data,
+    isLoading
   };
 }
