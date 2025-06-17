@@ -264,10 +264,12 @@ export default function ReviewCard({
             </Button>
           </div>
 
-          <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
-            <Flag className='mr-1.5 h-4 w-4 fill-current text-red-500' />
-            <p className='hidden text-sm sm:block'>Report</p>
-          </Button>
+          {session?.user && (
+            <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
+              <Flag className='mr-1.5 h-4 w-4 fill-current text-red-500' />
+              <p className='hidden text-sm sm:block'>Report</p>
+            </Button>
+          )}
         </CardFooter>
       )}
 
