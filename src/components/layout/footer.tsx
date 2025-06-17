@@ -220,7 +220,7 @@ export default function Footer() {
             <motion.p className='text-muted-foreground text-sm' whileHover={{ scale: 1.02 }}>
               © {new Date().getFullYear()} ProfOMeter. All rights reserved.
             </motion.p>
-            <div className='flex items-center gap-4'>
+            {/* <div className='flex items-center gap-4'>
               <motion.p className='text-muted-foreground flex items-center gap-2 text-sm' whileHover={{ scale: 1.02 }}>
                 Made with
                 <motion.span
@@ -251,7 +251,7 @@ export default function Footer() {
                   Saiyam Jain
                 </Link>
               </motion.p>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </div>
