@@ -1,24 +1,22 @@
+import { PrismaPg } from '@prisma/adapter-pg';
+
 import { PrismaClient } from '../../prisma/generated/client';
 import 'server-only';
 
-const getPrismaClient = () => {
-  return new PrismaClient();
+const globalForPrisma = global as unknown as {
+  prisma: PrismaClient;
 };
-export type ExtendedPrismaClient = ReturnType<typeof getPrismaClient>;
 
-declare global {
-  // eslint-disable-next-line no-var
-  var cachedPrisma: ExtendedPrismaClient;
-}
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL
+});
 
-let prisma: ExtendedPrismaClient;
-if (process.env.NODE_ENV === 'production') {
-  prisma = getPrismaClient();
-} else {
-  if (!global.cachedPrisma) {
-    global.cachedPrisma = getPrismaClient();
-  }
-  prisma = global.cachedPrisma;
-}
+const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    adapter
+  });
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export const db = prisma;

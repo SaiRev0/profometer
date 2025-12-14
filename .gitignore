@@ -42,3 +42,5 @@ prisma/generated
 #scripts
 scripts/*
 src/lib/seed/*
+
+profometer.code-workspace

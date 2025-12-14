@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Icons } from '@/components/Icons';
 import { Button } from '@/components/ui/button';
-import { type AuthError, authErrorMessages } from '@/lib/auth';
+import { type AuthError, authErrorMessages } from '@/lib/auth-types';
 import { cn } from '@/lib/utils';
 import { useLocalStorage } from '@mantine/hooks';
 

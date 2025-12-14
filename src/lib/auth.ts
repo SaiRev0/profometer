@@ -1,10 +1,9 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
-import { PrismaClient } from '../../prisma/generated/client';
+import { db } from './db';
+import 'dotenv/config';
 import { NextAuthOptions, getServerSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-
-const prisma = new PrismaClient();
 
 // Map of department codes to their IDs
 const departmentCodeMap: { [key: string]: string } = {
@@ -48,31 +47,16 @@ function getDepartmentCodeFromEmail(email: string): string | null {
   return officialCode || null;
 }
 
-// Define auth error types
-export type AuthError = {
-  type: 'AccessDenied' | 'InvalidDepartment' | 'DepartmentNotFound' | 'Unknown' | 'Unauthorized';
-  message: string;
-};
-
-// Map of error types to user-friendly messages
-export const authErrorMessages: Record<AuthError['type'], string> = {
-  AccessDenied: 'Only IIT BHU email addresses (@itbhu.ac.in) are allowed to sign in.',
-  InvalidDepartment: 'Could not determine your department from your email address.',
-  DepartmentNotFound: 'Your department is not registered in our system.',
-  Unknown: 'An unexpected error occurred during sign in.',
-  Unauthorized: 'Please sign in first'
-};
-
 // Create a custom adapter that includes department data
 const customPrismaAdapter = {
-  ...PrismaAdapter(prisma),
+  ...PrismaAdapter(db),
   createUser: async (data: any) => {
     // Extract email and get department code
     const email = data.email;
     const deptCode = getDepartmentCodeFromEmail(email);
 
     // Create user with department data
-    return prisma.user.create({
+    return db.user.create({
       data: {
         ...data,
         departmentCode: deptCode
@@ -105,24 +89,25 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ profile }) {
-      if (!profile?.email?.endsWith('@itbhu.ac.in')) {
-        return '/signin?error=AccessDenied';
-      }
+      // // Check if email is from IIT BHU domain
+      // if (!profile?.email?.endsWith('@itbhu.ac.in')) {
+      //   return '/signin?error=AccessDenied';
+      // }
 
-      // Get department code from email
-      const deptCode = getDepartmentCodeFromEmail(profile.email);
-      if (!deptCode) {
-        return '/signin?error=InvalidDepartment';
-      }
+      // // Get department code from email
+      // const deptCode = getDepartmentCodeFromEmail(profile.email);
+      // if (!deptCode) {
+      //   return '/signin?error=InvalidDepartment';
+      // }
 
-      // Find department in database
-      const department = await prisma.department.findUnique({
-        where: { code: deptCode }
-      });
+      // // Find department in database
+      // const department = await db.department.findUnique({
+      //   where: { code: deptCode }
+      // });
 
-      if (!department) {
-        return '/signin?error=DepartmentNotFound';
-      }
+      // if (!department) {
+      //   return '/signin?error=DepartmentNotFound';
+      // }
 
       return true;
     },
@@ -152,13 +137,6 @@ export const authOptions: NextAuthOptions = {
         token.picture = (profile as any).picture;
       }
       return token;
-    }
-  },
-  events: {
-    async signIn({ user, account, profile }) {
-      if (profile && profile.email && !profile.email.endsWith('@itbhu.ac.in')) {
-        throw new Error('AccessDenied');
-      }
     }
   }
 };
