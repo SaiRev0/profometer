@@ -82,7 +82,7 @@ export default function ReviewList({ professor, selectedCourse }: ReviewListProp
               <div key={review.id} ref={isLastReview ? ref : undefined}>
                 <ReviewCard
                   review={review}
-                  variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+                  variant={session?.user?.email && review.user?.email === session.user.email ? 'own' : 'default'}
                   usedIn='professor'
                   professor={professor}
                 />

@@ -8,6 +8,7 @@ import ProgressBarProvider from '@/components/providers/progressBar-provider';
 import QueryProviders from '@/components/providers/query-providers';
 import SessionProvider from '@/components/providers/session-provider';
 import ThemeProvider from '@/components/providers/theme-provider';
+import { TokenClaimProvider } from '@/components/providers/token-claim-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { SearchProvider } from '@/contexts/SearchContext';
 import { Analytics } from '@vercel/analytics/next';
@@ -88,21 +89,23 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
       <body className={inter.className}>
         <QueryProviders>
           <SessionProvider>
-            <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-              <ProgressBarProvider>
-                <SearchProvider>
-                  <div className='flex min-h-screen flex-col'>
-                    <Header />
-                    {authModal}
-                    <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
-                    <Footer />
-                    <BottomNavigation />
-                    <Analytics />
-                  </div>
-                  <Toaster richColors position='top-right' closeButton />
-                </SearchProvider>
-              </ProgressBarProvider>
-            </ThemeProvider>
+            <TokenClaimProvider>
+              <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+                <ProgressBarProvider>
+                  <SearchProvider>
+                    <div className='flex min-h-screen flex-col'>
+                      <Header />
+                      {authModal}
+                      <main className='container mx-auto flex-1 px-4 pt-16 pb-16 sm:px-6 md:pb-8'>{children}</main>
+                      <Footer />
+                      <BottomNavigation />
+                      <Analytics />
+                    </div>
+                    <Toaster richColors position='top-right' closeButton />
+                  </SearchProvider>
+                </ProgressBarProvider>
+              </ThemeProvider>
+            </TokenClaimProvider>
           </SessionProvider>
         </QueryProviders>
       </body>

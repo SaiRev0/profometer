@@ -140,6 +140,7 @@ model Review {
     type        ReviewType // 'course' or 'professor'
     upvotes     Int            @default(0)
     downvotes   Int            @default(0)
+    cycleId     String? // Cycle ID for anonymous reviews (null for regular reviews)
     reports     ReviewReport[]
     votes       ReviewVote[]
     createdAt   DateTime       @default(now())
@@ -152,6 +153,7 @@ model Review {
     @@index([createdAt(sort: Desc)])
     @@index([professorId, courseCode])
     @@index([userId, createdAt(sort: Desc)])
+    @@index([cycleId])
 }
 
 model ReviewVote {
@@ -182,4 +184,56 @@ model ReviewReport {
     @@index([reviewId])
     @@index([reportedBy])
     @@index([createdAt(sort: Desc)])
+}
+
+// ==========================================
+// GhostWriter Anonymous Review System Tables
+// ==========================================
+// Note: Anonymous reviews are stored in the main Review table with userId=null
+// and cycleId set to the GhostWriter cycle. Only 4 support tables are needed.
+
+/// Tracks if a user has claimed their "Book of Tickets" for the current cycle.
+/// Does NOT track which professors they liked/reviewed.
+model UserCycleLog {
+    userHash  String   // SHA-256(email + SERVER_SECRET) - 64 char hex
+    cycleId   String   // e.g., '2025_JAN_FEB'
+    claimedAt DateTime @default(now())
+
+    @@id([userHash, cycleId])
+    @@map("user_cycle_logs")
+}
+
+/// Prevents "Double Spending" (Replay Attacks).
+/// The token UUID was generated on client - no link to user.
+model UsedToken {
+    tokenUuid String   @id @db.Uuid // The Random ID inside the ticket
+    cycleId   String   // e.g., '2025_JAN_FEB'
+    profId    String   // Professor ID the token was used for
+    usedAt    DateTime @default(now())
+
+    @@index([cycleId])
+    @@map("used_tokens")
+}
+
+/// A holding area for reviews that have been received but NOT yet shuffled/published.
+/// Content is encrypted and unreadable until the shuffle phase.
+model PendingReview {
+    id            Int      @id @default(autoincrement())
+    profId        String   // Professor ID
+    encryptedBlob String   @db.Text // AES-256-GCM Encrypted Review
+    encryptedKey  String   @db.Text // RSA-OAEP Encrypted AES Key
+    cycleId       String   // e.g., '2025_JAN_FEB'
+    receivedAt    DateTime @default(now())
+
+    @@index([cycleId])
+    @@map("pending_reviews")
+}
+
+/// Tracks the state of the "Lazy Shuffle" mechanism.
+model SystemConfig {
+    key             String    @id // e.g., 'last_shuffle_time'
+    lastShuffleTime DateTime?
+    updatedAt       DateTime  @default(now()) @updatedAt
+
+    @@map("system_config")
 }

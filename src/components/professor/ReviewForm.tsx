@@ -11,15 +11,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useAnonymousTokenStatus } from '@/hooks/useAnonymousTokenStatus';
 import { useCreateReview } from '@/hooks/useCreateReview';
 import { useEditReview } from '@/hooks/useEditReview';
 import { useGetDepartmentCourses } from '@/hooks/useGetDepartmentCourses';
+import { useSubmitAnonymousReview } from '@/hooks/useSubmitAnonymousReview';
+import {
+  getCurrentYear,
+  getDefaultProfessorRatings,
+  getDefaultSemester,
+  getDefaultStatistics,
+  resetProfessorReviewForm
+} from '@/lib/review-form-utils';
 import { Professor, ProfessorPercentages, ProfessorReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useRouter } from '@bprogress/next/app';
 import { useIntersection } from '@mantine/hooks';
 
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Shield } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
@@ -45,18 +54,25 @@ export default function ReviewForm({
   const isLoading = isCreating || isEditing;
   const formRef = useRef<HTMLDivElement>(null);
   const { departmentCourses, isLoadingDepartmentCourses } = useGetDepartmentCourses(professor.departmentCode);
+  const { submitAnonymousReview, isSubmitting: isSubmittingAnonymous } = useSubmitAnonymousReview();
   const { ref: intersectionRef } = useIntersection({
     root: null,
     threshold: 0.1,
     rootMargin: '100px'
   });
 
+  // Use React Query hook for anonymous token status
+  const {
+    hasToken: hasAnonymousToken,
+    hasUsedToken,
+    cycleId,
+    refetch: refetchTokenStatus
+  } = useAnonymousTokenStatus(professor.id, status === 'authenticated' && modalState);
+
   if (status !== 'authenticated') {
     return <div className='text-muted-foreground mt-8 text-center'>Please sign in to leave a review.</div>;
   }
 
-  // Add helper function to get current year
-  const getCurrentYear = () => new Date().getFullYear();
   const [reviewCourse, setReviewCourse] = useState(initialData?.courseCode || '');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>(
     initialData?.semester ? (initialData.semester.split('-')[0] as 'Odd' | 'Even') : 'Odd'
@@ -64,28 +80,29 @@ export default function ReviewForm({
   const [semesterYear, setSemesterYear] = useState<number>(
     initialData?.semester ? parseInt(initialData.semester.split('-')[1]) : getCurrentYear()
   );
-  const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || `Odd-${getCurrentYear()}`);
-  const [reviewRatings, setReviewRatings] = useState(
-    initialData?.ratings || {
-      teaching: 0,
-      helpfulness: 0,
-      fairness: 0,
-      clarity: 0,
-      communication: 0
-    }
-  );
+  const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || getDefaultSemester());
+  const [reviewRatings, setReviewRatings] = useState(initialData?.ratings || getDefaultProfessorRatings());
   const [reviewComment, setReviewComment] = useState(initialData?.comment || '');
   const [reviewStatistics, setReviewStatistics] = useState<ProfessorPercentages>(
-    initialData?.statistics || {
-      wouldRecommend: -1,
-      quizes: -1,
-      assignments: -1,
-      attendanceRating: 50
-    }
+    initialData?.statistics || getDefaultStatistics()
   );
   const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
   const [isAnonymous, setIsAnonymous] = useState(initialData?.anonymous ?? true);
   const [courseSearch, setCourseSearch] = useState('');
+
+  // Helper function to reset form to initial state
+  const resetForm = () => {
+    resetProfessorReviewForm({
+      setReviewRatings,
+      setReviewStatistics,
+      setReviewComment,
+      setReviewCourse,
+      setReviewSemester,
+      setReviewGrade,
+      setIsAnonymous,
+      setModalState
+    });
+  };
 
   // Remove useEffect and update the handlers
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
@@ -105,7 +122,7 @@ export default function ReviewForm({
   });
 
   // Submit review function
-  const handleSubmitReview = async () => {
+  const handleSubmitReview = async (useAnonymousToken: boolean = false) => {
     // Validate year
     const year = semesterYear;
     const currentYear = getCurrentYear();
@@ -145,6 +162,22 @@ export default function ReviewForm({
       return;
     }
 
+    // Check anonymous token status when user wants to submit anonymously
+    if (isAnonymous && !initialData) {
+      // Token already used this cycle
+      if (hasUsedToken) {
+        toast.error(
+          "You've already submitted an anonymous review for this professor this cycle. You can submit another anonymous review in the next cycle (approximately 2 months)."
+        );
+        return;
+      }
+      // No token available and not used - tokens haven't been claimed yet
+      if (!hasAnonymousToken && !hasUsedToken) {
+        toast.info('Please wait while your anonymous tokens are being prepared...');
+        return;
+      }
+    }
+
     // Calculate overall rating as average of all ratings
     const overallRating = Number(
       (
@@ -161,7 +194,6 @@ export default function ReviewForm({
       professorId: professor.id,
       courseCode: reviewCourse,
       semester: reviewSemester,
-      anonymous: isAnonymous,
       ratings: {
         ...reviewRatings,
         overall: overallRating
@@ -180,29 +212,41 @@ export default function ReviewForm({
         });
         toast.success('Review Updated!');
         setModalState(false);
+      } else if (useAnonymousToken && isAnonymous && hasAnonymousToken && cycleId) {
+        // Use token-based anonymous submission for enhanced privacy
+        const result = await submitAnonymousReview(
+          professor.id,
+          {
+            text: reviewComment.trim(),
+            rating: overallRating,
+            courseCode: reviewCourse,
+            semester: reviewSemester,
+            timestamp: Date.now(),
+            ratings: {
+              ...reviewRatings,
+              overall: overallRating
+            },
+            statistics: reviewStatistics,
+            grade: reviewGrade || undefined,
+            type: 'professor'
+          },
+          cycleId
+        );
+
+        if (result.success) {
+          toast.success('Anonymous review submitted! It will be published after the next shuffle cycle.');
+          // Refetch token status to update hasAnonymousToken (token is now marked as used)
+          refetchTokenStatus();
+          // Reset form
+          resetForm();
+        } else {
+          toast.error(result.error || 'Failed to submit anonymous review.');
+        }
       } else {
         await createReview(reviewData);
         toast.success('Review Submitted!');
         // Reset form only for new reviews
-        setReviewRatings({
-          teaching: 0,
-          helpfulness: 0,
-          fairness: 0,
-          clarity: 0,
-          communication: 0
-        });
-        setReviewStatistics({
-          wouldRecommend: -1,
-          quizes: -1,
-          assignments: -1,
-          attendanceRating: 50
-        });
-        setReviewComment('');
-        setReviewCourse('');
-        setReviewSemester(`Odd-${getCurrentYear()}`);
-        setReviewGrade('');
-        setIsAnonymous(true);
-        setModalState(false);
+        resetForm();
       }
     } catch (error) {
       console.error('Error submitting review:', error);
@@ -220,7 +264,7 @@ export default function ReviewForm({
   return (
     <div ref={formRef}>
       <Dialog open={modalState} onOpenChange={setModalState}>
-        <DialogContent className='sm:max-w-[600px]'>
+        <DialogContent className='sm:max-w-150'>
           <DialogHeader>
             {status === 'authenticated' ? (
               <>
@@ -289,7 +333,7 @@ export default function ReviewForm({
                   <Label htmlFor='semester'>Semester</Label>
                   <div className='flex gap-2'>
                     <Select value={semesterType} onValueChange={handleSemesterTypeChange}>
-                      <SelectTrigger className='w-[120px]'>
+                      <SelectTrigger className='w-30'>
                         <SelectValue placeholder='Select type' />
                       </SelectTrigger>
                       <SelectContent>
@@ -302,7 +346,7 @@ export default function ReviewForm({
                       placeholder='Year'
                       value={semesterYear}
                       onChange={handleSemesterYearChange}
-                      className='w-[100px]'
+                      className='w-25'
                     />
                   </div>
                 </div>
@@ -466,20 +510,35 @@ export default function ReviewForm({
                 <>
                   <div className='flex items-center space-x-2'>
                     <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
-                    <Label htmlFor='anonymous'>Submit review anonymously</Label>
+                    <Label htmlFor='anonymous' className='flex items-center gap-2'>
+                      Submit anonymously
+                      {hasAnonymousToken && isAnonymous && (
+                        <span className='flex items-center gap-1 text-xs text-green-600'>
+                          <Shield className='h-3 w-3' />
+                          Enhanced privacy
+                        </span>
+                      )}
+                    </Label>
                   </div>
-                  <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
-                    Can not be traced back to you.
+                  <p className={cn('-mt-6 text-sm text-green-600', !isAnonymous && 'hidden')}>
+                    {hasAnonymousToken
+                      ? 'Your review will be cryptographically unlinkable to your account.'
+                      : 'Can not be traced back to you.'}
                   </p>
                 </>
               )}
 
               <div className='mt-2 flex justify-end gap-2'>
-                <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>
+                <Button
+                  variant='outline'
+                  onClick={() => setModalState(false)}
+                  disabled={isLoading || isSubmittingAnonymous}>
                   Cancel
                 </Button>
-                <Button onClick={handleSubmitReview} disabled={isLoading}>
-                  {isLoading
+                <Button
+                  onClick={() => handleSubmitReview(hasAnonymousToken)}
+                  disabled={isLoading || isSubmittingAnonymous}>
+                  {isLoading || isSubmittingAnonymous
                     ? initialData
                       ? 'Updating...'
                       : 'Submitting...'
@@ -491,7 +550,7 @@ export default function ReviewForm({
             </div>
           ) : (
             <div className='flex flex-col items-center gap-4 py-6'>
-              <Button onClick={handleSignInClick} size='lg' className='w-full max-w-[200px]'>
+              <Button onClick={handleSignInClick} size='lg' className='w-full max-w-50'>
                 Sign In
               </Button>
             </div>

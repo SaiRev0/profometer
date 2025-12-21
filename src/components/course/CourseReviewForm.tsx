@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -14,12 +14,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
 import { useEditReview } from '@/hooks/useEditReview';
 import { useGetDepartmentProfessors } from '@/hooks/useGetDepartmentProfessors';
-import { Course, CourseReview, Professor } from '@/lib/types';
+import { useSubmitAnonymousReview } from '@/hooks/useSubmitAnonymousReview';
+import { getToken } from '@/lib/crypto/token-store';
+import {
+  getCurrentYear,
+  getDefaultCourseRatings,
+  getDefaultSemester,
+  getDefaultStatistics,
+  resetCourseReviewForm
+} from '@/lib/review-form-utils';
+import { Course, CourseReview } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useRouter } from '@bprogress/next/app';
 import { useIntersection } from '@mantine/hooks';
 
-import { Search } from 'lucide-react';
+import { Search, Shield } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
@@ -38,14 +47,39 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
   const isLoading = isCreating || isEditing;
   const formRef = useRef<HTMLDivElement>(null);
   const { departmentProfessors, isLoadingDepartmentProfessors } = useGetDepartmentProfessors(course.departmentCode);
+  const { submitAnonymousReview, isSubmitting: isSubmittingAnonymous } = useSubmitAnonymousReview();
   const { ref: intersectionRef } = useIntersection({
     root: null,
     threshold: 0.1,
     rootMargin: '100px'
   });
 
-  // Add helper function to get current year
-  const getCurrentYear = () => new Date().getFullYear();
+  // Anonymous review token state
+  const [hasAnonymousToken, setHasAnonymousToken] = useState(false);
+  const [cycleId, setCycleId] = useState<string>('');
+
+  // Check if user has an anonymous token for this course
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        // Get current cycle from status endpoint
+        const response = await fetch('/api/review/status');
+        if (response.ok) {
+          const data = await response.json();
+          const cycle = data.cycleId;
+          setCycleId(cycle);
+          const token = await getToken(course.code, cycle);
+          setHasAnonymousToken(token !== null && !token.used);
+        }
+      } catch {
+        setHasAnonymousToken(false);
+      }
+    };
+
+    if (status === 'authenticated' && modalState) {
+      checkToken();
+    }
+  }, [course.code, status, modalState]);
 
   const [reviewProfessor, setReviewProfessor] = useState(initialData?.professorId || '');
   const [semesterType, setSemesterType] = useState<'Odd' | 'Even'>(
@@ -54,27 +88,28 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
   const [semesterYear, setSemesterYear] = useState<number>(
     initialData?.semester ? parseInt(initialData.semester.split('-')[1]) : getCurrentYear()
   );
-  const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || `Odd-${getCurrentYear()}`);
-  const [reviewRatings, setReviewRatings] = useState(
-    initialData?.ratings || {
-      scoring: 0,
-      engaging: 0,
-      conceptual: 0,
-      easyToLearn: 0
-    }
-  );
-  const [reviewStatistics, setReviewStatistics] = useState(
-    initialData?.statistics || {
-      wouldRecommend: -1,
-      quizes: -1,
-      assignments: -1,
-      attendanceRating: 50
-    }
-  );
+  const [reviewSemester, setReviewSemester] = useState<string>(initialData?.semester || getDefaultSemester());
+  const [reviewRatings, setReviewRatings] = useState(initialData?.ratings || getDefaultCourseRatings());
+  const [reviewStatistics, setReviewStatistics] = useState(initialData?.statistics || getDefaultStatistics());
   const [reviewComment, setReviewComment] = useState(initialData?.comment || '');
   const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
   const [isAnonymous, setIsAnonymous] = useState(initialData?.anonymous ?? true);
   const [professorSearch, setProfessorSearch] = useState('');
+
+  // Helper function to reset form to initial state
+  const resetForm = () => {
+    resetCourseReviewForm({
+      setReviewRatings,
+      setReviewStatistics,
+      setReviewComment,
+      setReviewProfessor,
+      setProfessorSearch,
+      setReviewSemester,
+      setReviewGrade,
+      setIsAnonymous,
+      setModalState
+    });
+  };
 
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
@@ -91,7 +126,7 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
     professor.name.toLowerCase().includes(professorSearch.toLowerCase())
   );
 
-  const handleSubmitReview = async () => {
+  const handleSubmitReview = async (useAnonymousToken: boolean = false) => {
     // Validate year
     const currentYear = getCurrentYear();
 
@@ -161,29 +196,40 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
         });
         toast.success('Review Updated!');
         setModalState(false);
+      } else if (useAnonymousToken && isAnonymous && hasAnonymousToken) {
+        // Use token-based anonymous submission for enhanced privacy
+        const result = await submitAnonymousReview(
+          course.code,
+          {
+            text: reviewComment.trim(),
+            rating: overallRating,
+            courseCode: course.code,
+            semester: reviewSemester,
+            timestamp: Date.now(),
+            ratings: {
+              ...reviewRatings,
+              overall: overallRating
+            },
+            statistics: reviewStatistics,
+            grade: reviewGrade || undefined,
+            type: 'course'
+          },
+          cycleId
+        );
+
+        if (result.success) {
+          toast.success('Anonymous review submitted! It will be published after the next shuffle cycle.');
+          setHasAnonymousToken(false);
+          // Reset form
+          resetForm();
+        } else {
+          toast.error(result.error || 'Failed to submit anonymous review.');
+        }
       } else {
         await createReview(reviewData);
         toast.success('Review Submitted!');
         // Reset form only for new reviews
-        setReviewRatings({
-          scoring: 0,
-          engaging: 0,
-          conceptual: 0,
-          easyToLearn: 0
-        });
-        setReviewStatistics({
-          wouldRecommend: -1,
-          quizes: -1,
-          assignments: -1,
-          attendanceRating: 50
-        });
-        setProfessorSearch('');
-        setReviewComment('');
-        setReviewProfessor('');
-        setReviewSemester(`Odd-${getCurrentYear()}`);
-        setReviewGrade('');
-        setIsAnonymous(true);
-        setModalState(false);
+        resetForm();
       }
     } catch (error) {
       console.error('Error submitting review:', error);
@@ -201,7 +247,7 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
   return (
     <div ref={formRef}>
       <Dialog open={modalState} onOpenChange={setModalState}>
-        <DialogContent className='sm:max-w-[600px]'>
+        <DialogContent className='sm:max-w-150'>
           <DialogHeader>
             {status === 'authenticated' ? (
               <>
@@ -262,7 +308,7 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
                   <Label htmlFor='semester'>Semester</Label>
                   <div className='flex gap-2'>
                     <Select value={semesterType} onValueChange={handleSemesterTypeChange}>
-                      <SelectTrigger className='w-[120px]'>
+                      <SelectTrigger className='w-30'>
                         <SelectValue placeholder='Select type' />
                       </SelectTrigger>
                       <SelectContent>
@@ -275,7 +321,7 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
                       placeholder='Year'
                       value={semesterYear}
                       onChange={handleSemesterYearChange}
-                      className='w-[100px]'
+                      className='w-25'
                       min={2012}
                       max={getCurrentYear()}
                     />
@@ -440,19 +486,35 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
                 <>
                   <div className='flex items-center space-x-2'>
                     <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
-                    <Label htmlFor='anonymous'>Submit review anonymously</Label>
+                    <Label htmlFor='anonymous' className='flex items-center gap-2'>
+                      Submit anonymously
+                      {hasAnonymousToken && isAnonymous && (
+                        <span className='flex items-center gap-1 text-xs text-green-600'>
+                          <Shield className='h-3 w-3' />
+                          Enhanced privacy
+                        </span>
+                      )}
+                    </Label>
                   </div>
-                  <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
-                    Can not be traced back to you.
+                  <p className={cn('-mt-6 text-sm text-green-600', !isAnonymous && 'hidden')}>
+                    {hasAnonymousToken
+                      ? 'Your review will be cryptographically unlinkable to your account.'
+                      : 'Can not be traced back to you.'}
                   </p>
                 </>
               )}
+
               <div className='mt-2 flex justify-end gap-2'>
-                <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>
+                <Button
+                  variant='outline'
+                  onClick={() => setModalState(false)}
+                  disabled={isLoading || isSubmittingAnonymous}>
                   Cancel
                 </Button>
-                <Button onClick={handleSubmitReview} disabled={isLoading}>
-                  {isLoading
+                <Button
+                  onClick={() => handleSubmitReview(hasAnonymousToken)}
+                  disabled={isLoading || isSubmittingAnonymous}>
+                  {isLoading || isSubmittingAnonymous
                     ? initialData
                       ? 'Updating...'
                       : 'Submitting...'
@@ -464,7 +526,7 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
             </div>
           ) : (
             <div className='flex flex-col items-center gap-4 py-6'>
-              <Button onClick={handleSignInClick} size='lg' className='w-full max-w-[200px]'>
+              <Button onClick={handleSignInClick} size='lg' className='w-full max-w-50'>
                 Sign In
               </Button>
             </div>

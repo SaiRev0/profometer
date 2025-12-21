@@ -11,7 +11,9 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "generate-keys": "npx tsx scripts/generate-keys.ts",
+    "test:crypto": "npx tsx scripts/test-crypto.ts"
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",

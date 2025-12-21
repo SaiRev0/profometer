@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { authOptions } from '@/lib/auth';
+import { tryLazyShuffle } from '@/lib/crypto/shuffle';
 import { db } from '@/lib/db';
 
 import { getServerSession } from 'next-auth';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Trigger lazy shuffle - publishes anonymous reviews if conditions are met
+  await tryLazyShuffle();
+
   const session = await getServerSession(authOptions);
   const { id } = await params;
   const { searchParams } = new URL(request.url);

@@ -5,6 +5,7 @@ import { db } from '@/lib/db';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all') === 'true';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const department = searchParams.get('department');
@@ -57,8 +58,7 @@ export async function GET(request: NextRequest) {
     const [professors, total] = await Promise.all([
       db.professor.findMany({
         where,
-        skip,
-        take: limit,
+        ...(all ? {} : { skip, take: limit }),
         orderBy: {
           createdAt: 'desc'
         },

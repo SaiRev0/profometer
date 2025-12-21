@@ -418,7 +418,6 @@ export async function PUT(req: Request) {
             professorId: reviewData.professorId,
             courseCode: reviewData.courseCode,
             semester: reviewData.semester,
-            anonymous: reviewData.anonymous,
             ratings: JSON.parse(JSON.stringify(reviewData.ratings)),
             comment: reviewData.comment,
             statistics: JSON.parse(JSON.stringify(reviewData.statistics)),

@@ -121,13 +121,13 @@ export default function ReviewCard({
         <div className='flex items-start justify-between'>
           <div className='flex items-center gap-3'>
             <Avatar>
-              <AvatarImage src={review.user.image} alt={review.user.name} />
+              <AvatarImage src={review.user?.image} alt={review.user?.name ?? 'Anonymous'} />
               <AvatarFallback className='bg-secondary text-secondary-foreground'>A</AvatarFallback>
             </Avatar>
 
             {/* User Details */}
             <div>
-              <p className='font-medium'>{review.user.name}</p>
+              <p className='font-medium'>{review.user?.name ?? 'Anonymous'}</p>
               <div className='text-muted-foreground flex flex-col text-sm'>
                 <div className='flex items-center gap-1'>
                   <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>

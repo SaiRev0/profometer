@@ -6,6 +6,15 @@ import { parse } from 'csv-parse/sync';
 import fs from 'fs';
 import path from 'path';
 
+interface ProfessorRecord {
+  name: string;
+  department: string;
+  designation: string;
+  image: string;
+  email: string;
+  website: string;
+}
+
 // async function updateDepartmentCounts() {
 //   // Get all departments with their professor counts
 //   const departments = await db.department.findMany({
@@ -44,7 +53,7 @@ export async function POST(request: NextRequest) {
     const records = parse(fileContent, {
       columns: true,
       skip_empty_lines: true
-    });
+    }) as ProfessorRecord[];
 
     console.log(`Starting to seed ${records.length} professors...`);
     let successCount = 0;

@@ -4,7 +4,6 @@ export interface CreateReviewApiData {
   professorId: string;
   courseCode: string;
   semester: string;
-  anonymous: boolean;
   ratings: ProfessorRating | CourseRating;
   comment: string;
   statistics: ProfessorPercentages | CoursePercentages;
