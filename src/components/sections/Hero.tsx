@@ -1,21 +1,21 @@
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Award, BookOpen, PenTool, Star, Users } from 'lucide-react';
 
 export default function HeroSection() {
   // Animation variants for floating elements
-  const floatingAnimation = {
+  const floatingAnimation: Variants = {
     initial: { y: 0 },
     animate: {
       y: [0, -15, 0],
       transition: {
         duration: 4,
         repeat: Infinity,
-        ease: 'easeInOut'
+        ease: 'easeInOut' as const
       }
     }
   };
 
-  const starAnimation = {
+  const starAnimation: Variants = {
     initial: { scale: 0.8, opacity: 0.5 },
     animate: {
       scale: [0.8, 1.0, 0.8],
@@ -23,7 +23,7 @@ export default function HeroSection() {
       transition: {
         duration: 2.5,
         repeat: Infinity,
-        ease: 'easeInOut'
+        ease: 'easeInOut' as const
       }
     }
   };
@@ -43,7 +43,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className='from-primary/10 to-background relative flex min-h-[80vh] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b p-6 md:p-10'>
+    <section className='from-primary/10 to-background relative flex min-h-[80vh] items-center justify-center overflow-hidden rounded-xl bg-linear-to-b p-6 md:p-10'>
       {/* Background pattern */}
       <div className='absolute inset-0 opacity-5'>
         <svg className='h-full w-full' viewBox='0 0 100 100' preserveAspectRatio='none'>
@@ -60,7 +60,7 @@ export default function HeroSection() {
         transition={{ duration: 0.8 }}
         className='relative z-10 mx-auto max-w-4xl text-center'>
         <motion.h1
-          className='from-primary to-primary/60 mb-6 bg-gradient-to-r bg-clip-text text-4xl font-bold text-transparent md:text-5xl lg:text-6xl'
+          className='from-primary to-primary/60 mb-6 bg-linear-to-r bg-clip-text text-4xl font-bold text-transparent md:text-5xl lg:text-6xl'
           variants={fadeInUp}>
           Find & Rate Your Professors
         </motion.h1>
