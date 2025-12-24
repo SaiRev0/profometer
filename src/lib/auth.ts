@@ -96,25 +96,25 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, profile }) {
-      // // Check if email is from IIT BHU domain
-      // if (!profile?.email?.endsWith('@itbhu.ac.in')) {
-      //   return '/signin?error=AccessDenied';
-      // }
+      // Check if email is from IIT BHU domain
+      if (!profile?.email?.endsWith('@itbhu.ac.in')) {
+        return '/signin?error=AccessDenied';
+      }
 
-      // // Get department code from email
-      // const deptCode = getDepartmentCodeFromEmail(profile.email);
-      // if (!deptCode) {
-      //   return '/signin?error=InvalidDepartment';
-      // }
+      // Get department code from email
+      const deptCode = getDepartmentCodeFromEmail(profile.email);
+      if (!deptCode) {
+        return '/signin?error=InvalidDepartment';
+      }
 
-      // // Find department in database
-      // const department = await db.department.findUnique({
-      //   where: { code: deptCode }
-      // });
+      // Find department in database
+      const department = await db.department.findUnique({
+        where: { code: deptCode }
+      });
 
-      // if (!department) {
-      //   return '/signin?error=DepartmentNotFound';
-      // }
+      if (!department) {
+        return '/signin?error=DepartmentNotFound';
+      }
 
       return true;
     },
