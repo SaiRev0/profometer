@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 
+import { CommentSection } from '@/components/comments';
 import CourseReviewForm from '@/components/course/CourseReviewForm';
 import { DeleteDialog } from '@/components/dialogs/DeleteDialog';
 import { ReportDialog } from '@/components/dialogs/ReportDialog';
 import ReviewForm from '@/components/professor/ReviewForm';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -23,7 +24,7 @@ import { cn } from '@/lib/utils';
 import { useRouter } from '@bprogress/next/app';
 
 import { formatDistanceToNow } from 'date-fns';
-import { Edit, Flag, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { Edit, Flag, MessageCircle, MoreHorizontal, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
@@ -49,6 +50,7 @@ export default function ReviewCard({
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const userVote = (review.votes?.[0]?.voteType || null) as 'up' | 'down' | null;
   const [currentUserVote, setCurrentUserVote] = useState<'up' | 'down' | null>(userVote);
@@ -121,21 +123,20 @@ export default function ReviewCard({
         <div className='flex items-start justify-between'>
           <div className='flex items-center gap-3'>
             <Avatar>
-              <AvatarImage src={review.user.image} alt={review.user.name} />
-              <AvatarFallback className='bg-secondary text-secondary-foreground'>A</AvatarFallback>
+              <AvatarFallback className='bg-secondary text-secondary-foreground'>
+                {review.user.username?.[0]?.toUpperCase() || 'U'}
+              </AvatarFallback>
             </Avatar>
 
             {/* User Details */}
             <div>
-              <p className='font-medium'>{review.user.name}</p>
+              <p className='font-medium'>@{review.user.username}</p>
               <div className='text-muted-foreground flex flex-col text-sm'>
                 <div className='flex items-center gap-1'>
                   <span>{formatDistanceToNow(review.createdAt, { addSuffix: true })}</span>
-                  {!review.anonymous &&
-                    review.updatedAt &&
-                    new Date(review.updatedAt).getTime() > new Date(review.createdAt).getTime() && (
-                      <span className='text-muted-foreground text-xs'>(edited)</span>
-                    )}
+                  {review.updatedAt && new Date(review.updatedAt).getTime() > new Date(review.createdAt).getTime() && (
+                    <span className='text-muted-foreground text-xs'>(edited)</span>
+                  )}
                 </div>
                 <div className='flex flex-row items-center'>
                   {usedIn !== 'professor' && review.professor && (
@@ -240,37 +241,46 @@ export default function ReviewCard({
         </div>
       </CardContent>
 
-      {variant === 'default' && (
-        <CardFooter className='flex justify-between px-4 pt-0 pb-3'>
-          <div className='flex items-center gap-2'>
-            <Button
-              variant={currentUserVote === 'up' ? 'secondary' : 'ghost'}
-              size='sm'
-              className='h-8'
-              onClick={() => handleVote(review.id, 'up')}>
-              <ThumbsUp className={cn('mr-1.5 h-4 w-4', currentUserVote === 'up' && 'text-primary fill-current')} />
-              <p className='hidden text-sm sm:block'>Helpful</p>
-              {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
-            </Button>
+      <CardFooter className='flex justify-between px-4 pt-0 pb-3'>
+        <div className='flex items-center gap-2'>
+          <Button
+            variant={currentUserVote === 'up' ? 'secondary' : 'ghost'}
+            size='sm'
+            className='h-8'
+            onClick={() => handleVote(review.id, 'up')}>
+            <ThumbsUp className={cn('mr-1.5 h-4 w-4', currentUserVote === 'up' && 'text-primary fill-current')} />
+            <p className='hidden text-sm sm:block'>Helpful</p>
+            {upvoteCount > 0 && <span className='ml-1.5 text-xs'>({upvoteCount})</span>}
+          </Button>
 
-            <Button
-              variant={currentUserVote === 'down' ? 'secondary' : 'ghost'}
-              size='sm'
-              className='h-8'
-              onClick={() => handleVote(review.id, 'down')}>
-              <ThumbsDown className={cn('mr-1.5 h-4 w-4', currentUserVote === 'down' && 'fill-current text-red-500')} />
-              <p className='hidden text-sm sm:block'>Not helpful</p>
-              {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}
-            </Button>
-          </div>
+          <Button
+            variant={currentUserVote === 'down' ? 'secondary' : 'ghost'}
+            size='sm'
+            className='h-8'
+            onClick={() => handleVote(review.id, 'down')}>
+            <ThumbsDown className={cn('mr-1.5 h-4 w-4', currentUserVote === 'down' && 'fill-current text-red-500')} />
+            <p className='hidden text-sm sm:block'>Not helpful</p>
+            {downvoteCount > 0 && <span className='ml-1.5 text-xs'>({downvoteCount})</span>}
+          </Button>
 
-          {session?.user && (
-            <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
-              <Flag className='mr-1.5 h-4 w-4 fill-current text-red-500' />
-              <p className='hidden text-sm sm:block'>Report</p>
-            </Button>
-          )}
-        </CardFooter>
+          <Button variant='ghost' size='sm' className='h-8' onClick={() => setShowComments(!showComments)}>
+            <MessageCircle className={cn('mr-1.5 h-4 w-4', showComments && 'fill-current')} />
+            <p className='hidden text-sm sm:block'>Comments</p>
+          </Button>
+        </div>
+
+        {session?.user && variant !== 'own' && (
+          <Button variant='ghost' size='sm' className='h-8' onClick={() => setReportDialogOpen(true)}>
+            <Flag className='mr-1.5 h-4 w-4 fill-current text-red-500' />
+            <p className='hidden text-sm sm:block'>Report</p>
+          </Button>
+        )}
+      </CardFooter>
+
+      {showComments && (
+        <div className='border-t px-4 py-4'>
+          <CommentSection reviewId={review.id} />
+        </div>
       )}
 
       <ReportDialog open={reportDialogOpen} onOpenChange={setReportDialogOpen} reviewId={review.id} />

@@ -76,7 +76,7 @@ export default function CourseReviews({ course }: { course: Course }) {
               <div key={review.id} ref={isLastReview ? ref : undefined}>
                 <ReviewCard
                   review={review}
-                  variant={session?.user?.email === review.user.email ? 'own' : 'default'}
+                  variant={session?.user?.id === review.user.id ? 'own' : 'default'}
                   usedIn='course'
                   course={course}
                 />

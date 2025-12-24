@@ -4,14 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { CoursePercentages, CourseRating, ProfessorPercentages, ProfessorRating } from '@/lib/types';
 import { CreateReviewApiData } from '@/lib/types/apiTypes';
-import {
-  calculateNewAverage,
-  calculateNewGradeAverage,
-  calculateNewPercentage,
-  convertNumberToGrade,
-  gradeNumberMap,
-  safeClamp
-} from '@/lib/utils';
+import { calculateNewAverage, calculateNewGradeAverage, calculateNewPercentage, safeClamp } from '@/lib/utils';
 
 import { getServerSession } from 'next-auth';
 
@@ -22,17 +15,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const {
-      professorId,
-      courseCode,
-      semester,
-      anonymous = false,
-      ratings,
-      comment,
-      statistics,
-      grade,
-      type
-    } = (await req.json()) as CreateReviewApiData;
+    const { professorId, courseCode, semester, ratings, comment, statistics, grade, type } =
+      (await req.json()) as CreateReviewApiData;
 
     // Validate required fields
     if (!professorId || !courseCode || !semester || !ratings || !comment || !statistics || !type) {
@@ -42,10 +26,23 @@ export async function POST(req: Request) {
     // Start a transaction to create review and update statistics
     const result = await db.$transaction(async (tx) => {
       try {
-        // Get the appropriate user ID based on anonymous flag
-        const userId = anonymous ? process.env.ANONYMOUS_USER_ID : (session.user as { id: string }).id;
+        // Get the real user ID
+        const userId = (session.user as { id: string }).id;
 
-        if (!userId) throw new Error('Anonymous user ID not configured in environment variables');
+        // Check if user already has a review for this entity
+        const existingReview = await tx.review.findFirst({
+          where: {
+            userId: userId,
+            type,
+            ...(type === 'professor' ? { professorId } : { courseCode })
+          }
+        });
+
+        if (existingReview) {
+          throw new Error(
+            `You have already reviewed this ${type}. You can edit or delete your existing review instead.`
+          );
+        }
 
         // Get current professor statistics
         const professor = await tx.professor.findUnique({
@@ -355,7 +352,6 @@ export async function POST(req: Request) {
             courseCode,
             userId,
             semester,
-            anonymous,
             ratings: JSON.parse(JSON.stringify(ratings)),
             comment,
             statistics: JSON.parse(JSON.stringify(statistics)),
@@ -374,9 +370,13 @@ export async function POST(req: Request) {
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error creating review:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+
+    // Check if it's a duplicate review error
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    if (errorMessage.includes('already reviewed')) {
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
+    }
+
+    return NextResponse.json({ error: 'Internal server error', details: errorMessage }, { status: 500 });
   }
 }

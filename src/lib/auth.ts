@@ -1,9 +1,12 @@
+import { generateUsername } from '@/lib/username-generator';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
 import { db } from './db';
 import 'dotenv/config';
 import { NextAuthOptions, getServerSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+
+// Types are defined in src/lib/types/next-auth.d.ts
 
 // Map of department codes to their IDs
 const departmentCodeMap: { [key: string]: string } = {
@@ -55,10 +58,14 @@ const customPrismaAdapter = {
     const email = data.email;
     const deptCode = getDepartmentCodeFromEmail(email);
 
+    // Generate unique username for new users
+    const username = await generateUsername();
+
     // Create user with department data
     return db.user.create({
       data: {
         ...data,
+        username, // NEW: Add generated username
         departmentCode: deptCode
       }
     });
@@ -88,7 +95,7 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async signIn({ profile }) {
+    async signIn({ user, profile }) {
       // // Check if email is from IIT BHU domain
       // if (!profile?.email?.endsWith('@itbhu.ac.in')) {
       //   return '/signin?error=AccessDenied';
@@ -112,30 +119,46 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
+
     async session({ token, session }) {
       if (token && session.user) {
         session.user.id = token.id as string;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.image = token.picture as string;
-        session.user.departmentCode = token.departmentCode as string;
+        session.user.username = token.username as string;
+        session.user.usernameSetAt = token.usernameSetAt as Date | null;
       }
       return session;
     },
 
-    async jwt({ token, user, account, profile, trigger, session }) {
+    async jwt({ token, user, account, trigger }) {
+      // Initial sign in
       if (user) {
         token.id = user.id;
-        token.departmentCode = user.departmentCode;
+        token.username = user.username;
+        token.usernameSetAt = user.usernameSetAt;
       }
       if (account) {
         token.accessToken = account.access_token;
       }
-      if (profile) {
-        token.email = profile.email as string;
-        token.name = profile.name as string;
-        token.picture = (profile as any).picture;
+
+      // On every request, fetch fresh usernameSetAt to detect confirmation
+      if (token.id) {
+        const dbUser = await db.user.findUnique({
+          where: { id: token.id as string },
+          select: { username: true, usernameSetAt: true }
+        });
+        if (dbUser) {
+          token.username = dbUser.username;
+          token.usernameSetAt = dbUser.usernameSetAt;
+        }
       }
+
       return token;
     }
   }

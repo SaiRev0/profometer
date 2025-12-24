@@ -15,7 +15,7 @@ export async function GET() {
 
     // Get user profile data
     const user = await db.user.findUnique({
-      where: { email: session.user.email },
+      where: { id: session.user.id },
       include: {
         reviews: {
           include: {

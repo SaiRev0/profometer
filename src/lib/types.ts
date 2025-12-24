@@ -83,7 +83,6 @@ interface Review {
   professor?: Professor;
   courseCode: string;
   semester: string;
-  anonymous: boolean;
   comment: string;
   grade?: string;
   upvotes: number;
@@ -92,6 +91,10 @@ interface Review {
   updatedAt: Date;
   user: User;
   course: Course;
+  comments?: ReviewComment[];
+  _count?: {
+    comments: number;
+  };
 }
 export interface CourseReview extends Review {
   type: 'course';
@@ -103,11 +106,25 @@ export interface ProfessorReview extends Review {
   ratings: ProfessorRating;
   statistics: ProfessorPercentages;
 }
+
+// Comment on a review - text only, no ratings
+export interface ReviewComment {
+  id: string;
+  content: string;
+  userId: string | null;
+  user: User | null;
+  reviewId: string;
+  parentId: string | null;
+  replies?: ReviewComment[]; // Nested child comments
+  upvotes: number;
+  downvotes: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
 export interface User {
   id: string;
-  name: string;
-  email: string;
-  image: string;
+  username: string;
+  email?: string;
   departmentCode: string;
   department: Department;
   reviews: (ProfessorReview | CourseReview)[];

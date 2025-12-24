@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -80,12 +80,11 @@ export default function ProfilePage() {
           <CardHeader>
             <div className='flex flex-col items-start gap-4 sm:flex-row sm:items-center'>
               <Avatar className='h-16 w-16'>
-                <AvatarImage src={profile.image} alt={profile.name} />
-                <AvatarFallback>{profile.name[0]}</AvatarFallback>
+                <AvatarFallback>{profile.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
               </Avatar>
 
               <div className='flex-1'>
-                <CardTitle className='text-2xl'>{profile.name}</CardTitle>
+                <CardTitle className='text-2xl'>@{profile.username}</CardTitle>
                 <CardDescription className='flex items-center gap-1'>
                   <School className='h-4 w-4' />
                   {profile.department.name}

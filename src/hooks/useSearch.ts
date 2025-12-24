@@ -10,6 +10,11 @@ interface SearchResult {
 }
 
 export const SEARCH_QUERY_KEY = (query: string) => ['search', query] as const;
+export const POPULAR_DEPARTMENTS_QUERY_KEY = ['popularDepartments'] as const;
+
+// Cache duration: 60 minutes (departments rarely change)
+const DEPARTMENTS_STALE_TIME = 60 * 60 * 1000;
+const DEPARTMENTS_GC_TIME = 60 * 60 * 1000;
 
 export function useSearch(searchTerm: string) {
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms debounce delay
@@ -20,12 +25,14 @@ export function useSearch(searchTerm: string) {
     isLoading: popularDepartmentsLoading,
     error: popularDepartmentsError
   } = useQuery<Department[]>({
-    queryKey: ['popularDepartments'],
+    queryKey: POPULAR_DEPARTMENTS_QUERY_KEY,
     queryFn: async () => {
       const response = await fetch('/api/departments?limit=3');
       if (!response.ok) throw new Error('Failed to fetch departments');
       return response.json();
-    }
+    },
+    staleTime: DEPARTMENTS_STALE_TIME, // Data considered fresh for 60 minutes
+    gcTime: DEPARTMENTS_GC_TIME // Keep in cache for 60 minutes
   });
 
   // Query for search results - using debounced search term

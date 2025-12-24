@@ -22,7 +22,12 @@ export function useCreateReview() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create review');
+        const errorData = await response.json();
+        // Specific error for duplicate review (includes cycle info)
+        if (errorData.error?.includes('already submitted') || errorData.error?.includes('current period')) {
+          throw new Error(errorData.error);
+        }
+        throw new Error(errorData.error || 'Failed to create review');
       }
 
       return response.json();

@@ -59,6 +59,11 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Unauthorized to edit this review' }, { status: 403 });
     }
 
+    // Prevent changing review target during edit
+    if (existingReview.professorId !== reviewData.professorId || existingReview.courseCode !== reviewData.courseCode) {
+      return NextResponse.json({ error: 'Cannot change professor or course when editing a review' }, { status: 400 });
+    }
+
     // Start a transaction to update review and statistics
     const result = await db.$transaction(async (tx) => {
       try {
@@ -418,7 +423,6 @@ export async function PUT(req: Request) {
             professorId: reviewData.professorId,
             courseCode: reviewData.courseCode,
             semester: reviewData.semester,
-            anonymous: reviewData.anonymous,
             ratings: JSON.parse(JSON.stringify(reviewData.ratings)),
             comment: reviewData.comment,
             statistics: JSON.parse(JSON.stringify(reviewData.statistics)),

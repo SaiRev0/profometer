@@ -50,6 +50,8 @@ model VerificationToken {
 model User {
     id             String         @id @default(cuid())
     name           String?
+    username       String         @unique
+    usernameSetAt  DateTime?      // null means user hasn't finalized username yet
     email          String         @unique
     emailVerified  DateTime?
     image          String?
@@ -60,8 +62,13 @@ model User {
     reviews        Review[]
     reviewVotes    ReviewVote[]
     reviewReports  ReviewReport[]
+    reviewComments ReviewComment[]
+    commentVotes   CommentVote[]
+    commentReports CommentReport[]
     createdAt      DateTime       @default(now())
     updatedAt      DateTime       @updatedAt
+
+    @@index([username])
 }
 
 model Department {
@@ -124,26 +131,26 @@ model Course {
 }
 
 model Review {
-    id          String         @id @default(cuid())
+    id          String          @id @default(cuid())
     professorId String
-    professor   Professor      @relation(fields: [professorId], references: [id])
+    professor   Professor       @relation(fields: [professorId], references: [id])
     courseCode  String
-    course      Course         @relation(fields: [courseCode], references: [code])
-    userId      String?
-    user        User?          @relation(fields: [userId], references: [id])
+    course      Course          @relation(fields: [courseCode], references: [code])
+    userId      String
+    user        User            @relation(fields: [userId], references: [id])
     semester    String
-    anonymous   Boolean        @default(false)
     ratings     Json // Stores all ratings as a JSON object
-    comment     String         @db.Text
+    comment     String          @db.Text
     statistics  Json // Stores all statistics as a JSON object
     grade       String?
     type        ReviewType // 'course' or 'professor'
-    upvotes     Int            @default(0)
-    downvotes   Int            @default(0)
+    upvotes     Int             @default(0)
+    downvotes   Int             @default(0)
     reports     ReviewReport[]
     votes       ReviewVote[]
-    createdAt   DateTime       @default(now())
-    updatedAt   DateTime       @updatedAt
+    comments    ReviewComment[]
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
 
     @@index([userId])
     @@index([professorId, type, createdAt(sort: Desc)])
@@ -152,6 +159,73 @@ model Review {
     @@index([createdAt(sort: Desc)])
     @@index([professorId, courseCode])
     @@index([userId, createdAt(sort: Desc)])
+}
+
+model ReviewComment {
+    id        String          @id @default(cuid())
+
+    // Content - text only, no ratings
+    content   String          @db.Text
+
+    // Author
+    userId    String
+    user      User            @relation(fields: [userId], references: [id])
+
+    // Parent Review (which review this comment belongs to)
+    reviewId  String
+    review    Review          @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+    // Parent Comment (for nested/threaded replies)
+    parentId  String?
+    parent    ReviewComment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+    replies   ReviewComment[] @relation("CommentToComment")
+
+    // Voting
+    upvotes   Int             @default(0)
+    downvotes Int             @default(0)
+    votes     CommentVote[]
+
+    // Reports
+    reports   CommentReport[]
+
+    // Timestamps
+    createdAt DateTime        @default(now())
+    updatedAt DateTime        @updatedAt
+
+    @@index([reviewId])
+    @@index([parentId])
+    @@index([userId])
+    @@index([reviewId, parentId])
+    @@index([createdAt(sort: Desc)])
+}
+
+model CommentVote {
+    id        String        @id @default(cuid())
+    commentId String
+    comment   ReviewComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    userId    String
+    user      User          @relation(fields: [userId], references: [id])
+    voteType  String // 'up' or 'down'
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+
+    @@unique([commentId, userId])
+    @@index([userId])
+}
+
+model CommentReport {
+    id         String        @id @default(cuid())
+    commentId  String
+    comment    ReviewComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    reason     String
+    details    String?       @db.Text
+    reportedBy String
+    reporter   User          @relation(fields: [reportedBy], references: [id])
+    createdAt  DateTime      @default(now())
+    updatedAt  DateTime      @updatedAt
+
+    @@index([commentId])
+    @@index([reportedBy])
 }
 
 model ReviewVote {

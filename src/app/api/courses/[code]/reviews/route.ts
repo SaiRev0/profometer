@@ -21,7 +21,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       include: {
         course: true,
         professor: true,
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true // Only expose username
+          }
+        },
         ...(session?.user?.id && {
           votes: {
             where: { userId: session.user.id },

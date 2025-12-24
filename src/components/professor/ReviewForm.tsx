@@ -9,13 +9,11 @@ import { Label } from '@/components/ui/label';
 import RatingStars from '@/components/ui/rating-stars';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateReview } from '@/hooks/useCreateReview';
 import { useEditReview } from '@/hooks/useEditReview';
 import { useGetDepartmentCourses } from '@/hooks/useGetDepartmentCourses';
 import { Professor, ProfessorPercentages, ProfessorReview } from '@/lib/types';
-import { cn } from '@/lib/utils';
 import { useRouter } from '@bprogress/next/app';
 import { useIntersection } from '@mantine/hooks';
 
@@ -84,7 +82,6 @@ export default function ReviewForm({
     }
   );
   const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
-  const [isAnonymous, setIsAnonymous] = useState(initialData?.anonymous ?? true);
   const [courseSearch, setCourseSearch] = useState('');
 
   // Remove useEffect and update the handlers
@@ -161,7 +158,6 @@ export default function ReviewForm({
       professorId: professor.id,
       courseCode: reviewCourse,
       semester: reviewSemester,
-      anonymous: isAnonymous,
       ratings: {
         ...reviewRatings,
         overall: overallRating
@@ -201,14 +197,23 @@ export default function ReviewForm({
         setReviewCourse('');
         setReviewSemester(`Odd-${getCurrentYear()}`);
         setReviewGrade('');
-        setIsAnonymous(true);
         setModalState(false);
       }
     } catch (error) {
       console.error('Error submitting review:', error);
-      toast.error('Failed to submit review. Please try again.', {
-        description: error instanceof Error ? error.message : 'Unknown error'
-      });
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      // Check if it's a duplicate review error
+      if (errorMessage.includes('already reviewed')) {
+        toast.error('Already Reviewed', {
+          description: errorMessage,
+          duration: 6000
+        });
+      } else {
+        toast.error('Failed to submit review. Please try again.', {
+          description: errorMessage
+        });
+      }
     }
   };
 
@@ -220,7 +225,7 @@ export default function ReviewForm({
   return (
     <div ref={formRef}>
       <Dialog open={modalState} onOpenChange={setModalState}>
-        <DialogContent className='sm:max-w-[600px]'>
+        <DialogContent className='sm:max-w-150'>
           <DialogHeader>
             {status === 'authenticated' ? (
               <>
@@ -289,7 +294,7 @@ export default function ReviewForm({
                   <Label htmlFor='semester'>Semester</Label>
                   <div className='flex gap-2'>
                     <Select value={semesterType} onValueChange={handleSemesterTypeChange}>
-                      <SelectTrigger className='w-[120px]'>
+                      <SelectTrigger className='w-30'>
                         <SelectValue placeholder='Select type' />
                       </SelectTrigger>
                       <SelectContent>
@@ -302,7 +307,7 @@ export default function ReviewForm({
                       placeholder='Year'
                       value={semesterYear}
                       onChange={handleSemesterYearChange}
-                      className='w-[100px]'
+                      className='w-25'
                     />
                   </div>
                 </div>
@@ -462,18 +467,6 @@ export default function ReviewForm({
                   </SelectContent>
                 </Select>
               </div>
-              {!initialData && (
-                <>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='anonymous' checked={isAnonymous} onCheckedChange={setIsAnonymous} />
-                    <Label htmlFor='anonymous'>Submit review anonymously</Label>
-                  </div>
-                  <p className={cn('mt-[-1.5rem] text-sm text-green-600', !isAnonymous && 'hidden')}>
-                    Can not be traced back to you.
-                  </p>
-                </>
-              )}
-
               <div className='mt-2 flex justify-end gap-2'>
                 <Button variant='outline' onClick={() => setModalState(false)} disabled={isLoading}>
                   Cancel
@@ -491,7 +484,7 @@ export default function ReviewForm({
             </div>
           ) : (
             <div className='flex flex-col items-center gap-4 py-6'>
-              <Button onClick={handleSignInClick} size='lg' className='w-full max-w-[200px]'>
+              <Button onClick={handleSignInClick} size='lg' className='w-full max-w-50'>
                 Sign In
               </Button>
             </div>
