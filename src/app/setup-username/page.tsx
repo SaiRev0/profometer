@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 import { useConfirmUsername } from '@/hooks/useConfirmUsername';
 import { useGenerateUsername } from '@/hooks/useGenerateUsername';
@@ -17,10 +19,18 @@ export default function SetupUsernamePage() {
   const router = useRouter();
   const { data: session, status, update } = useSession();
   const [displayUsername, setDisplayUsername] = useState<string>('');
-  const [shouldGenerate, setShouldGenerate] = useState<boolean>(false);
+  const [includeNumbers, setIncludeNumbers] = useState<boolean>(true);
+  const [useHyphens, setUseHyphens] = useState<boolean>(false);
+  const [noSeparator, setNoSeparator] = useState<boolean>(false);
+  const isInitialMount = useRef(true);
 
-  // Generate username hook - only enabled when we need to generate
-  const { username: generatedUsername, isLoading: isGenerating, refetch: generateNext } = useGenerateUsername(shouldGenerate);
+  // Generate username hook - always enabled on this page
+  const { username: generatedUsername, isLoading: isGenerating, refetch: generateNext } = useGenerateUsername(
+    true,
+    includeNumbers,
+    useHyphens,
+    noSeparator
+  );
 
   // Confirm username hook
   const { confirmUsername, isLoading: isConfirming } = useConfirmUsername();
@@ -44,9 +54,6 @@ export default function SetupUsernamePage() {
     // If user has a username but hasn't confirmed it, use it as default
     if (session?.user?.username) {
       setDisplayUsername(session.user.username);
-    } else {
-      // Otherwise enable generation
-      setShouldGenerate(true);
     }
   }, [status, session, router]);
 
@@ -57,7 +64,7 @@ export default function SetupUsernamePage() {
     }
   }, [generatedUsername]);
 
-  const handleGenerateNext = async () => {
+  const handleGenerateNext = useCallback(async () => {
     try {
       const result = await generateNext();
       if (result.data?.username) {
@@ -68,7 +75,20 @@ export default function SetupUsernamePage() {
     } catch (error) {
       toast.error('Failed to generate username');
     }
-  };
+  }, [generateNext]);
+
+  // Regenerate username when options change
+  useEffect(() => {
+    // Skip on initial mount - let the normal flow handle it
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    // Regenerate when options change
+    generateNext();
+    // Only include the option states in dependencies, not displayUsername or generateNext
+  }, [includeNumbers, useHyphens, noSeparator]);
 
   const handleConfirmUsername = async () => {
     if (!displayUsername) {
@@ -94,7 +114,7 @@ export default function SetupUsernamePage() {
   };
 
   // Show loading while checking session or generating initial username
-  if (status === 'loading' || (shouldGenerate && isGenerating && !displayUsername)) {
+  if (status === 'loading' || (isGenerating && !displayUsername)) {
     return (
       <div className='flex min-h-screen items-center justify-center p-4'>
         <Card className='w-full max-w-md'>
@@ -124,8 +144,58 @@ export default function SetupUsernamePage() {
         <CardContent className='space-y-6'>
           {/* Username Display */}
           <div className='text-center'>
-            <div className='bg-muted inline-flex items-center justify-center rounded-lg px-6 py-4'>
-              <span className='text-primary text-2xl font-bold'>@{displayUsername}</span>
+            <div className='bg-muted flex items-center justify-center rounded-lg px-4 py-4 mx-auto max-w-full'>
+              <span className='text-primary text-xl sm:text-2xl font-bold break-all'>@{displayUsername}</span>
+            </div>
+          </div>
+
+          {/* Username Options */}
+          <div className='space-y-3 border rounded-lg p-4'>
+            <div className='text-sm font-medium mb-3'>Username Options</div>
+            <div className='flex items-center space-x-2'>
+              <Checkbox
+                id='includeNumbers'
+                checked={includeNumbers}
+                onCheckedChange={(checked) => setIncludeNumbers(checked as boolean)}
+                disabled={isGenerating || isConfirming}
+              />
+              <Label
+                htmlFor='includeNumbers'
+                className='text-sm font-normal cursor-pointer'>
+                Include numbers (e.g., user123)
+              </Label>
+            </div>
+            <div className='flex items-center space-x-2'>
+              <Checkbox
+                id='useHyphens'
+                checked={useHyphens}
+                onCheckedChange={(checked) => {
+                  setUseHyphens(checked as boolean);
+                  if (checked) setNoSeparator(false);
+                }}
+                disabled={isGenerating || isConfirming || noSeparator}
+              />
+              <Label
+                htmlFor='useHyphens'
+                className='text-sm font-normal cursor-pointer'>
+                Use hyphens instead of underscores (e.g., cool-user)
+              </Label>
+            </div>
+            <div className='flex items-center space-x-2'>
+              <Checkbox
+                id='noSeparator'
+                checked={noSeparator}
+                onCheckedChange={(checked) => {
+                  setNoSeparator(checked as boolean);
+                  if (checked) setUseHyphens(false);
+                }}
+                disabled={isGenerating || isConfirming}
+              />
+              <Label
+                htmlFor='noSeparator'
+                className='text-sm font-normal cursor-pointer'>
+                No separators (e.g., cooluser)
+              </Label>
             </div>
           </div>
 

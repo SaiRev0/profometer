@@ -7,16 +7,26 @@ interface GenerateUsernameResponse {
   available: boolean;
 }
 
-export function useGenerateUsername(enabled: boolean = true) {
+export function useGenerateUsername(
+  enabled: boolean = true,
+  includeNumbers: boolean = true,
+  useHyphens: boolean = false,
+  noSeparator: boolean = false
+) {
   const {
     data,
     isLoading,
     error,
     refetch
   } = useQuery<GenerateUsernameResponse, Error>({
-    queryKey: ['generate-username'],
+    queryKey: ['generate-username', includeNumbers, useHyphens, noSeparator],
     queryFn: async () => {
-      const response = await fetch('/api/username/generate');
+      const params = new URLSearchParams({
+        includeNumbers: includeNumbers.toString(),
+        useHyphens: useHyphens.toString(),
+        noSeparator: noSeparator.toString()
+      });
+      const response = await fetch(`/api/username/generate?${params}`);
 
       if (!response.ok) {
         const errorData = await response.json();

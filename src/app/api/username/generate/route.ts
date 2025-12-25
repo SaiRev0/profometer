@@ -1,17 +1,22 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 import { generatePreviewUsername } from '@/lib/username-generator';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const searchParams = request.nextUrl.searchParams;
+    const includeNumbers = searchParams.get('includeNumbers') === 'true';
+    const useHyphens = searchParams.get('useHyphens') === 'true';
+    const noSeparator = searchParams.get('noSeparator') === 'true';
+
     let username: string;
     let isAvailable = false;
     let attempts = 0;
 
     // Generate until we find an available username
     while (!isAvailable && attempts < 10) {
-      username = generatePreviewUsername();
+      username = generatePreviewUsername({ includeNumbers, useHyphens, noSeparator });
 
       const existingUser = await db.user.findUnique({
         where: { username },
