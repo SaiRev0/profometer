@@ -18,12 +18,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 course: true
               }
             }
-          }
+          },
+          orderBy: { name: 'asc' }
         },
         courses: {
           include: {
             reviews: true
-          }
+          },
+          orderBy: { name: 'asc' }
         },
         _count: {
           select: {

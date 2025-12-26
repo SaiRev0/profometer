@@ -9,7 +9,7 @@ import { Star } from 'lucide-react';
 
 const renderLoadingCards = (type: 'professor' | 'course', length: number) =>
   Array.from({ length }).map((_, index) => (
-    <div key={index} className='min-w-[250px] grow snap-start sm:min-w-[280px]'>
+    <div key={index} className='w-full snap-start md:min-w-62.5 md:grow lg:min-w-70'>
       {type === 'professor' ? (
         <ProfessorCardSkeleton key={index} variant='detailed' />
       ) : (
@@ -20,7 +20,7 @@ const renderLoadingCards = (type: 'professor' | 'course', length: number) =>
 
 // Loading fallback
 const LoadingFallback = () => (
-  <div className='scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4'>
+  <div className='scrollbar-hide flex flex-col gap-4 scroll-smooth pb-4 md:snap-x md:snap-mandatory md:flex-row md:overflow-x-auto'>
     {renderLoadingCards('professor', 4)}
   </div>
 );
@@ -30,18 +30,18 @@ function RecentlyReviewedContent() {
   const { data, isLoading } = useGetRecentReviews({ limit: 2 });
 
   return (
-    <div className='scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4'>
+    <div className='scrollbar-hide flex flex-col gap-4 scroll-smooth pb-4 md:snap-x md:snap-mandatory md:flex-row md:overflow-x-auto'>
       {isLoading
         ? renderLoadingCards('professor', 2)
         : data?.professors.map((professor) => (
-            <div key={professor.id} className='min-w-[300px] snap-start sm:min-w-[320px]'>
+            <div key={professor.id} className='w-full snap-start md:min-w-75 lg:min-w-[320px]'>
               <ProfessorCard professor={professor} variant='detailed' />
             </div>
           ))}
       {isLoading
         ? renderLoadingCards('course', 2)
         : data?.courses.map((course) => (
-            <div key={course.code} className='min-w-[300px] snap-start sm:min-w-[320px]'>
+            <div key={course.code} className='w-full snap-start md:min-w-75 lg:min-w-[320px]'>
               <CourseCard course={course} variant='detailed' />
             </div>
           ))}

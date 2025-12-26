@@ -10,7 +10,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       where: {
         departmentCode: code,
         verified: true
-      }
+      },
+      orderBy: { name: 'asc' }
     });
 
     return NextResponse.json(courses);

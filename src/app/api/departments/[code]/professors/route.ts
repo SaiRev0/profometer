@@ -8,7 +8,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const professors = await db.professor.findMany({
       where: { departmentCode: code.toUpperCase() },
-      include: { department: true }
+      include: { department: true },
+      orderBy: { name: 'asc' }
     });
 
     return NextResponse.json(professors);
