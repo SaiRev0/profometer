@@ -257,20 +257,26 @@ export default function ReviewForm({
                     </SelectTrigger>
                     <SelectContent showScrollButtons={false}>
                       <div className='bg-background sticky top-0 z-10 border-b p-2'>
-                        <div className='relative'>
+                        <div className='relative' onPointerDown={(e) => e.stopPropagation()}>
                           <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
                           <Input
                             placeholder='Search courses...'
                             value={courseSearch}
                             onChange={(e) => setCourseSearch(e.target.value)}
                             className='pl-8'
+                            onPointerDown={(e) => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
+                            onTouchStart={(e) => e.stopPropagation()}
                           />
                         </div>
                         <Button
                           variant='outline'
                           size='sm'
                           className='mt-2 flex w-full items-center justify-center gap-2'
-                          onClick={() => setAddCourseDialogOpen(true)}>
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAddCourseDialogOpen(true);
+                          }}>
                           <Plus className='h-4 w-4' />
                           Add New Course
                         </Button>

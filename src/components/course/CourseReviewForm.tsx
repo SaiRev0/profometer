@@ -238,13 +238,16 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
                     </SelectTrigger>
                     <SelectContent showScrollButtons={false}>
                       <div className='bg-background sticky top-0 z-10 border-b p-2'>
-                        <div className='relative'>
+                        <div className='relative' onPointerDown={(e) => e.stopPropagation()}>
                           <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
                           <Input
                             placeholder='Search professors...'
                             value={professorSearch}
                             onChange={(e) => setProfessorSearch(e.target.value)}
                             className='pl-8'
+                            onPointerDown={(e) => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
+                            onTouchStart={(e) => e.stopPropagation()}
                           />
                         </div>
                       </div>
