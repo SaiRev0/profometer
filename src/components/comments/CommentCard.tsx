@@ -88,7 +88,7 @@ export default function CommentCard({ comment, reviewId, depth = 0, maxDepth = 3
   };
 
   return (
-    <div className={cn('border-muted border-l-2 pl-4', depth > 0 && 'mt-3 ml-4')}>
+    <div className={cn('border-muted border-l-2 pl-2', depth > 0 && 'mt-3 ml-1')}>
       <div className='flex items-start gap-3'>
         <Avatar className='h-8 w-8'>
           <AvatarFallback className='bg-secondary text-secondary-foreground text-xs'>
@@ -117,7 +117,7 @@ export default function CommentCard({ comment, reviewId, depth = 0, maxDepth = 3
               onSuccess={() => setShowEditForm(false)}
             />
           ) : (
-            <p className='mt-1 text-sm whitespace-pre-line'>{comment.content}</p>
+            <p className='mt-1 text-sm whitespace-pre-line wrap-break-word overflow-wrap-anywhere'>{comment.content}</p>
           )}
 
           {!showEditForm && (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -34,11 +34,17 @@ export default function CommentForm({
   const { data: session } = useSession();
   const router = useRouter();
   const [content, setContent] = useState(initialContent);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { createComment, isLoading: isCreating } = useCreateComment();
   const { editComment, isLoading: isEditing } = useEditComment();
 
   const isLoading = isCreating || isEditing;
+
+  // Auto-focus textarea when component mounts
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   const handleSubmit = async () => {
     if (!session?.user) {
@@ -79,6 +85,7 @@ export default function CommentForm({
   return (
     <div className='space-y-3'>
       <Textarea
+        ref={textareaRef}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder={placeholder}
