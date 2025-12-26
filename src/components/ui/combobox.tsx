@@ -66,8 +66,9 @@ export function Combobox({
         align='start'
         side='bottom'
         sideOffset={5}
-        collisionPadding={{ left: 16, right: 16, top: 16, bottom: 16 }}
-        avoidCollisions={true}
+        collisionPadding={{ left: 16, right: 16, bottom: 16 }}
+        avoidCollisions={false}
+        sticky='always'
         style={{ width: 'var(--radix-popover-trigger-width)', maxWidth: 'calc(100vw - 2rem)' }}>
         <Command className='max-h-[min(300px,50vh)] overflow-hidden'>
           <CommandInput placeholder={searchPlaceholder} className='h-9' />
