@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Combobox } from '@/components/ui/combobox';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,7 +18,7 @@ import { Professor, ProfessorPercentages, ProfessorReview } from '@/lib/types';
 import { useRouter } from '@bprogress/next/app';
 import { useIntersection } from '@mantine/hooks';
 
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
@@ -82,7 +83,6 @@ export default function ReviewForm({
     }
   );
   const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
-  const [courseSearch, setCourseSearch] = useState('');
 
   // Remove useEffect and update the handlers
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
@@ -95,11 +95,13 @@ export default function ReviewForm({
     setReviewSemester(`${semesterType}-${semesterYear}`);
   };
 
-  // Add this function to filter courses
-  const filteredCourses = departmentCourses?.filter((course) => {
-    const searchTerm = courseSearch.toLowerCase();
-    return course.code.toLowerCase().includes(searchTerm) || course.name.toLowerCase().includes(searchTerm);
-  });
+  // Prepare course options for combobox
+  const courseOptions =
+    departmentCourses?.map((course) => ({
+      value: course.code,
+      label: `${course.code} - ${course.name}`,
+      searchLabel: `${course.code} ${course.name}`
+    })) || [];
 
   // Submit review function
   const handleSubmitReview = async () => {
@@ -251,49 +253,26 @@ export default function ReviewForm({
               <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
                 <div>
                   <Label htmlFor='course'>Course Taken</Label>
-                  <Select value={reviewCourse} onValueChange={setReviewCourse}>
-                    <SelectTrigger id='course'>
-                      <SelectValue placeholder='Select a course' className='flex-1 truncate' />
-                    </SelectTrigger>
-                    <SelectContent showScrollButtons={false}>
-                      <div className='bg-background sticky top-0 z-10 border-b p-2'>
-                        <div className='relative' onPointerDown={(e) => e.stopPropagation()}>
-                          <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
-                          <Input
-                            placeholder='Search courses...'
-                            value={courseSearch}
-                            onChange={(e) => setCourseSearch(e.target.value)}
-                            className='pl-8'
-                            onPointerDown={(e) => e.stopPropagation()}
-                            onClick={(e) => e.stopPropagation()}
-                            onTouchStart={(e) => e.stopPropagation()}
-                          />
-                        </div>
-                        <Button
-                          variant='outline'
-                          size='sm'
-                          className='mt-2 flex w-full items-center justify-center gap-2'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAddCourseDialogOpen(true);
-                          }}>
-                          <Plus className='h-4 w-4' />
-                          Add New Course
-                        </Button>
-                      </div>
-                      {isLoadingDepartmentCourses ? (
-                        <div className='text-muted-foreground p-2 text-center text-sm'>Loading...</div>
-                      ) : filteredCourses?.length === 0 ? (
-                        <div className='text-muted-foreground p-2 text-center text-sm'>No courses found</div>
-                      ) : (
-                        filteredCourses?.map((course) => (
-                          <SelectItem key={course.code} value={course.code} className='py-2'>
-                            {course.code} - {course.name}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <Combobox
+                    value={reviewCourse}
+                    onValueChange={setReviewCourse}
+                    options={courseOptions}
+                    placeholder='Select a course'
+                    searchPlaceholder='Search courses...'
+                    emptyMessage='No courses found'
+                    isLoading={isLoadingDepartmentCourses}>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      className='flex w-full items-center justify-center gap-2'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAddCourseDialogOpen(true);
+                      }}>
+                      <Plus className='h-4 w-4' />
+                      Add New Course
+                    </Button>
+                  </Combobox>
                 </div>
 
                 <div>

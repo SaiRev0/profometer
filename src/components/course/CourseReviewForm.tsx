@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Combobox } from '@/components/ui/combobox';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,7 +18,6 @@ import { Course, CourseReview, Professor } from '@/lib/types';
 import { useRouter } from '@bprogress/next/app';
 import { useIntersection } from '@mantine/hooks';
 
-import { Search } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
@@ -71,7 +71,6 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
   );
   const [reviewComment, setReviewComment] = useState(initialData?.comment || '');
   const [reviewGrade, setReviewGrade] = useState(initialData?.grade || '');
-  const [professorSearch, setProfessorSearch] = useState('');
 
   const handleSemesterTypeChange = (value: 'Odd' | 'Even') => {
     setSemesterType(value);
@@ -84,9 +83,13 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
     setReviewSemester(`${semesterType}-${year}`);
   };
 
-  const filteredProfessors = departmentProfessors?.filter((professor) =>
-    professor.name.toLowerCase().includes(professorSearch.toLowerCase())
-  );
+  // Prepare professor options for combobox
+  const professorOptions =
+    departmentProfessors?.map((professor) => ({
+      value: professor.id,
+      label: professor.name,
+      searchLabel: professor.name
+    })) || [];
 
   const handleSubmitReview = async () => {
     // Validate year
@@ -173,7 +176,6 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
           assignments: -1,
           attendanceRating: 50
         });
-        setProfessorSearch('');
         setReviewComment('');
         setReviewProfessor('');
         setReviewSemester(`Odd-${getCurrentYear()}`);
@@ -232,38 +234,15 @@ export default function CourseReviewForm({ course, modalState, setModalState, in
               <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
                 <div>
                   <Label htmlFor='professor'>Professor</Label>
-                  <Select value={reviewProfessor} onValueChange={setReviewProfessor}>
-                    <SelectTrigger id='professor'>
-                      <SelectValue placeholder='Select professor' />
-                    </SelectTrigger>
-                    <SelectContent showScrollButtons={false}>
-                      <div className='bg-background sticky top-0 z-10 border-b p-2'>
-                        <div className='relative' onPointerDown={(e) => e.stopPropagation()}>
-                          <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
-                          <Input
-                            placeholder='Search professors...'
-                            value={professorSearch}
-                            onChange={(e) => setProfessorSearch(e.target.value)}
-                            className='pl-8'
-                            onPointerDown={(e) => e.stopPropagation()}
-                            onClick={(e) => e.stopPropagation()}
-                            onTouchStart={(e) => e.stopPropagation()}
-                          />
-                        </div>
-                      </div>
-                      {isLoadingDepartmentProfessors ? (
-                        <div className='text-muted-foreground p-2 text-center text-sm'>Loading...</div>
-                      ) : filteredProfessors?.length === 0 ? (
-                        <div className='text-muted-foreground p-2 text-center text-sm'>No professors found</div>
-                      ) : (
-                        filteredProfessors?.map((professor) => (
-                          <SelectItem key={professor.id} value={professor.id}>
-                            {professor.name}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <Combobox
+                    value={reviewProfessor}
+                    onValueChange={setReviewProfessor}
+                    options={professorOptions}
+                    placeholder='Select professor'
+                    searchPlaceholder='Search professors...'
+                    emptyMessage='No professors found'
+                    isLoading={isLoadingDepartmentProfessors}
+                  />
                 </div>
 
                 <div>
