@@ -198,9 +198,10 @@ export default function AdminDashboardPage() {
             ) : (
               <ReportsTable
                 type='review'
-                reports={reviewReports?.reports ?? []}
+                groupedReports={reviewReports?.groupedReports ?? []}
                 isLoading={reviewReportsLoading}
                 pagination={reviewReports?.pagination}
+                meta={reviewReports?.meta}
                 onPageChange={setReviewPage}
                 onDelete={handleReviewDelete}
               />
@@ -224,9 +225,10 @@ export default function AdminDashboardPage() {
             ) : (
               <ReportsTable
                 type='comment'
-                reports={commentReports?.reports ?? []}
+                groupedReports={commentReports?.groupedReports ?? []}
                 isLoading={commentReportsLoading}
                 pagination={commentReports?.pagination}
+                meta={commentReports?.meta}
                 onPageChange={setCommentPage}
                 onDelete={handleCommentDelete}
               />

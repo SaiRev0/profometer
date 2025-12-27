@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+import { isAdminUser } from '@/lib/admin-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 
@@ -23,9 +24,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
-    // Check if user is the author (or admin)
+    // Check if user is the author or an admin
     const userId = (session.user as { id: string }).id;
-    if (comment.userId !== userId && userId !== process.env.ADMIN_ID) {
+    if (comment.userId !== userId && !isAdminUser(userId)) {
       return NextResponse.json({ error: 'Unauthorized to delete this comment' }, { status: 403 });
     }
 

@@ -1,33 +1,31 @@
 'use client';
 
-import type { ReviewReportData } from '@/components/admin/ReportsTable';
+import type { GroupedReportsResponse, ReportSortBy, SortOrder } from '@/lib/types/admin-reports';
 import { useQuery } from '@tanstack/react-query';
 
 interface UseAdminReviewReportsOptions {
   page?: number;
   limit?: number;
   reason?: string;
+  sortBy?: ReportSortBy;
+  order?: SortOrder;
 }
 
-interface ReviewReportsResponse {
-  reports: ReviewReportData[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-}
-
-export function useAdminReviewReports({ page = 1, limit = 20, reason }: UseAdminReviewReportsOptions = {}) {
-  return useQuery<ReviewReportsResponse>({
-    queryKey: ['admin-review-reports', page, limit, reason],
+export function useAdminReviewReports({
+  page = 1,
+  limit = 20,
+  reason,
+  sortBy = 'reportCount',
+  order = 'desc'
+}: UseAdminReviewReportsOptions = {}) {
+  return useQuery<GroupedReportsResponse>({
+    queryKey: ['admin-grouped-review-reports', page, limit, reason, sortBy, order],
     queryFn: async () => {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: limit.toString()
+        limit: limit.toString(),
+        sortBy,
+        order
       });
 
       if (reason && reason !== 'all') {
@@ -38,7 +36,7 @@ export function useAdminReviewReports({ page = 1, limit = 20, reason }: UseAdmin
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || 'Failed to fetch review reports');
+        throw new Error(error.error || 'Failed to fetch grouped review reports');
       }
 
       return res.json();

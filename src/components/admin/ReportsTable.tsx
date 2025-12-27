@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Pagination from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { GroupedCommentReport, GroupedReviewReport } from '@/lib/types/admin-reports';
 import { cn } from '@/lib/utils';
 
-import { ReasonBadge } from './ReasonBadge';
 import { ReportDetailDialog } from './ReportDetailDialog';
-import { formatDistanceToNow } from 'date-fns';
 import { BadgeInfo, FileQuestion } from 'lucide-react';
 
 export interface ReviewReportData {
@@ -80,13 +80,17 @@ export interface CommentReportData {
 
 interface ReportsTableProps {
   type: 'review' | 'comment';
-  reports: ReviewReportData[] | CommentReportData[];
+  groupedReports: GroupedReviewReport[] | GroupedCommentReport[];
   isLoading?: boolean;
   pagination?: {
     page: number;
     totalPages: number;
     hasNext: boolean;
     hasPrev: boolean;
+  };
+  meta?: {
+    totalReports: number;
+    totalGroups: number;
   };
   // eslint-disable-next-line no-unused-vars
   onPageChange?: (page: number) => void;
@@ -95,19 +99,20 @@ interface ReportsTableProps {
 
 export function ReportsTable({
   type,
-  reports,
+  groupedReports,
   isLoading = false,
   pagination,
+  meta,
   onPageChange,
   onDelete
 }: ReportsTableProps) {
-  const [selectedReport, setSelectedReport] = useState<ReviewReportData | CommentReportData | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<GroupedReviewReport | GroupedCommentReport | null>(null);
 
   if (isLoading) {
     return <ReportsTableSkeleton />;
   }
 
-  if (!reports || reports.length === 0) {
+  if (!groupedReports || groupedReports.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center rounded-lg border-2 border-dashed bg-slate-50 py-16 dark:bg-slate-900'>
         <div className='rounded-full bg-slate-100 p-4 dark:bg-slate-800'>
@@ -115,63 +120,91 @@ export function ReportsTable({
         </div>
         <h3 className='mt-4 text-lg font-semibold'>No reports found</h3>
         <p className='text-muted-foreground mt-2 text-sm'>There are no {type} reports matching your filters.</p>
+        {meta && meta.totalReports > 0 && (
+          <p className='text-muted-foreground mt-1 text-xs'>
+            ({meta.totalReports} individual reports across {meta.totalGroups} content pieces)
+          </p>
+        )}
       </div>
     );
   }
 
-  const getContentPreview = (report: ReviewReportData | CommentReportData) => {
+  const getContentPreview = (group: GroupedReviewReport | GroupedCommentReport) => {
     if (type === 'review') {
-      return (report as ReviewReportData).review.comment;
+      return (group as GroupedReviewReport).content.comment;
     }
-    return (report as CommentReportData).comment.content;
+    return (group as GroupedCommentReport).content.content;
+  };
+
+  const getCountBadgeClassName = (count: number) => {
+    if (count >= 10) {
+      return 'bg-red-600 text-white hover:bg-red-700 text-base px-3 py-1.5 font-bold';
+    } else if (count >= 5) {
+      return 'bg-orange-600 text-white hover:bg-orange-700 text-sm px-2.5 py-1 font-semibold';
+    }
+    return 'bg-yellow-600 text-white hover:bg-yellow-700 text-xs px-2 py-0.5 font-medium';
   };
 
   return (
     <div className='space-y-4'>
+      {/* Summary Stats */}
+      {meta && (
+        <div className='text-muted-foreground flex items-center gap-4 text-sm'>
+          <span>
+            <strong className='text-foreground'>{meta.totalGroups}</strong> content pieces reported
+          </span>
+          <span>•</span>
+          <span>
+            <strong className='text-foreground'>{meta.totalReports}</strong> total reports
+          </span>
+        </div>
+      )}
+
       <div className='overflow-hidden rounded-lg border-2 shadow-sm'>
         <Table>
           <TableHeader>
             <TableRow className='bg-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800'>
               <TableHead className='w-8 p-2 text-center font-semibold text-slate-700 dark:text-slate-300'></TableHead>
-              <TableHead className='min-w-40 text-center font-semibold text-slate-700 dark:text-slate-300'>
-                Reason
+              <TableHead className='w-24 text-center font-semibold text-slate-700 dark:text-slate-300'>
+                Reports
               </TableHead>
               <TableHead className='text-center font-semibold text-slate-700 dark:text-slate-300'>Content</TableHead>
-              <TableHead className='w-40 text-center font-semibold text-slate-700 dark:text-slate-300'>Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {reports.map((report, index) => (
+            {groupedReports.map((group, index) => (
               <TableRow
-                key={report.id}
+                key={group.contentId}
                 className={cn(
                   'group transition-colors hover:bg-slate-50 dark:hover:bg-slate-900',
                   index % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50/50 dark:bg-slate-900/50'
                 )}>
+                {/* Info Button */}
                 <TableCell className='w-8 p-2'>
                   <Button
                     variant='ghost'
                     size='icon'
-                    onClick={() => setSelectedReport(report)}
+                    onClick={() => setSelectedGroup(group)}
                     className='h-6 w-6 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950 dark:hover:text-blue-400'>
                     <BadgeInfo className='h-4 w-4' />
                   </Button>
                 </TableCell>
-                <TableCell>
-                  <ReasonBadge reason={report.reason} />
+
+                {/* Report Count */}
+                <TableCell className='text-center'>
+                  <Badge className={cn('whitespace-nowrap', getCountBadgeClassName(group.reportCount))}>
+                    {group.reportCount}
+                  </Badge>
                 </TableCell>
+
+                {/* Content Preview */}
                 <TableCell className='max-w-md'>
-                  <div className='group relative'>
-                    <p className='line-clamp-2 text-sm'>{getContentPreview(report)}</p>
-                    <div className='bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 hidden max-w-lg rounded-md border p-2 text-xs shadow-md group-hover:block'>
-                      {getContentPreview(report)}
+                  <div className='group/preview relative'>
+                    <p className='line-clamp-2 text-center text-sm'>{getContentPreview(group)}</p>
+                    <div className='bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 hidden max-w-lg rounded-md border p-2 text-center text-xs shadow-md group-hover/preview:block'>
+                      {getContentPreview(group)}
                     </div>
                   </div>
-                </TableCell>
-                <TableCell className='text-muted-foreground w-40 text-sm whitespace-nowrap'>
-                  {formatDistanceToNow(new Date(report.createdAt), {
-                    addSuffix: true
-                  })}
                 </TableCell>
               </TableRow>
             ))}
@@ -187,12 +220,12 @@ export function ReportsTable({
       )}
 
       {/* Detail Dialog */}
-      {selectedReport && (
+      {selectedGroup && (
         <ReportDetailDialog
           type={type}
-          report={selectedReport}
-          open={!!selectedReport}
-          onOpenChange={(open: boolean) => !open && setSelectedReport(null)}
+          groupedReport={selectedGroup}
+          open={!!selectedGroup}
+          onOpenChange={(open: boolean) => !open && setSelectedGroup(null)}
           onDelete={onDelete}
         />
       )}
@@ -203,14 +236,19 @@ export function ReportsTable({
 function ReportsTableSkeleton() {
   return (
     <div className='space-y-4'>
+      <div className='flex items-center gap-4'>
+        <Skeleton className='h-4 w-40' />
+        <Skeleton className='h-4 w-32' />
+      </div>
       <div className='overflow-hidden rounded-lg border-2 shadow-sm'>
         <Table>
           <TableHeader>
             <TableRow className='bg-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800'>
-              <TableHead className='w-10 p-2 font-semibold text-slate-700 dark:text-slate-300'></TableHead>
-              <TableHead className='min-w-35 font-semibold text-slate-700 dark:text-slate-300'>Reason</TableHead>
+              <TableHead className='w-8 p-2 font-semibold text-slate-700 dark:text-slate-300'></TableHead>
+              <TableHead className='w-24 text-center font-semibold text-slate-700 dark:text-slate-300'>
+                Reports
+              </TableHead>
               <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Content</TableHead>
-              <TableHead className='w-40 font-semibold text-slate-700 dark:text-slate-300'>Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -218,17 +256,26 @@ function ReportsTableSkeleton() {
               <TableRow
                 key={i}
                 className={cn(i % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50/50 dark:bg-slate-900/50')}>
-                <TableCell className='w-10 p-2'>
-                  <Skeleton className='h-8 w-8 rounded' />
+                <TableCell className='w-8 p-2'>
+                  <Skeleton className='h-6 w-6 rounded' />
+                </TableCell>
+                <TableCell className='text-center'>
+                  <Skeleton className='mx-auto h-6 w-16 rounded-full' />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className='h-6 w-24 rounded-full' />
+                  <div className='flex gap-1'>
+                    <Skeleton className='h-5 w-20 rounded-full' />
+                    <Skeleton className='h-5 w-24 rounded-full' />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-4 w-64' />
                 </TableCell>
-                <TableCell className='w-40'>
-                  <Skeleton className='h-4 w-28' />
+                <TableCell className='w-44'>
+                  <div className='space-y-1'>
+                    <Skeleton className='h-3 w-32' />
+                    <Skeleton className='h-3 w-28' />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

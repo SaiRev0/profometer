@@ -8,8 +8,6 @@ import {
   calculateUpdatedAverage,
   calculateUpdatedGradeAverage,
   calculateUpdatedPercentage,
-  convertNumberToGrade,
-  gradeNumberMap,
   safeClamp
 } from '@/lib/utils';
 
@@ -52,10 +50,7 @@ export async function PUT(req: Request) {
     }
 
     // Check if user is the author of the review
-    if (
-      existingReview.userId !== (session.user as { id: string }).id && // Check if user is the author of the review
-      (session.user as { id: string }).id !== process.env.ADMIN_ID // Admin ID is used to delete reviews
-    ) {
+    if (existingReview.userId !== (session.user as { id: string }).id) {
       return NextResponse.json({ error: 'Unauthorized to edit this review' }, { status: 403 });
     }
 

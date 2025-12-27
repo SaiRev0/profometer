@@ -11,6 +11,25 @@ export interface AdminCheckResult {
 }
 
 /**
+ * Checks if a given user ID is an admin
+ * Supports multiple comma-separated admin IDs in ADMIN_ID environment variable
+ * @param userId - The user ID to check
+ * @returns boolean - true if user is admin, false otherwise
+ */
+export function isAdminUser(userId: string): boolean {
+  const adminIds = process.env.ADMIN_ID;
+
+  if (!adminIds) {
+    console.warn('ADMIN_ID environment variable is not configured');
+    return false;
+  }
+
+  // Split by comma, trim whitespace, and check if userId is in the list
+  const adminIdList = adminIds.split(',').map((id) => id.trim());
+  return adminIdList.includes(userId);
+}
+
+/**
  * Checks if the current user is an admin based on their user ID
  * @returns Promise<boolean> - true if user is admin, false otherwise
  */
@@ -21,15 +40,8 @@ export async function isAdmin(): Promise<boolean> {
     return false;
   }
 
-  const adminId = process.env.ADMIN_ID;
-
-  if (!adminId) {
-    console.warn('ADMIN_ID environment variable is not configured');
-    return false;
-  }
-
   const userId = (session.user as { id: string }).id;
-  return userId === adminId;
+  return isAdminUser(userId);
 }
 
 /**

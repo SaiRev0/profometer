@@ -32,7 +32,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
-    // Check if user is the author (or admin)
+    // Check if user is the author
     const userId = (session.user as { id: string }).id;
     if (existingComment.userId !== userId) {
       return NextResponse.json({ error: 'Unauthorized to edit this comment' }, { status: 403 });

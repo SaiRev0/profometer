@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+import { isAdminUser } from '@/lib/admin-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { CoursePercentages, CourseRating, ProfessorPercentages, ProfessorRating } from '@/lib/types';
@@ -34,11 +35,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: 'Review not found' }, { status: 404 });
     }
 
-    // Check if user is the author of the review
-    if (
-      review.userId !== (session.user as { id: string }).id && // Check if user is the author of the review
-      (session.user as { id: string }).id !== process.env.ADMIN_ID // Admin ID is used to delete reviews
-    ) {
+    // Check if user is the author of the review or an admin
+    const userId = (session.user as { id: string }).id;
+    if (review.userId !== userId && !isAdminUser(userId)) {
       return NextResponse.json({ error: 'Unauthorized to delete this review' }, { status: 403 });
     }
 

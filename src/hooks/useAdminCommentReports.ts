@@ -1,33 +1,31 @@
 'use client';
 
-import type { CommentReportData } from '@/components/admin/ReportsTable';
+import type { GroupedReportsResponse, ReportSortBy, SortOrder } from '@/lib/types/admin-reports';
 import { useQuery } from '@tanstack/react-query';
 
 interface UseAdminCommentReportsOptions {
   page?: number;
   limit?: number;
   reason?: string;
+  sortBy?: ReportSortBy;
+  order?: SortOrder;
 }
 
-interface CommentReportsResponse {
-  reports: CommentReportData[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-}
-
-export function useAdminCommentReports({ page = 1, limit = 20, reason }: UseAdminCommentReportsOptions = {}) {
-  return useQuery<CommentReportsResponse>({
-    queryKey: ['admin-comment-reports', page, limit, reason],
+export function useAdminCommentReports({
+  page = 1,
+  limit = 20,
+  reason,
+  sortBy = 'reportCount',
+  order = 'desc'
+}: UseAdminCommentReportsOptions = {}) {
+  return useQuery<GroupedReportsResponse>({
+    queryKey: ['admin-grouped-comment-reports', page, limit, reason, sortBy, order],
     queryFn: async () => {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: limit.toString()
+        limit: limit.toString(),
+        sortBy,
+        order
       });
 
       if (reason && reason !== 'all') {
@@ -38,7 +36,7 @@ export function useAdminCommentReports({ page = 1, limit = 20, reason }: UseAdmi
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || 'Failed to fetch comment reports');
+        throw new Error(error.error || 'Failed to fetch grouped comment reports');
       }
 
       return res.json();
