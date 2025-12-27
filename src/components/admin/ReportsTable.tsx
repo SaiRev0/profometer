@@ -2,28 +2,16 @@
 
 import { useState } from 'react';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import Pagination from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useDeleteComment } from '@/hooks/useDeleteComment';
-import { useDeleteReview } from '@/hooks/useDeleteReview';
 import { cn } from '@/lib/utils';
 
 import { ReasonBadge } from './ReasonBadge';
 import { ReportDetailDialog } from './ReportDetailDialog';
 import { formatDistanceToNow } from 'date-fns';
-import { AlertCircle, ExternalLink, Eye, FileQuestion, Trash2 } from 'lucide-react';
+import { BadgeInfo, FileQuestion } from 'lucide-react';
 
 export interface ReviewReportData {
   id: string;
@@ -114,61 +102,6 @@ export function ReportsTable({
   onDelete
 }: ReportsTableProps) {
   const [selectedReport, setSelectedReport] = useState<ReviewReportData | CommentReportData | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<{
-    id: string;
-    reviewId?: string;
-    type: 'review' | 'comment';
-  } | null>(null);
-
-  const { deleteReview, isLoading: isReviewDeleting } = useDeleteReview();
-  const { deleteComment, isLoading: isCommentDeleting } = useDeleteComment();
-
-  const isDeleting = isReviewDeleting || isCommentDeleting;
-
-  const handleDelete = async () => {
-    if (!itemToDelete) return;
-
-    try {
-      if (itemToDelete.type === 'review') {
-        await deleteReview({ reviewId: itemToDelete.id });
-      } else {
-        await deleteComment({
-          commentId: itemToDelete.id,
-          reviewId: itemToDelete.reviewId || ''
-        });
-      }
-
-      setDeleteDialogOpen(false);
-      setItemToDelete(null);
-
-      // Refresh the admin data
-      if (onDelete) {
-        onDelete();
-      }
-    } catch (error) {
-      // Error is already handled by the hooks
-      console.error('Delete error:', error);
-    }
-  };
-
-  const openDeleteDialog = (report: ReviewReportData | CommentReportData) => {
-    if (type === 'review') {
-      const reviewReport = report as ReviewReportData;
-      setItemToDelete({
-        id: reviewReport.review.id,
-        type: 'review'
-      });
-    } else {
-      const commentReport = report as CommentReportData;
-      setItemToDelete({
-        id: commentReport.comment.id,
-        reviewId: commentReport.comment.review.id,
-        type: 'comment'
-      });
-    }
-    setDeleteDialogOpen(true);
-  };
 
   if (isLoading) {
     return <ReportsTableSkeleton />;
@@ -186,52 +119,11 @@ export function ReportsTable({
     );
   }
 
-  const getContentUrl = (report: ReviewReportData | CommentReportData) => {
-    if (type === 'review') {
-      const reviewReport = report as ReviewReportData;
-      const baseUrl =
-        reviewReport.review.type === 'professor'
-          ? `/professor/${reviewReport.review.professor?.id}`
-          : `/course/${reviewReport.review.course?.code}`;
-      return `${baseUrl}#review-${reviewReport.review.id}`;
-    } else {
-      const commentReport = report as CommentReportData;
-      const baseUrl =
-        commentReport.comment.review.type === 'professor'
-          ? `/professor/${commentReport.comment.review.professor?.id}`
-          : `/course/${commentReport.comment.review.course?.code}`;
-      return `${baseUrl}#comment-${commentReport.comment.id}`;
-    }
-  };
-
   const getContentPreview = (report: ReviewReportData | CommentReportData) => {
     if (type === 'review') {
       return (report as ReviewReportData).review.comment;
     }
     return (report as CommentReportData).comment.content;
-  };
-
-  const getAuthor = (report: ReviewReportData | CommentReportData) => {
-    if (type === 'review') {
-      return (report as ReviewReportData).review.author.username;
-    }
-    return (report as CommentReportData).comment.author.username;
-  };
-
-  const getContext = (report: ReviewReportData | CommentReportData) => {
-    if (type === 'review') {
-      const reviewReport = report as ReviewReportData;
-      if (reviewReport.review.type === 'professor') {
-        return reviewReport.review.professor?.name || 'Unknown';
-      }
-      return reviewReport.review.course?.name || 'Unknown';
-    } else {
-      const commentReport = report as CommentReportData;
-      if (commentReport.comment.review.type === 'professor') {
-        return commentReport.comment.review.professor?.name || 'Unknown';
-      }
-      return commentReport.comment.review.course?.name || 'Unknown';
-    }
   };
 
   return (
@@ -240,15 +132,12 @@ export function ReportsTable({
         <Table>
           <TableHeader>
             <TableRow className='bg-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800'>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Reporter</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Reason</TableHead>
-              <TableHead className='max-w-xs font-semibold text-slate-700 dark:text-slate-300'>
-                Content Preview
+              <TableHead className='w-8 p-2 text-center font-semibold text-slate-700 dark:text-slate-300'></TableHead>
+              <TableHead className='min-w-40 text-center font-semibold text-slate-700 dark:text-slate-300'>
+                Reason
               </TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Author</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Context</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Date</TableHead>
-              <TableHead className='text-right font-semibold text-slate-700 dark:text-slate-300'>Actions</TableHead>
+              <TableHead className='text-center font-semibold text-slate-700 dark:text-slate-300'>Content</TableHead>
+              <TableHead className='w-40 text-center font-semibold text-slate-700 dark:text-slate-300'>Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -259,69 +148,30 @@ export function ReportsTable({
                   'group transition-colors hover:bg-slate-50 dark:hover:bg-slate-900',
                   index % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50/50 dark:bg-slate-900/50'
                 )}>
-                <TableCell className='font-medium'>
-                  <div className='flex items-center gap-2'>
-                    <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300'>
-                      {report.reporter.username.charAt(0).toUpperCase()}
-                    </div>
-                    <span>{report.reporter.username}</span>
-                  </div>
+                <TableCell className='w-8 p-2'>
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    onClick={() => setSelectedReport(report)}
+                    className='h-6 w-6 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950 dark:hover:text-blue-400'>
+                    <BadgeInfo className='h-4 w-4' />
+                  </Button>
                 </TableCell>
                 <TableCell>
                   <ReasonBadge reason={report.reason} />
                 </TableCell>
-                <TableCell className='max-w-xs'>
+                <TableCell className='max-w-md'>
                   <div className='group relative'>
-                    <p className='truncate text-sm'>{getContentPreview(report)}</p>
-                    <div className='bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 hidden max-w-sm rounded-md border p-2 text-xs shadow-md group-hover:block'>
+                    <p className='line-clamp-2 text-sm'>{getContentPreview(report)}</p>
+                    <div className='bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 hidden max-w-lg rounded-md border p-2 text-xs shadow-md group-hover:block'>
                       {getContentPreview(report)}
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className='flex items-center gap-2'>
-                    <AlertCircle className='h-3.5 w-3.5 text-orange-500' />
-                    <span className='font-medium'>{getAuthor(report)}</span>
-                  </div>
-                </TableCell>
-                <TableCell className='max-w-37.5'>
-                  <p className='truncate text-sm font-medium'>{getContext(report)}</p>
-                </TableCell>
-                <TableCell className='text-muted-foreground text-sm'>
-                  <div className='flex flex-col'>
-                    <span>
-                      {formatDistanceToNow(new Date(report.createdAt), {
-                        addSuffix: true
-                      })}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell className='text-right'>
-                  <div className='flex justify-end gap-1'>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      onClick={() => setSelectedReport(report)}
-                      className='hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950 dark:hover:text-blue-400'>
-                      <Eye className='h-4 w-4' />
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      asChild
-                      className='hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950 dark:hover:text-green-400'>
-                      <a href={getContentUrl(report)} target='_blank' rel='noopener noreferrer'>
-                        <ExternalLink className='h-4 w-4' />
-                      </a>
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      onClick={() => openDeleteDialog(report)}
-                      className='hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400'>
-                      <Trash2 className='h-4 w-4' />
-                    </Button>
-                  </div>
+                <TableCell className='text-muted-foreground w-40 text-sm whitespace-nowrap'>
+                  {formatDistanceToNow(new Date(report.createdAt), {
+                    addSuffix: true
+                  })}
                 </TableCell>
               </TableRow>
             ))}
@@ -346,28 +196,6 @@ export function ReportsTable({
           onDelete={onDelete}
         />
       )}
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete {itemToDelete?.type === 'review' ? 'Review' : 'Comment'}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the {itemToDelete?.type} and all associated
-              data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className='bg-red-600 hover:bg-red-700 focus:ring-red-600'>
-              {isDeleting ? 'Deleting...' : 'Delete'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
@@ -379,13 +207,10 @@ function ReportsTableSkeleton() {
         <Table>
           <TableHeader>
             <TableRow className='bg-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800'>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Reporter</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Reason</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Content Preview</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Author</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Context</TableHead>
-              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Date</TableHead>
-              <TableHead className='text-right font-semibold text-slate-700 dark:text-slate-300'>Actions</TableHead>
+              <TableHead className='w-10 p-2 font-semibold text-slate-700 dark:text-slate-300'></TableHead>
+              <TableHead className='min-w-35 font-semibold text-slate-700 dark:text-slate-300'>Reason</TableHead>
+              <TableHead className='font-semibold text-slate-700 dark:text-slate-300'>Content</TableHead>
+              <TableHead className='w-40 font-semibold text-slate-700 dark:text-slate-300'>Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -393,35 +218,17 @@ function ReportsTableSkeleton() {
               <TableRow
                 key={i}
                 className={cn(i % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50/50 dark:bg-slate-900/50')}>
-                <TableCell>
-                  <div className='flex items-center gap-2'>
-                    <Skeleton className='h-8 w-8 rounded-full' />
-                    <Skeleton className='h-4 w-24' />
-                  </div>
+                <TableCell className='w-10 p-2'>
+                  <Skeleton className='h-8 w-8 rounded' />
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-6 w-24 rounded-full' />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className='h-4 w-48' />
+                  <Skeleton className='h-4 w-64' />
                 </TableCell>
-                <TableCell>
-                  <div className='flex items-center gap-2'>
-                    <Skeleton className='h-3.5 w-3.5 rounded-full' />
-                    <Skeleton className='h-4 w-24' />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-32' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-20' />
-                </TableCell>
-                <TableCell>
-                  <div className='flex justify-end gap-1'>
-                    <Skeleton className='h-8 w-8 rounded' />
-                    <Skeleton className='h-8 w-8 rounded' />
-                  </div>
+                <TableCell className='w-40'>
+                  <Skeleton className='h-4 w-28' />
                 </TableCell>
               </TableRow>
             ))}

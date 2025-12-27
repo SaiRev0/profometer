@@ -77,7 +77,6 @@ export default function AdminDashboardPage() {
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
           <h2 className='text-2xl font-bold tracking-tight'>Platform Statistics</h2>
-          <div className='text-muted-foreground text-sm'>Real-time overview</div>
         </div>
 
         <StatCardGrid>
@@ -132,14 +131,14 @@ export default function AdminDashboardPage() {
               value={stats?.professors.totalReviews ?? 0}
               icon={Star}
               isLoading={statsLoading}
-              variant='default'
+              variant='secondary'
             />
             <StatCard
               title='Course Reviews'
               value={stats?.courses.totalReviews ?? 0}
               icon={FileCheck}
               isLoading={statsLoading}
-              variant='default'
+              variant='info'
             />
             <StatCard
               title='Recent Activity'

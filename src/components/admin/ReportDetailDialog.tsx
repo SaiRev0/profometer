@@ -26,7 +26,6 @@ import { format, formatDistanceToNow } from 'date-fns';
 import {
   AlertCircle,
   Calendar,
-  Copy,
   ExternalLink,
   FileText,
   Flag,
@@ -47,19 +46,12 @@ interface ReportDetailDialogProps {
 }
 
 export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete }: ReportDetailDialogProps) {
-  const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { deleteReview, isLoading: isReviewDeleting } = useDeleteReview();
   const { deleteComment, isLoading: isCommentDeleting } = useDeleteComment();
 
   const isDeleting = isReviewDeleting || isCommentDeleting;
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
 
   const handleDelete = async () => {
     try {
@@ -178,9 +170,6 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
     }
   };
 
-  const contentId =
-    type === 'review' ? (report as ReviewReportData).review.id : (report as CommentReportData).comment.id;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[85vh] max-w-3xl overflow-y-auto'>
@@ -193,25 +182,22 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
               <DialogTitle className='text-2xl font-bold'>Report Details</DialogTitle>
               <DialogDescription className='mt-1'>Detailed information about this {type} report</DialogDescription>
             </div>
-            <div className='rounded-lg bg-red-50 p-2 dark:bg-red-950'>
-              <Flag className='h-5 w-5 text-red-600 dark:text-red-400' />
-            </div>
           </div>
         </DialogHeader>
 
         <div className='space-y-6 pt-2'>
           {/* Report Information Card */}
-          <div className='rounded-lg border-2 bg-linear-to-br from-slate-50 to-slate-100 p-4 dark:from-slate-900 dark:to-slate-800'>
+          <div className='rounded-lg border bg-card p-4'>
             <div className='grid gap-4 md:grid-cols-2'>
               <div className='space-y-2'>
-                <div className='flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300'>
+                <div className='flex items-center gap-2 text-sm font-semibold'>
                   <AlertCircle className='h-4 w-4' />
                   Report Reason
                 </div>
                 <ReasonBadge reason={report.reason} />
               </div>
               <div className='space-y-2'>
-                <div className='flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300'>
+                <div className='flex items-center gap-2 text-sm font-semibold'>
                   <Calendar className='h-4 w-4' />
                   Reported Date
                 </div>
@@ -226,11 +212,11 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
 
             {report.details && (
               <div className='mt-4 space-y-2'>
-                <div className='flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300'>
+                <div className='flex items-center gap-2 text-sm font-semibold'>
                   <MessageSquare className='h-4 w-4' />
-                  Additional Details
+                  Details
                 </div>
-                <div className='rounded-md border bg-white p-3 text-sm dark:bg-slate-950'>{report.details}</div>
+                <div className='rounded-md border bg-muted/50 p-3 text-sm'>{report.details}</div>
               </div>
             )}
           </div>
@@ -241,19 +227,11 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
           <div className='space-y-3'>
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-2 text-base font-bold'>
-                <FileText className='h-5 w-5 text-blue-600 dark:text-blue-400' />
+                <FileText className='h-5 w-5' />
                 Reported Content
               </div>
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={() => copyToClipboard(contentId, 'content')}
-                className='gap-2'>
-                <Copy className='h-3.5 w-3.5' />
-                {copiedId === 'content' ? 'Copied!' : 'Copy ID'}
-              </Button>
             </div>
-            <div className='rounded-lg border-2 border-orange-200 bg-orange-50/50 p-4 dark:border-orange-900 dark:bg-orange-950/20'>
+            <div className='rounded-lg border-2 border-muted-foreground/20 bg-muted/30 p-4'>
               <p className='text-sm leading-relaxed whitespace-pre-wrap'>{getContent()}</p>
             </div>
           </div>
@@ -261,42 +239,27 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
           {/* Metadata Cards */}
           <div className='grid gap-4 md:grid-cols-2'>
             {/* Author Card */}
-            <div className='rounded-lg border bg-linear-to-br from-blue-50 to-blue-100 p-4 dark:from-blue-950 dark:to-blue-900'>
-              <div className='mb-3 flex items-center gap-2 text-sm font-semibold text-blue-900 dark:text-blue-100'>
-                <User className='h-4 w-4' />
-                Content Author
-              </div>
-              <div className='flex items-center gap-3'>
-                <div className='flex h-10 w-10 items-center justify-center rounded-full bg-blue-200 text-sm font-bold text-blue-900 dark:bg-blue-800 dark:text-blue-100'>
-                  {author.username.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <p className='font-semibold'>{author.username}</p>
-                </div>
+            <div className='rounded-lg border bg-card p-4'>
+              <div className='flex items-center gap-2 text-sm'>
+                <User className='h-4 w-4 text-muted-foreground' />
+                <span className='text-muted-foreground'>Content Author:</span>
+                <span className='font-semibold'>{author.username}</span>
               </div>
             </div>
 
             {/* Reporter Card */}
-            <div className='rounded-lg border bg-linear-to-br from-purple-50 to-purple-100 p-4 dark:from-purple-950 dark:to-purple-900'>
-              <div className='mb-3 flex items-center gap-2 text-sm font-semibold text-purple-900 dark:text-purple-100'>
-                <Flag className='h-4 w-4' />
-                Reporter
-              </div>
-              <div className='flex items-center gap-3'>
-                <div className='flex h-10 w-10 items-center justify-center rounded-full bg-purple-200 text-sm font-bold text-purple-900 dark:bg-purple-800 dark:text-purple-100'>
-                  {report.reporter.username.charAt(0).toUpperCase()}
-                </div>
-                <div className='flex-1 overflow-hidden'>
-                  <p className='font-semibold'>{report.reporter.username}</p>
-                </div>
+            <div className='rounded-lg border bg-card p-4'>
+              <div className='flex items-center gap-2 text-sm'>
+                <Flag className='h-4 w-4 text-muted-foreground' />
+                <span className='text-muted-foreground'>Reporter:</span>
+                <span className='font-semibold'>{report.reporter.username}</span>
               </div>
             </div>
           </div>
 
           {/* Context & Votes */}
           <div className='grid gap-4 md:grid-cols-2'>
-            <div className='rounded-lg border bg-slate-50 p-4 dark:bg-slate-900'>
-              <h4 className='mb-3 text-sm font-semibold'>Context</h4>
+            <div className='rounded-lg border bg-card p-4'>
               <div className='space-y-2'>
                 <Badge variant='secondary' className='text-xs'>
                   {context.type}
@@ -307,16 +270,16 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
                 )}
               </div>
             </div>
-            <div className='rounded-lg border bg-slate-50 p-4 dark:bg-slate-900'>
-              <h4 className='mb-3 text-sm font-semibold'>Community Votes</h4>
-              <div className='flex gap-4'>
-                <div className='flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 dark:bg-green-950'>
+            <div className='rounded-lg border bg-card p-4'>
+              <div className='flex items-center gap-2 text-sm'>
+                <span className='text-muted-foreground'>Community Votes:</span>
+                <div className='flex items-center gap-1'>
                   <ThumbsUp className='h-4 w-4 text-green-600 dark:text-green-400' />
-                  <span className='font-bold text-green-700 dark:text-green-300'>{votes.upvotes}</span>
+                  <span className='font-semibold'>{votes.upvotes}</span>
                 </div>
-                <div className='flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 dark:bg-red-950'>
+                <div className='flex items-center gap-1'>
                   <ThumbsDown className='h-4 w-4 text-red-600 dark:text-red-400' />
-                  <span className='font-bold text-red-700 dark:text-red-300'>{votes.downvotes}</span>
+                  <span className='font-semibold'>{votes.downvotes}</span>
                 </div>
               </div>
             </div>
@@ -334,19 +297,18 @@ export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete 
               <Trash2 className='h-4 w-4' />
               Delete {type === 'review' ? 'Review' : 'Comment'}
             </Button>
-            <div className='flex flex-col gap-3 sm:flex-row'>
-              <Button variant='outline' onClick={() => onOpenChange(false)} className='gap-2'>
-                Close
-              </Button>
-              <Button
-                asChild
-                className='gap-2 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'>
-                <a href={getContentUrl()} target='_blank' rel='noopener noreferrer'>
-                  <ExternalLink className='h-4 w-4' />
-                  View in Context
-                </a>
-              </Button>
-            </div>
+            <Button
+              asChild
+              variant='default'
+              className='gap-2'>
+              <a href={getContentUrl()} target='_blank' rel='noopener noreferrer'>
+                <ExternalLink className='h-4 w-4' />
+                View in Context
+              </a>
+            </Button>
+            <Button variant='outline' onClick={() => onOpenChange(false)} className='gap-2'>
+              Close
+            </Button>
           </div>
         </div>
 
