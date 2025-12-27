@@ -47,8 +47,7 @@ export async function GET(request: NextRequest) {
           reporter: {
             select: {
               id: true,
-              username: true,
-              email: true
+              username: true
             }
           },
           comment: {
@@ -98,8 +97,7 @@ export async function GET(request: NextRequest) {
       updatedAt: report.updatedAt.toISOString(),
       reporter: {
         id: report.reporter.id,
-        username: report.reporter.username,
-        email: report.reporter.email
+        username: report.reporter.username
       },
       comment: {
         id: report.comment.id,

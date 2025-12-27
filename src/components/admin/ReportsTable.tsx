@@ -33,7 +33,6 @@ export interface ReviewReportData {
   reporter: {
     id: string;
     username: string;
-    email: string;
   };
   review: {
     id: string;
@@ -65,7 +64,6 @@ export interface CommentReportData {
   reporter: {
     id: string;
     username: string;
-    email: string;
   };
   comment: {
     id: string;
@@ -345,6 +343,7 @@ export function ReportsTable({
           report={selectedReport}
           open={!!selectedReport}
           onOpenChange={(open: boolean) => !open && setSelectedReport(null)}
+          onDelete={onDelete}
         />
       )}
 

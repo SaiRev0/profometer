@@ -2,10 +2,22 @@
 
 import { useState } from 'react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { useDeleteComment } from '@/hooks/useDeleteComment';
+import { useDeleteReview } from '@/hooks/useDeleteReview';
 import { cn } from '@/lib/utils';
 
 import { ReasonBadge } from './ReasonBadge';
@@ -21,6 +33,7 @@ import {
   MessageSquare,
   ThumbsDown,
   ThumbsUp,
+  Trash2,
   User
 } from 'lucide-react';
 
@@ -28,16 +41,50 @@ interface ReportDetailDialogProps {
   type: 'review' | 'comment';
   report: ReviewReportData | CommentReportData;
   open: boolean;
+  // eslint-disable-next-line no-unused-vars
   onOpenChange: (open: boolean) => void;
+  onDelete?: () => void;
 }
 
-export function ReportDetailDialog({ type, report, open, onOpenChange }: ReportDetailDialogProps) {
+export function ReportDetailDialog({ type, report, open, onOpenChange, onDelete }: ReportDetailDialogProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const { deleteReview, isLoading: isReviewDeleting } = useDeleteReview();
+  const { deleteComment, isLoading: isCommentDeleting } = useDeleteComment();
+
+  const isDeleting = isReviewDeleting || isCommentDeleting;
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (type === 'review') {
+        const reviewReport = report as ReviewReportData;
+        await deleteReview({ reviewId: reviewReport.review.id });
+      } else {
+        const commentReport = report as CommentReportData;
+        await deleteComment({
+          commentId: commentReport.comment.id,
+          reviewId: commentReport.comment.review.id
+        });
+      }
+
+      setDeleteDialogOpen(false);
+      onOpenChange(false);
+
+      // Refresh the admin data
+      if (onDelete) {
+        onDelete();
+      }
+    } catch (error) {
+      // Error is already handled by the hooks
+      console.error('Delete error:', error);
+    }
   };
 
   const getContentUrl = () => {
@@ -225,7 +272,6 @@ export function ReportDetailDialog({ type, report, open, onOpenChange }: ReportD
                 </div>
                 <div>
                   <p className='font-semibold'>{author.username}</p>
-                  <p className='text-muted-foreground text-xs'>ID: {author.id.slice(0, 8)}...</p>
                 </div>
               </div>
             </div>
@@ -242,7 +288,6 @@ export function ReportDetailDialog({ type, report, open, onOpenChange }: ReportD
                 </div>
                 <div className='flex-1 overflow-hidden'>
                   <p className='font-semibold'>{report.reporter.username}</p>
-                  <p className='text-muted-foreground truncate text-xs'>{report.reporter.email}</p>
                 </div>
               </div>
             </div>
@@ -280,20 +325,52 @@ export function ReportDetailDialog({ type, report, open, onOpenChange }: ReportD
           <Separator />
 
           {/* Actions */}
-          <div className='flex flex-col gap-3 sm:flex-row sm:justify-end'>
-            <Button variant='outline' onClick={() => onOpenChange(false)} className='gap-2'>
-              Close
-            </Button>
+          <div className='flex flex-col gap-3 sm:flex-row sm:justify-between'>
             <Button
-              asChild
-              className='gap-2 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'>
-              <a href={getContentUrl()} target='_blank' rel='noopener noreferrer'>
-                <ExternalLink className='h-4 w-4' />
-                View in Context
-              </a>
+              variant='destructive'
+              onClick={() => setDeleteDialogOpen(true)}
+              disabled={isDeleting}
+              className='gap-2'>
+              <Trash2 className='h-4 w-4' />
+              Delete {type === 'review' ? 'Review' : 'Comment'}
             </Button>
+            <div className='flex flex-col gap-3 sm:flex-row'>
+              <Button variant='outline' onClick={() => onOpenChange(false)} className='gap-2'>
+                Close
+              </Button>
+              <Button
+                asChild
+                className='gap-2 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'>
+                <a href={getContentUrl()} target='_blank' rel='noopener noreferrer'>
+                  <ExternalLink className='h-4 w-4' />
+                  View in Context
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete {type === 'review' ? 'Review' : 'Comment'}?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the {type} and all associated data including
+                votes and nested content.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className='bg-red-600 hover:bg-red-700 focus:ring-red-600'>
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </DialogContent>
     </Dialog>
   );
