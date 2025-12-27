@@ -2,16 +2,28 @@
 
 import { useState } from 'react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import Pagination from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useDeleteComment } from '@/hooks/useDeleteComment';
+import { useDeleteReview } from '@/hooks/useDeleteReview';
 import { cn } from '@/lib/utils';
 
 import { ReasonBadge } from './ReasonBadge';
 import { ReportDetailDialog } from './ReportDetailDialog';
 import { formatDistanceToNow } from 'date-fns';
-import { AlertCircle, ExternalLink, Eye, FileQuestion } from 'lucide-react';
+import { AlertCircle, ExternalLink, Eye, FileQuestion, Trash2 } from 'lucide-react';
 
 export interface ReviewReportData {
   id: string;
@@ -90,11 +102,75 @@ interface ReportsTableProps {
     hasNext: boolean;
     hasPrev: boolean;
   };
+  // eslint-disable-next-line no-unused-vars
   onPageChange?: (page: number) => void;
+  onDelete?: () => void;
 }
 
-export function ReportsTable({ type, reports, isLoading = false, pagination, onPageChange }: ReportsTableProps) {
+export function ReportsTable({
+  type,
+  reports,
+  isLoading = false,
+  pagination,
+  onPageChange,
+  onDelete
+}: ReportsTableProps) {
   const [selectedReport, setSelectedReport] = useState<ReviewReportData | CommentReportData | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{
+    id: string;
+    reviewId?: string;
+    type: 'review' | 'comment';
+  } | null>(null);
+
+  const { deleteReview, isLoading: isReviewDeleting } = useDeleteReview();
+  const { deleteComment, isLoading: isCommentDeleting } = useDeleteComment();
+
+  const isDeleting = isReviewDeleting || isCommentDeleting;
+
+  const handleDelete = async () => {
+    if (!itemToDelete) return;
+
+    try {
+      if (itemToDelete.type === 'review') {
+        await deleteReview({ reviewId: itemToDelete.id });
+      } else {
+        await deleteComment({
+          commentId: itemToDelete.id,
+          reviewId: itemToDelete.reviewId || ''
+        });
+      }
+
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+
+      // Refresh the admin data
+      if (onDelete) {
+        onDelete();
+      }
+    } catch (error) {
+      // Error is already handled by the hooks
+      console.error('Delete error:', error);
+    }
+  };
+
+  const openDeleteDialog = (report: ReviewReportData | CommentReportData) => {
+    if (type === 'review') {
+      const reviewReport = report as ReviewReportData;
+      setItemToDelete({
+        id: reviewReport.review.id,
+        type: 'review'
+      });
+    } else {
+      const commentReport = report as CommentReportData;
+      setItemToDelete({
+        id: commentReport.comment.id,
+        reviewId: commentReport.comment.review.id,
+        type: 'comment'
+      });
+    }
+    setDeleteDialogOpen(true);
+  };
 
   if (isLoading) {
     return <ReportsTableSkeleton />;
@@ -240,6 +316,13 @@ export function ReportsTable({ type, reports, isLoading = false, pagination, onP
                         <ExternalLink className='h-4 w-4' />
                       </a>
                     </Button>
+                    <Button
+                      variant='ghost'
+                      size='sm'
+                      onClick={() => openDeleteDialog(report)}
+                      className='hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400'>
+                      <Trash2 className='h-4 w-4' />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -264,6 +347,28 @@ export function ReportsTable({ type, reports, isLoading = false, pagination, onP
           onOpenChange={(open: boolean) => !open && setSelectedReport(null)}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {itemToDelete?.type === 'review' ? 'Review' : 'Comment'}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the {itemToDelete?.type} and all associated
+              data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className='bg-red-600 hover:bg-red-700 focus:ring-red-600'>
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -11,24 +11,25 @@ export interface AdminCheckResult {
 }
 
 /**
- * Checks if the current user is an admin based on their email
+ * Checks if the current user is an admin based on their user ID
  * @returns Promise<boolean> - true if user is admin, false otherwise
  */
 export async function isAdmin(): Promise<boolean> {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.email) {
+  if (!session?.user) {
     return false;
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminId = process.env.ADMIN_ID;
 
-  if (!adminEmail) {
-    console.warn('ADMIN_EMAIL environment variable is not configured');
+  if (!adminId) {
+    console.warn('ADMIN_ID environment variable is not configured');
     return false;
   }
 
-  return session.user.email.toLowerCase() === adminEmail.toLowerCase();
+  const userId = (session.user as { id: string }).id;
+  return userId === adminId;
 }
 
 /**

@@ -61,11 +61,11 @@ export function StatCard({
   if (isLoading) {
     return (
       <Card className='overflow-hidden bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800'>
-        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+        <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4 pb-2 sm:px-6'>
           <Skeleton className='h-4 w-24' />
           <Skeleton className='h-10 w-10 rounded-lg' />
         </CardHeader>
-        <CardContent className='space-y-2'>
+        <CardContent className='space-y-2 px-4 sm:px-6'>
           <Skeleton className='h-9 w-20' />
           <Skeleton className='h-4 w-32' />
         </CardContent>
@@ -89,7 +89,7 @@ export function StatCard({
         styles.border,
         styles.gradient
       )}>
-      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-3'>
+      <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4 pb-3 sm:px-6'>
         <CardTitle className='text-sm font-semibold tracking-tight'>{title}</CardTitle>
         {Icon && (
           <div
@@ -101,7 +101,7 @@ export function StatCard({
           </div>
         )}
       </CardHeader>
-      <CardContent className='space-y-2'>
+      <CardContent className='space-y-2 px-4 sm:px-6'>
         <div className='text-3xl font-bold tracking-tight'>{value}</div>
         {(description || trend) && (
           <div className='flex items-center gap-2 text-xs'>
@@ -119,5 +119,5 @@ interface StatCardGridProps {
 }
 
 export function StatCardGrid({ children }: StatCardGridProps) {
-  return <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>{children}</div>;
+  return <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>{children}</div>;
 }

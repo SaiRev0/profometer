@@ -6,7 +6,6 @@ import { ReportFilters } from '@/components/admin/ReportFilters';
 import { ReportsTable } from '@/components/admin/ReportsTable';
 import { StatCard, StatCardGrid } from '@/components/admin/StatCard';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAdminCommentReports } from '@/hooks/useAdminCommentReports';
 import { useAdminReviewReports } from '@/hooks/useAdminReviewReports';
@@ -24,11 +23,12 @@ export default function AdminDashboardPage() {
   const [commentReason, setCommentReason] = useState('all');
 
   // Fetch data
-  const { data: stats, isLoading: statsLoading, error: statsError } = useAdminStats();
+  const { data: stats, isLoading: statsLoading, error: statsError, refetch: refetchStats } = useAdminStats();
   const {
     data: reviewReports,
     isLoading: reviewReportsLoading,
-    error: reviewReportsError
+    error: reviewReportsError,
+    refetch: refetchReviewReports
   } = useAdminReviewReports({
     page: reviewPage,
     reason: reviewReason
@@ -36,11 +36,22 @@ export default function AdminDashboardPage() {
   const {
     data: commentReports,
     isLoading: commentReportsLoading,
-    error: commentReportsError
+    error: commentReportsError,
+    refetch: refetchCommentReports
   } = useAdminCommentReports({
     page: commentPage,
     reason: commentReason
   });
+
+  const handleReviewDelete = () => {
+    refetchReviewReports();
+    refetchStats();
+  };
+
+  const handleCommentDelete = () => {
+    refetchCommentReports();
+    refetchStats();
+  };
 
   return (
     <div className='container mx-auto space-y-8 py-8'>
@@ -149,85 +160,80 @@ export default function AdminDashboardPage() {
           <h2 className='text-2xl font-bold tracking-tight'>Reports Management</h2>
         </div>
 
-        <Card className='border-2'>
-          <CardHeader className='bg-linear-to-r from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800'>
-            <CardTitle className='text-xl'>Active Reports</CardTitle>
-          </CardHeader>
-          <CardContent className='pt-6'>
-            <Tabs defaultValue='reviews' className='space-y-6'>
-              <TabsList className='grid w-full max-w-md grid-cols-2'>
-                <TabsTrigger value='reviews' className='gap-2'>
-                  <Flag className='h-4 w-4' />
-                  Review Reports
-                  {stats?.reports.totalReviewReports ? (
-                    <span className='ml-2 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700 dark:bg-orange-900 dark:text-orange-300'>
-                      {stats.reports.totalReviewReports}
-                    </span>
-                  ) : null}
-                </TabsTrigger>
-                <TabsTrigger value='comments' className='gap-2'>
-                  <MessageSquare className='h-4 w-4' />
-                  Comment Reports
-                  {stats?.reports.totalCommentReports ? (
-                    <span className='ml-2 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900 dark:text-red-300'>
-                      {stats.reports.totalCommentReports}
-                    </span>
-                  ) : null}
-                </TabsTrigger>
-              </TabsList>
+        <Tabs defaultValue='reviews' className='space-y-4'>
+          <TabsList className='grid w-full max-w-md grid-cols-2'>
+            <TabsTrigger value='reviews' className='gap-2'>
+              <Flag className='h-4 w-4' />
+              Reviews
+              {stats?.reports.totalReviewReports ? (
+                <span className='ml-1.5 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700 dark:bg-orange-900 dark:text-orange-300'>
+                  {stats.reports.totalReviewReports}
+                </span>
+              ) : null}
+            </TabsTrigger>
+            <TabsTrigger value='comments' className='gap-2'>
+              <MessageSquare className='h-4 w-4' />
+              Comments
+              {stats?.reports.totalCommentReports ? (
+                <span className='ml-1.5 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900 dark:text-red-300'>
+                  {stats.reports.totalCommentReports}
+                </span>
+              ) : null}
+            </TabsTrigger>
+          </TabsList>
 
-              {/* Review Reports Tab */}
-              <TabsContent value='reviews' className='space-y-4'>
-                <ReportFilters
-                  reason={reviewReason}
-                  onReasonChange={(reason) => {
-                    setReviewReason(reason);
-                    setReviewPage(1); // Reset to first page on filter change
-                  }}
-                />
+          {/* Review Reports Tab */}
+          <TabsContent value='reviews' className='space-y-4'>
+            <ReportFilters
+              reason={reviewReason}
+              onReasonChange={(reason) => {
+                setReviewReason(reason);
+                setReviewPage(1); // Reset to first page on filter change
+              }}
+            />
 
-                {reviewReportsError ? (
-                  <Alert variant='destructive'>
-                    <AlertDescription>Failed to load review reports. Please try again.</AlertDescription>
-                  </Alert>
-                ) : (
-                  <ReportsTable
-                    type='review'
-                    reports={reviewReports?.reports ?? []}
-                    isLoading={reviewReportsLoading}
-                    pagination={reviewReports?.pagination}
-                    onPageChange={setReviewPage}
-                  />
-                )}
-              </TabsContent>
+            {reviewReportsError ? (
+              <Alert variant='destructive'>
+                <AlertDescription>Failed to load review reports. Please try again.</AlertDescription>
+              </Alert>
+            ) : (
+              <ReportsTable
+                type='review'
+                reports={reviewReports?.reports ?? []}
+                isLoading={reviewReportsLoading}
+                pagination={reviewReports?.pagination}
+                onPageChange={setReviewPage}
+                onDelete={handleReviewDelete}
+              />
+            )}
+          </TabsContent>
 
-              {/* Comment Reports Tab */}
-              <TabsContent value='comments' className='space-y-4'>
-                <ReportFilters
-                  reason={commentReason}
-                  onReasonChange={(reason) => {
-                    setCommentReason(reason);
-                    setCommentPage(1); // Reset to first page on filter change
-                  }}
-                />
+          {/* Comment Reports Tab */}
+          <TabsContent value='comments' className='space-y-4'>
+            <ReportFilters
+              reason={commentReason}
+              onReasonChange={(reason) => {
+                setCommentReason(reason);
+                setCommentPage(1); // Reset to first page on filter change
+              }}
+            />
 
-                {commentReportsError ? (
-                  <Alert variant='destructive'>
-                    <AlertDescription>Failed to load comment reports. Please try again.</AlertDescription>
-                  </Alert>
-                ) : (
-                  <ReportsTable
-                    type='comment'
-                    reports={commentReports?.reports ?? []}
-                    isLoading={commentReportsLoading}
-                    pagination={commentReports?.pagination}
-                    onPageChange={setCommentPage}
-                  />
-                )}
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+            {commentReportsError ? (
+              <Alert variant='destructive'>
+                <AlertDescription>Failed to load comment reports. Please try again.</AlertDescription>
+              </Alert>
+            ) : (
+              <ReportsTable
+                type='comment'
+                reports={commentReports?.reports ?? []}
+                isLoading={commentReportsLoading}
+                pagination={commentReports?.pagination}
+                onPageChange={setCommentPage}
+                onDelete={handleCommentDelete}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

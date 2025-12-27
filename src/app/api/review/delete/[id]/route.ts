@@ -7,8 +7,6 @@ import {
   calculateAverageAfterRemoval,
   calculateGradeAverageAfterRemoval,
   calculatePercentageAfterRemoval,
-  convertNumberToGrade,
-  gradeNumberMap,
   safeClamp
 } from '@/lib/utils';
 
