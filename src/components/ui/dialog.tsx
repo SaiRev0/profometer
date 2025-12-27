@@ -6,7 +6,60 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 import { X } from 'lucide-react';
 
-const Dialog = DialogPrimitive.Root;
+// Wrapper for Dialog.Root that handles back button
+interface DialogProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root> {
+  // eslint-disable-next-line no-unused-vars
+  onOpenChange?: (open: boolean) => void;
+  enableBackButton?: boolean;
+}
+
+function Dialog({ open, onOpenChange, enableBackButton = true, ...props }: DialogProps) {
+  const historyPushedRef = React.useRef(false);
+  const closingViaBackButtonRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!enableBackButton) {
+      return;
+    }
+
+    if (open) {
+      // Dialog is opening - push a history state if we haven't already
+      if (!historyPushedRef.current) {
+        window.history.pushState({ dialogOpen: true }, '');
+        historyPushedRef.current = true;
+      }
+
+      // Handle back button press
+      const handlePopState = () => {
+        if (open && onOpenChange) {
+          closingViaBackButtonRef.current = true;
+          onOpenChange(false);
+        }
+      };
+
+      window.addEventListener('popstate', handlePopState);
+
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    } else {
+      // Dialog is closing
+      if (historyPushedRef.current && !closingViaBackButtonRef.current) {
+        // Dialog closed normally (not via back button), so remove the history state silently
+        if (window.history.state?.dialogOpen) {
+          window.history.replaceState(null, '', window.location.href);
+        }
+      }
+
+      // Reset refs for next time
+      historyPushedRef.current = false;
+      closingViaBackButtonRef.current = false;
+    }
+  }, [open, onOpenChange, enableBackButton]);
+
+  return <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />;
+}
+
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
