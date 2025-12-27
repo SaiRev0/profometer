@@ -34,18 +34,17 @@ export default [
     eslintConfigPrettier, // ? https://github.com/prettier/eslint-config-prettier
     {
         rules: {
-            'no-unused-vars': 'off',
+            'no-unused-vars': 'warn',
             'react/react-in-jsx-scope': 'off',
             'react-hooks/exhaustive-deps': 'off',
             'react/display-name': 'off',
             'react/prop-types': 'off',
             'newline-before-return': 'off',
-            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/no-unused-expressions': 'off',
             'import/no-unresolved': 'off',
             'import/no-named-as-default': 'off',
-            // ! TO COMPILE SHADCN EXAMPLES, PLEASE REMOVE AS NEEDED
-            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-empty-object-type': 'off',
             '@typescript-eslint/ban-ts-comment': 'off',
             'react/no-unescaped-entities': 'off',
