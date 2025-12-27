@@ -6,8 +6,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { code } = await params;
 
-    const course = await db.course.findUnique({
-      where: { code: code.toUpperCase() },
+    const course = await db.course.findFirst({
+      where: {
+        code: code.toUpperCase(),
+        verified: true
+      },
       include: {
         department: true
       }

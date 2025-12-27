@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { CourseVerificationTable } from '@/components/admin/CourseVerificationTable';
 import { ReportFilters } from '@/components/admin/ReportFilters';
 import { ReportsTable } from '@/components/admin/ReportsTable';
 import { StatCard, StatCardGrid } from '@/components/admin/StatCard';
@@ -11,7 +12,17 @@ import { useAdminCommentReports } from '@/hooks/useAdminCommentReports';
 import { useAdminReviewReports } from '@/hooks/useAdminReviewReports';
 import { useAdminStats } from '@/hooks/useAdminStats';
 
-import { BookOpen, FileCheck, Flag, GraduationCap, MessageSquare, Star, TrendingUp, Users } from 'lucide-react';
+import {
+  BookCheck,
+  BookOpen,
+  FileCheck,
+  Flag,
+  GraduationCap,
+  MessageSquare,
+  Star,
+  TrendingUp,
+  Users
+} from 'lucide-react';
 
 export default function AdminDashboardPage() {
   // State for review reports
@@ -21,6 +32,9 @@ export default function AdminDashboardPage() {
   // State for comment reports
   const [commentPage, setCommentPage] = useState(1);
   const [commentReason, setCommentReason] = useState('all');
+
+  // State for course verification
+  const [coursePage, setCoursePage] = useState(1);
 
   // Fetch data
   const { data: stats, isLoading: statsLoading, error: statsError, refetch: refetchStats } = useAdminStats();
@@ -153,18 +167,29 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Reports Section */}
+      {/* Management Section */}
       <div className='space-y-4'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-2xl font-bold tracking-tight'>Reports Management</h2>
+          <h2 className='text-2xl font-bold tracking-tight'>Content Management</h2>
         </div>
 
-        <Tabs defaultValue='reviews' className='space-y-4'>
-          <TabsList className='grid w-full max-w-md grid-cols-2'>
+        <Tabs defaultValue='courses' className='space-y-4'>
+          <TabsList className='grid w-full max-w-2xl grid-cols-3'>
+            <TabsTrigger value='courses' className='gap-2'>
+              <BookCheck className='h-4 w-4' />
+              Course
+              {stats?.courses.total &&
+              stats.courses.verified !== undefined &&
+              stats.courses.total - stats.courses.verified > 0 ? (
+                <span className='ml-1.5 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300'>
+                  {stats.courses.total - stats.courses.verified}
+                </span>
+              ) : null}
+            </TabsTrigger>
             <TabsTrigger value='reviews' className='gap-2'>
               <Flag className='h-4 w-4' />
-              Reviews
-              {stats?.reports.totalReviewReports ? (
+              Review
+              {stats?.reports.totalReviewReports && stats.reports.totalReviewReports > 0 ? (
                 <span className='ml-1.5 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700 dark:bg-orange-900 dark:text-orange-300'>
                   {stats.reports.totalReviewReports}
                 </span>
@@ -172,14 +197,19 @@ export default function AdminDashboardPage() {
             </TabsTrigger>
             <TabsTrigger value='comments' className='gap-2'>
               <MessageSquare className='h-4 w-4' />
-              Comments
-              {stats?.reports.totalCommentReports ? (
+              Comment
+              {stats?.reports.totalCommentReports && stats.reports.totalCommentReports > 0 ? (
                 <span className='ml-1.5 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900 dark:text-red-300'>
                   {stats.reports.totalCommentReports}
                 </span>
               ) : null}
             </TabsTrigger>
           </TabsList>
+
+          {/* Course Verification Tab */}
+          <TabsContent value='courses' className='space-y-4'>
+            <CourseVerificationTable page={coursePage} onPageChange={setCoursePage} />
+          </TabsContent>
 
           {/* Review Reports Tab */}
           <TabsContent value='reviews' className='space-y-4'>

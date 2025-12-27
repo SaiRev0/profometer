@@ -37,6 +37,7 @@ export async function GET(request: Request) {
       // Get recently reviewed courses
       db.course.findMany({
         where: {
+          verified: true,
           reviews: {
             some: {
               type: 'course'

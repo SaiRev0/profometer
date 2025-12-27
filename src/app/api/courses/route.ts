@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build the where clause based on filters
-    const where: any = {};
+    const where: any = { verified: true };
     if (department) where.department = department;
     if (search) {
       where.OR = [

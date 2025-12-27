@@ -20,6 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Get unique courses taught by this professor
     const courses = await db.course.findMany({
       where: {
+        verified: true,
         reviews: {
           some: {
             professorId: id,

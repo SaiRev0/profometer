@@ -201,9 +201,6 @@ export function ReportsTable({
                 <TableCell className='max-w-md'>
                   <div className='group/preview relative'>
                     <p className='line-clamp-2 text-center text-sm'>{getContentPreview(group)}</p>
-                    <div className='bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 hidden max-w-lg rounded-md border p-2 text-center text-xs shadow-md group-hover/preview:block'>
-                      {getContentPreview(group)}
-                    </div>
                   </div>
                 </TableCell>
               </TableRow>
